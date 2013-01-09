@@ -1,0 +1,14 @@
+[user]
+	name = Vlad Suciu
+	email = suciu.vlad@gmail.com
+[alias]
+  co = checkout
+  ci = commit
+  st = status
+  br = branch
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  type = cat-file -t
+  dump = cat-file -p
+[core]
+  editor = mvim -v
+  excludesfile = ~/.gitignore

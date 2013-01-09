@@ -1,0 +1,10 @@
+.DS_Store
+Thumbs.db
+._*
+*~
+pkg/*
+.svn
+log/*
+tmp/**/*
+.*.swp
+.sass-cache
