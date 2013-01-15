@@ -13,6 +13,14 @@ Bundle 'gmarik/vundle'
 Bundle 'tpope/vim-surround'
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'ervandew/supertab'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'wincent/Command-T'
+Bundle 'scrooloose/nerdtree'
+Bundle 'kien/ctrlp.vim'
+Bundle 'mileszs/ack.vim'
+Bundle 'hallettj/jslint.vim'
+Bundle 'tpope/vim-commentary'
+Bundle 'tpope/vim-rails'
 
 set nocompatible  " Use Vim settings, rather then Vi settings
 
