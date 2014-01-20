@@ -8,3 +8,11 @@ log/*
 tmp/**/*
 .*.swp
 .sass-cache
+tags
+solr
+solr/data/**/*
+solr/pids/**/*
+dump.rdb
+.env
+.powenv
+

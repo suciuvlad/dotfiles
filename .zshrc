@@ -5,7 +5,7 @@ ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="blinks"
+ZSH_THEME="robbyrussell"
 
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
@@ -14,8 +14,11 @@ ZSH_THEME="blinks"
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
 
-# Comment this out to disable weekly auto-update checks
+# Comment this out to disable bi-weekly auto-update checks
 # DISABLE_AUTO_UPDATE="true"
+
+# Uncomment to change how many often would you like to wait before auto-updates occur? (in days)
+# export UPDATE_ZSH_DAYS=13
 
 # Uncomment following line if you want to disable colors in ls
 # DISABLE_LS_COLORS="true"
@@ -34,8 +37,7 @@ plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
-# export PATH=/usr/local/bin:/Users/vladsuciu/.rbenv/shims:/usr/bin:/bin:/usr/sbin:/sbin
-export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/npm/bin:$PATH
 
 function _prompt_char() {
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
@@ -44,11 +46,6 @@ function _prompt_char() {
     echo ' '
   fi
 }
-
-#ZSH_THEME_GIT_PROMPT_PREFIX=" [%{%B%F{blue}%}"
-#ZSH_THEME_GIT_PROMPT_SUFFIX="%{%f%k%b%K{black}%B%F{green}%}]"
-#ZSH_THEME_GIT_PROMPT_DIRTY=" %{%F{red}%}*%{%f%k%b%}"
-#ZSH_THEME_GIT_PROMPT_CLEAN=""
 
 project_pwd() {
   echo $PWD | sed -e "s/\/Users\/$USER/~/"
@@ -85,20 +82,9 @@ export PROMPT=$'%{\e[1;34m%}%n@\e[1;34m%M%{\e[0m%}
 %{\e[0;%(?.32.31)m%}>%{\e[0m%} '
 
 export RPROMPT=$'%{\e[1;31m%}$(project_pwd)%{\e[0;34m%}$(ruby_version)$(git_cwd_info)%{\e[0m%}'
-
-#Original blinks prompt
-#PROMPT='
-#%{%K{black}%}$(_prompt_char)%{%K{black}%} %#%{%f%k%b%} '
-
-#RPROMPT='%{%b%F{yellow}%K{black}%}%~%{%B%F{green}%}$(git_prompt_info)'
-
-alias prj="cd ~/'Google Drive'/projects/"
-
-
-# git shortcuts
-alias git hist=log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-alias git type=cat-file -t
-alias git dump=cat-file -p
+eval "$(rbenv init -)"
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+
+export DISABLE_AUTO_TITLE=true

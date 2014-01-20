@@ -16,9 +16,15 @@ Bundle 'wincent/Command-T'
 Bundle 'scrooloose/nerdtree'
 Bundle 'kien/ctrlp.vim'
 Bundle 'mileszs/ack.vim'
-Bundle 'hallettj/jslint.vim'
+" Bundle 'wookiehangover/jshint.vim'
+Bundle 'FuDesign2008/jslint.vim'
 Bundle 'tpope/vim-commentary'
 Bundle 'tpope/vim-rails'
+Bundle 'tpope/vim-fugitive'
+Bundle 'Lokaltog/vim-powerline'
+Bundle 'mattn/gist-vim'
+Bundle 'Yggdroot/indentLine'
+Bundle 'christoomey/vim-tmux-navigator'
 
 set nocompatible  " Use Vim settings, rather then Vi settings
 
@@ -59,10 +65,31 @@ highlight StatusLine ctermfg=blue ctermbg=yellow
 set shiftround " When at 3 spaces and I hit >>, go to 4, not 5.
 
 set grepprg=ack
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects
+  " .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
+
+" bind K to grep word under cursor
+nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+
+" bind \ (backward slash) to grep shortcut
+command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+nnoremap \ :Ag<SPACE>
 
 " Snippets are activated by Shift+Tab
 let g:snippetsEmu_key = "<S-Tab>"
 let g:ctrlp_max_height = 30
+
+set go-=L " Removes left hand scroll bar
+set guioptions-=r "Removes right hand scroll bar
 
 
 " Let's be reasonable, shall we?
@@ -77,8 +104,14 @@ set scrolloff=3
 syntax on
 filetype plugin indent on
 
-set number
+" Line Numbers
+set relativenumber
 set numberwidth=5
+
+" silent! au FocusLost * :set number
+" silent! au FocusGained * :set relativenumber
+" silent! autocmd WinLeave * :set number
+" silent! autocmd WinEnter * set relativenumber
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
@@ -86,12 +119,16 @@ let g:html_indent_tags = 'li\|p'
 " Display extra whitespace
 set list listchars=tab:»·,trail:·
 
+" Set the taf file search order
+set tags=./tags;
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " STATUS LINE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 :set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 
 set background=dark
+set t_Co=256
 colorscheme solarized
 
 " Softtabs, 2 spaces
@@ -291,3 +328,25 @@ endfunction
 
 
 map <leader>rt :NERDTreeToggle<cr>
+
+map <Leader>pn :sp ~/Dropbox/dev/notes/project-notes.txt<cr>
+map <Leader>m :Rmodel
+
+map <Leader>vc :RVcontroller<cr>
+map <Leader>vm :RVmodel<cr>
+map <Leader>vv :RVview<cr>
+
+let g:indentLine_color_gui = '#0A3641'
+let g:indentLine_char = '┆'
+
+" tell vim to use the system clipboard:
+set clipboard=unnamed
+
+let g:Powerline_stl_path_style = 'short'
+
+" Syntax coloring lines that are too long just slows down the world
+set synmaxcol=81
+
+set ttyfast " u got a fast terminal
+set ttyscroll=3
+set lazyredraw " to avoid scrolling problems
