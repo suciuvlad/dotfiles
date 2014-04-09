@@ -14,3 +14,5 @@
   excludesfile = ~/.gitignore
 [color]
   ui = true
+[commit]
+  template = ~/.gitmessage
