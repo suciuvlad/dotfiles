@@ -1,3 +1,7 @@
+if filereadable(expand("~/.vimrc.bundles"))
+  source ~/.vimrc.bundles
+endif
+
 set nocompatible  " Use Vim settings, rather then Vi settings
 
 set history=10000
