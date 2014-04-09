@@ -1,33 +1,3 @@
-" ========================================================================
-" Vundle stuff
-" ========================================================================
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-
-" Let Vundle manage Vundle (required)!
-Bundle 'gmarik/vundle'
-
-" My bundles
-Bundle 'tpope/vim-surround'
-Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-Bundle 'ervandew/supertab'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'wincent/Command-T'
-Bundle 'scrooloose/nerdtree'
-Bundle 'kien/ctrlp.vim'
-Bundle 'mileszs/ack.vim'
-" Bundle 'wookiehangover/jshint.vim'
-Bundle 'FuDesign2008/jslint.vim'
-Bundle 'tpope/vim-commentary'
-Bundle 'tpope/vim-rails'
-Bundle 'tpope/vim-fugitive'
-Bundle 'Lokaltog/vim-powerline'
-Bundle 'mattn/gist-vim'
-Bundle 'Yggdroot/indentLine'
-Bundle 'christoomey/vim-tmux-navigator'
-Bundle 'thoughtbot/vim-rspec'
-Bundle 'jgdavey/tslime.vim'
-
 set nocompatible  " Use Vim settings, rather then Vi settings
 
 set history=10000
