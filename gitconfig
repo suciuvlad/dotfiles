@@ -9,6 +9,7 @@
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
   type = cat-file -t
   dump = cat-file -p
+  lg = log --oneline --decorate --all --graph
 [core]
   editor = mvim -v
   excludesfile = ~/.gitignore
@@ -16,3 +17,7 @@
   ui = true
 [commit]
   template = ~/.gitmessage
+[push]
+  default = simple
+[branch]
+  autosetuprebase = always
