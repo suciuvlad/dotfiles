@@ -275,5 +275,5 @@ set ttyscroll=3
 set lazyredraw " to avoid scrolling problems
 "
 " This tells vim-rspec to use Send_to_Tmux to run the selected specs.
-let g:rspec_command = 'call Send_to_Tmux("rspec {spec}\n")'
+let g:rspec_command = 'call Send_to_Tmux("rspec {spec} --color -f d\n")'
 
