@@ -15,4 +15,4 @@ solr/pids/**/*
 dump.rdb
 .env
 .powenv
-
+.phrase
