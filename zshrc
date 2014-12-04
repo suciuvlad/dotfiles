@@ -83,7 +83,8 @@ export PROMPT=$'%{\e[1;34m%}%n@\e[1;34m%M%{\e[0m%}
 %{\e[0;%(?.32.31)m%}>%{\e[0m%} '
 
 export RPROMPT=$'%{\e[1;31m%}$(project_pwd)%{\e[0;34m%}$(ruby_version)$(git_cwd_info)%{\e[0m%}'
-eval "$(rbenv init -)"
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
