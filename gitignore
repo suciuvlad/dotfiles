@@ -16,3 +16,5 @@ dump.rdb
 .env
 .powenv
 .phrase
+node_modules
+.npm-debug.log
