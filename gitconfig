@@ -11,8 +11,8 @@
   dump = cat-file -p
   lg = log --oneline --decorate --all --graph
 [core]
-  editor = mvim -v
   excludesfile = ~/.gitignore
+  editor = nvim
 [color]
   ui = true
 [commit]
