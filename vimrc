@@ -99,7 +99,11 @@ set tags=./tags;
 
 set background=dark
 set t_Co=256
-colorscheme solarized
+" colorscheme solarized
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
 
 " Softtabs, 2 spaces
 set tabstop=2
