@@ -5,6 +5,7 @@ Thumbs.db
 pkg/*
 .svn
 log/*
+*.log
 tmp/**/*
 .*.swp
 .sass-cache
