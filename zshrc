@@ -103,3 +103,9 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 
 # You must iTerm2 > Install Shell Integration
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# https://github.com/chriskempson/base16-shell
+# https://github.com/chriskempson/base16-iterm2
+# Tomorrow Night Theme. Run it with base16_tomorrow_night
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
