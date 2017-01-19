@@ -15,6 +15,7 @@ POWERLEVEL9K_SHOW_CHANGESET=TRUE
 POWERLEVEL9K_CHANGESET_HASH_LENGTH=7
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(dir rbenv vcs status)
+POWERLEVEL9K_LEFT_SEGMENT_SEPARATOR=''
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -93,6 +94,7 @@ source $ZSH/oh-my-zsh.sh
 #
 
 alias tmux="tmux -u"
+source ~/.bin/tmuxinator.zsh
 
 export DISABLE_AUTO_TITLE=true
 export EDITOR="/usr/local/bin/nvim"
