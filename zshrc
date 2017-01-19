@@ -7,7 +7,14 @@ export ZSH=/Users/vladsuciu/.oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+#ZSH_THEME="robbyrussell"
+# Monaco Patched Font
+# https://gist.github.com/baopham/1838072
+ZSH_THEME="powerlevel9k/powerlevel9k"
+POWERLEVEL9K_SHOW_CHANGESET=TRUE
+POWERLEVEL9K_CHANGESET_HASH_LENGTH=7
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(dir rbenv vcs status)
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
