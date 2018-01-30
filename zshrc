@@ -10,12 +10,12 @@ export ZSH=/Users/vladsuciu/.oh-my-zsh
 #ZSH_THEME="robbyrussell"
 # Monaco Patched Font
 # https://gist.github.com/baopham/1838072
-ZSH_THEME="powerlevel9k/powerlevel9k"
-POWERLEVEL9K_SHOW_CHANGESET=TRUE
-POWERLEVEL9K_CHANGESET_HASH_LENGTH=7
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(dir rbenv vcs status)
-POWERLEVEL9K_LEFT_SEGMENT_SEPARATOR=''
+#ZSH_THEME="powerlevel9k/powerlevel9k"
+#POWERLEVEL9K_SHOW_CHANGESET=TRUE
+#POWERLEVEL9K_CHANGESET_HASH_LENGTH=7
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=()
+#POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(dir rbenv vcs)
+#POWERLEVEL9K_LEFT_SEGMENT_SEPARATOR='~'
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -92,8 +92,15 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 #
+#
+
+autoload -U promptinit; promptinit
+prompt pure
+
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 alias tmux="tmux -u"
+alias ci="code-insiders"
 source ~/.bin/tmuxinator.zsh
 
 export DISABLE_AUTO_TITLE=true
@@ -101,14 +108,16 @@ export EDITOR="/usr/local/bin/nvim"
 export FZF_DEFAULT_COMMAND='ag -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
+
 if which rbenv > /dev/null;
   then eval "$(rbenv init -)";
 fi
 
-export PATH="$HOME/.rbenv/bin:$PATH"
+export GOROOT=/usr/local/opt/go/libexec
+export GOPATH=$HOME/.go
+export PATH="$HOME/.rbenv/bin:$PATH:$GOROOT/bin:$GOPATH/bin"
 
 # Install fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # You must iTerm2 > Install Shell Integration
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
@@ -118,3 +127,7 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # Tomorrow Night Theme. Run it with base16_tomorrow_night
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export PATH="$HOME/.yarn/bin:$PATH"

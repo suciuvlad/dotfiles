@@ -87,7 +87,7 @@ set numberwidth=5
 let g:html_indent_tags = 'li\|p'
 
 " Display extra whitespace
-set list listchars=tab:»·,trail:·
+" set list listchars=tab:»·,trail:·
 
 " Set the taf file search order
 set tags=./tags;
@@ -177,50 +177,10 @@ map <leader>n :call RenameFile()<cr>
 
 nnoremap <leader><leader> <c-^>
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" SWITCH BETWEEN TEST AND PRODUCTION CODE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! OpenTestAlternate()
-  let new_file = AlternateForCurrentFile()
-  exec ':e ' . new_file
-endfunction
-function! AlternateForCurrentFile()
-  let current_file = expand("%")
-  let new_file = current_file
-  let in_spec = match(current_file, '^spec/') != -1
-  let going_to_spec = !in_spec
-  let in_app = match(current_file, '\<controllers\>') != -1 || match(current_file, '\<models\>') != -1 || match(current_file, '\<views\>') || match(current_file, '\<helpers\>') != -1
-  if going_to_spec
-    if in_app
-      let new_file = substitute(new_file, '^app/', '', '')
-    end
-    let new_file = substitute(new_file, '\.rb$', '_spec.rb', '')
-    let new_file = 'spec/' . new_file
-  else
-    let new_file = substitute(new_file, '_spec\.rb$', '.rb', '')
-    let new_file = substitute(new_file, '^spec/', '', '')
-    if in_app
-      let new_file = 'app/' . new_file
-    end
-  endif
-  return new_file
-endfunction
-nnoremap <leader>. :call OpenTestAlternate()<cr>
-
-" RSpec.vim mappings
-map <Leader>t :call RunCurrentSpecFile()<CR>
-map <Leader>s :call RunNearestSpec()<CR>
-map <Leader>l :call RunLastSpec()<CR>
-map <Leader>a :call RunAllSpecs()<CR>
-
 map <leader>rt :NERDTreeToggle<cr>
 
 map <Leader>pn :sp ~/Dropbox/dev/notes/project-notes.txt<cr>
 map <Leader>m :Rmodel
-
-map <Leader>vc :RVcontroller<cr>
-map <Leader>vm :RVmodel<cr>
-map <Leader>vv :RVview<cr>
 
 let g:indentLine_color_gui = '#0A3641'
 let g:indentLine_char = '┆'
@@ -259,3 +219,20 @@ let g:neomake_javascript_enabled_makers = ['eslint']
 hi clear SignColumn
 
 autocmd! BufWritePost * Neomake
+
+let g:go_fmt_command = "goimports"
+
+set completeopt-=preview
+autocmd FileType javascript setlocal omnifunc=tern#Complete
+
+" Use tern_for_vim.
+let g:tern#command = ["tern"]
+let g:tern#arguments = ["--persistent"]
+
+let g:deoplete#omni#functions = {}
+" set omnifunc=syntaxcomplete#Complete
+
+let g:deoplete#omni#functions.javascript = [
+  \ 'tern#Complete',
+  \ 'jspc#omni'
+  \]
