@@ -8,19 +8,16 @@ log/*
 *.log
 tmp/**/*
 .*.swp
-.sass-cache
 tags
-solr
-solr/data/**/*
-solr/pids/**/*
 dump.rdb
 .env
 .powenv
-.phrase
 node_modules
-.npm-debug.log
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
+npm-debug.log
+yarn-error.log
+.vscode/
+*.un~
+.idea/
+.history
+*.patch
+.eslintcache

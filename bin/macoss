@@ -25,14 +25,23 @@ echo "node --version: $(node --version)"
 echo "npm --version: $(npm --version)"
 
 echo "brew installing stuff"
-brew install yarn
+brew install nvim yarn git zsh tmux tmuxinator
+
+echo "installing Oh My Zsh"
+
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
 
 echo "installing a few global npm packages"
 npm install --global serve diff-so-fancy fkill-cli semantic-release-cli alfred-fkill
 
-echo "installing apps with brew cask"
+echo "Installing apps with brew cask"
 
 brew cask install alfred firefox brave-browser google-drive-file-stream visual-studio-code 1password skype sublime-text vlc discord betterzip zoomus sip kmplayer whatsapp telegram cloudapp droplr tresorit microsoft-office spotify sketch iterm2 notion spectrum expressvpn zeplin intellij-idea goland hyper docker
+
+echo "Installing iterm2 shell integration"
+curl -L https://iterm2.com/shell_integration/install_shell_integration.sh | bash
 
 echo "Generating an RSA token for GitHub"
 mkdir -p ~/.ssh
