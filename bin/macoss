@@ -36,9 +36,22 @@ git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerl
 echo "installing a few global npm packages"
 npm install --global serve diff-so-fancy fkill-cli semantic-release-cli alfred-fkill
 
+git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+echo "source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
+
+git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
+
+
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
+
+
+
 echo "Installing apps with brew cask"
 
-brew cask install alfred firefox brave-browser google-drive-file-stream visual-studio-code 1password skype sublime-text vlc discord betterzip zoomus sip kmplayer whatsapp telegram cloudapp droplr tresorit microsoft-office spotify sketch iterm2 notion spectrum expressvpn zeplin intellij-idea goland hyper docker
+brew cask install alfred firefox brave-browser google-drive-file-stream visual-studio-code 1password skype sublime-text vlc discord betterzip zoomus sip kmplayer whatsapp telegram cloudapp droplr tresorit microsoft-office spotify sketch iterm2 spectrum expressvpn zeplin intellij-idea goland hyper docker
 
 echo "Installing iterm2 shell integration"
 curl -L https://iterm2.com/shell_integration/install_shell_integration.sh | bash
@@ -91,20 +104,20 @@ defaults write com.apple.finder _FXSortFoldersFirst -bool true
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 
 # Disable the warning when changing a file extension
+
+# Display full POSIX path as Finder window title
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+
+# Keep folders on top when sorting by name
+defaults write com.apple.finder _FXSortFoldersFirst -bool true
+
+# When performing a search, search the current folder by default
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+
+# Disable the warning when changing a file extension
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
 # Set the icon size of Dock items to 16 pixels
 defaults write com.apple.dock tilesize -int 32
 
 # Minimize windows into their application’s icon
-defaults write com.apple.dock minimize-to-application -bool true
-
-# Wipe all (default) app icons from the Dock
-# This is only really useful when setting up a new Mac, or if you don’t use
-# the Dock to launch apps.
-defaults write com.apple.dock persistent-apps -array
-
-# Show only open applications in the Dock
-defaults write com.apple.dock static-only -bool true
-
-echo "Done. Note that some of these changes require a logout/restart to take effect."

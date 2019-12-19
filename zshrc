@@ -110,3 +110,4 @@ autoload -U compinit && compinit
 
 export EDITOR="/usr/local/bin/nvim"
 source ~/.bin/tmuxinator.zsh
+source /Users/vladsuciu/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
