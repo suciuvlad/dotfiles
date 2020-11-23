@@ -2,7 +2,25 @@ call plug#begin('~/.vim/plugged')
 
 " My bundles
 "
-Plug 'vimlab/neojs'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'preservim/nerdtree'
+Plug 'chriskempson/base16-vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+" Plug 'neomake/neomake'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+Plug 'tpope/vim-commentary'
+Plug 'easymotion/vim-easymotion'
+
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'ryanoasis/vim-devicons'
+Plug 'airblade/vim-gitgutter'
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
 
 " Add plugins to &runtimepath
 call plug#end()
