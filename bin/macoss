@@ -50,7 +50,7 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/the
 
 echo "Installing apps with brew cask"
 
-brew install --cask bartender alfred firefox brave-browser dropbox google-drive visual-studio-code 1password skype sublime-text vlc discord betterzip zoom sip kmplayer whatsapp telegram cloudapp droplr tresorit microsoft-office spotify sketch iterm2 spectrum expressvpn zeplin intellij-idea goland hyper docker fantastical figma folx signal postman imagealpha imageoptim
+brew install --cask slack bartender alfred firefox brave-browser dropbox google-drive visual-studio-code 1password skype sublime-text vlc discord betterzip zoom sip kmplayer whatsapp telegram cloudapp droplr tresorit microsoft-office spotify sketch iterm2 spectrum expressvpn zeplin intellij-idea goland hyper docker fantastical figma folx signal postman imagealpha imageoptim
 
 #xA simple command line interface for the Mac App Store. Designed for scripting and automation.
 brew install mas
