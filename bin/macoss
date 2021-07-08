@@ -25,7 +25,7 @@ echo "node --version: $(node --version)"
 echo "npm --version: $(npm --version)"
 
 echo "brew installing stuff"
-brew install gonvim yarn git zsh zsh-completions zsh-syntax-highlighting zsh-autosuggestions tmux tmuxinator yarn ripgrep fzf reattach-to-user-namespace
+brew install gonvim yarn git zsh zsh-completions zsh-syntax-highlighting zsh-autosuggestions tmux tmuxinator yarn ripgrep fzf reattach-to-user-namespace hub bat tree ripgrep
 
 echo "installing Oh My Zsh"
 
