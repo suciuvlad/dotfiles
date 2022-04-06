@@ -4,14 +4,17 @@ call plug#begin('~/.vim/plugged')
 "
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'vim-test/vim-test'
 Plug 'preservim/nerdtree'
 Plug 'chriskempson/base16-vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'antoinemadec/coc-fzf'
 " Plug 'neomake/neomake'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
 Plug 'easymotion/vim-easymotion'
 
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
@@ -21,6 +24,9 @@ Plug 'airblade/vim-gitgutter'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+Plug 'dracula/vim', { 'name': 'dracula' }
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Add plugins to &runtimepath
 call plug#end()

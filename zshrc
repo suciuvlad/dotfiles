@@ -121,13 +121,19 @@ source /Users/vladsuciu/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-sy
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Base16 Shell
-BASE16_SHELL="$HOME/.config/base16-shell/"
-[ -n "$PS1" ] && \
-    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-        eval "$("$BASE16_SHELL/profile_helper.sh")"
+# BASE16_SHELL="$HOME/.config/base16-shell/"
+# [ -n "$PS1" ] && \
+#    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+#        eval "$("$BASE16_SHELL/profile_helper.sh")"
+# end of removed Base16Shell
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/vladsuciu/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/vladsuciu/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/vladsuciu/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/vladsuciu/google-cloud-sdk/completion.zsh.inc'; fi
+
+if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
+  export PATH=/opt/homebrew/opt/ruby/bin:$PATH
+  export PATH=`gem environment gemdir`/bin:$PATH
+fi

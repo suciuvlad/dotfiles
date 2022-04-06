@@ -53,6 +53,9 @@ set grepprg=rg\ --vimgrep\ --smart-case\ --hidden\ --follow
 
 let $FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git'"
 
+let g:fzf_layout = { 'up': '~90%', 'window': { 'width': 0.8, 'height': 0.8, 'yoffset':0.5, 'xoffset': 0.5 } }
+let $FZF_DEFAULT_OPTS = '--layout=reverse --info=inline'
+
 " bind K to grep word under cursor
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
@@ -113,6 +116,7 @@ endif
 
 let base16colorspace=256
 "colorscheme base16-ocean
+colorscheme dracula
 
 " Softtabs, 2 spaces
 set tabstop=2
@@ -450,7 +454,8 @@ nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<C
 " highlight CocErrorHighlight ctermfg=Yellow  guifg=#ff00ff
 "
 " 
-autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+"autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
 let g:airline#extensions#coc#enabled = 1
 
 nnoremap <silent> <leader>h :call CocActionAsync('doHover')<cr>
@@ -477,6 +482,6 @@ autocmd FileType go nmap <leader>t  <Plug>(go-test)
 "               FZF                "
 "=================================="
 " ~~~~~ Open FZF search in vim
-map <C-p> <Esc><Esc>:Files!<CR>
-map <C-f> <Esc><Esc>:BLines!<CR>
-map <C-g> <Esc><Esc>:BCommits!<CR>
+map <C-p> <Esc><Esc>:Files<CR>
+map <C-f> <Esc><Esc>:BLines<CR>
+map <C-g> <Esc><Esc>:BCommits<CR>
