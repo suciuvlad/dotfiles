@@ -163,6 +163,13 @@ return require('packer').startup(function(use)
   }
 
   use {
+    'hrsh7th/cmp-vsnip', requires = {
+      'hrsh7th/vim-vsnip',
+      'rafamadriz/friendly-snippets',
+    }
+  }
+
+  use {
     'hrsh7th/nvim-cmp',
     requires = {
       'hrsh7th/cmp-nvim-lsp',

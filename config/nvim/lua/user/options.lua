@@ -16,6 +16,7 @@ vim.o.termguicolors = true
 vim.o.undofile = true
 vim.o.spell = true
 vim.o.title = true
+vim.o.colorcolumn = 80
 vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.wildmode = 'longest:full,full'

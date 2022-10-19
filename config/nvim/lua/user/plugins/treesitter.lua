@@ -7,7 +7,8 @@ local parser_config = require('nvim-treesitter.parsers').get_parser_configs();
 -- }
 
 require('nvim-treesitter.configs').setup {
-  ensure_installed = 'maintained',
+  ensure_installed = 'all',
+  ignore_install = { "phpdoc" },
   indent = {
     enable = { 'solidity', 'go', 'html', 'blade' ,'css', 'javascript', 'typescript'},
   },
@@ -37,3 +38,11 @@ require('nvim-treesitter.configs').setup {
     enable = true,
   },
 }
+
+vim.api.nvim_exec([[
+  set foldexpr=nvim_treesitter#foldexpr()
+  set foldmethod=expr
+  set nofoldenable
+  set foldlevel=1
+  set foldnestmax=1
+]], true)

@@ -7,7 +7,6 @@ log/*
 *.log
 tmp/**/*
 .*.swp
-tags
 dump.rdb
 .env
 .powenv
