@@ -104,7 +104,7 @@ source $ZSH/oh-my-zsh.sh
 
 # Go ENV Variables
 export GOPRIVATE=github.com/purposeinplay/*
-export PATH=$PATH:$(go env GOPATH)/bin
+export PATH=$PATH:$(go env GOPATH)/bin:$HOME/.local/bin
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
