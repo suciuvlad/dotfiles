@@ -1,35 +1,32 @@
+-- Define the installation path for packer.nvim
 local fn = vim.fn
 local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+
+-- Check if packer.nvim is already installed
 if fn.empty(fn.glob(install_path)) > 0 then
+  -- Clone the packer.nvim repository from GitHub
   packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+  vim.cmd 'packadd packer.nvim'
 end
 
+-- Initialize and configure packer.nvim
 return require('packer').startup(function(use)
-  use { 'wbthomason/packer.nvim' } -- Let packer manage itself
+  -- Let packer manage itself
+  use { 'wbthomason/packer.nvim' }
+
+  -- Vim Tmux Navigator
   use { 'christoomey/vim-tmux-navigator' }
 
-  -- use {
-  --   'dracula/vim',
-  --   as = 'dracula',
-  --   config = function()
-  --     require('user.plugins.dracula')
-  --   end
-  -- }
-
+  -- Catppuccin theme
   use {
-    'marko-cerovac/material.nvim',
+    'catppuccin/nvim',
+    as = 'catppuccin',
     config = function()
-      require('user.plugins.material')
+      require('user.plugins.catppuccin')
     end
   }
 
-  use {
-    'lukas-reineke/indent-blankline.nvim',
-    config = function()
-      require('user.plugins.indent-blankline')
-    end
-  }
-
+  -- Nvim Tree file explorer
   use {
     'kyazdani42/nvim-tree.lua',
     requires = 'kyazdani42/nvim-web-devicons',
@@ -38,6 +35,7 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- Vim Test plugin
   use {
     'vim-test/vim-test',
     config = function()
@@ -45,6 +43,7 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- Floaterm plugin
   use {
     'voldikss/vim-floaterm',
     config = function()
@@ -52,6 +51,7 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- Gitsigns plugin for Git integration
   use {
     'lewis6991/gitsigns.nvim',
     requires = 'nvim-lua/plenary.nvim',
@@ -60,19 +60,27 @@ return require('packer').startup(function(use)
     end,
   }
 
+  -- Trouble plugin for diagnostics
   use {
-    "folke/trouble.nvim",
-    requires = "kyazdani42/nvim-web-devicons",
+    'folke/trouble.nvim',
+    requires = 'kyazdani42/nvim-web-devicons',
     config = function()
       require('user.plugins.trouble')
-      require("trouble").setup {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
-      }
+      require('trouble').setup {}
     end
   }
 
+  -- Mason and LSP configurations
+  use {
+    'williamboman/mason.nvim',
+    'williamboman/mason-lspconfig.nvim',
+    'neovim/nvim-lspconfig',
+    config = function()
+      require('user.plugins.lspconfig')
+    end
+  }
+
+  -- Telescope for fuzzy finding
   use {
     'nvim-telescope/telescope.nvim',
     requires = {
@@ -86,6 +94,7 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- Splitjoin plugin
   use {
     'AndrewRadev/splitjoin.vim',
     config = function()
@@ -93,6 +102,7 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- Nvim-autopairs plugin
   use {
     'windwp/nvim-autopairs',
     config = function()
@@ -100,14 +110,7 @@ return require('packer').startup(function(use)
     end
   }
 
-  -- use {
-  --   'akinsho/bufferline.nvim',
-  --   requires = 'kyazdani42/nvim-web-devicons',
-  --   config = function()
-  --     require('user.plugins.bufferline')
-  --   end
-  -- }
-
+  -- Neoscroll for smooth scrolling
   use {
     'karb94/neoscroll.nvim',
     config = function()
@@ -115,6 +118,7 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- Lualine statusline
   use {
     'nvim-lualine/lualine.nvim',
     requires = 'kyazdani42/nvim-web-devicons',
@@ -123,6 +127,7 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- Nvim-lint for linting
   use {
     'mfussenegger/nvim-lint',
     config = function()
@@ -130,18 +135,7 @@ return require('packer').startup(function(use)
     end
   }
 
-  use {
-    'neovim/nvim-lspconfig',
-    requires = {
-      'b0o/schemastore.nvim',
-      'folke/lsp-colors.nvim',
-      'weilbith/nvim-code-action-menu',
-    },
-    config = function ()
-      require('user.plugins.lspconfig')
-    end
-  }
-
+  -- Fidget plugin for LSP progress
   use {
     'j-hui/fidget.nvim',
     config = function()
@@ -149,12 +143,14 @@ return require('packer').startup(function(use)
     end,
   }
 
+  -- Vim Fugitive for Git
   use {
     'tpope/vim-fugitive',
     requires = 'tpope/vim-rhubarb',
     cmd = 'G',
   }
 
+  -- Vim Pasta plugin
   use {
     'sickill/vim-pasta',
     config = function()
@@ -162,13 +158,7 @@ return require('packer').startup(function(use)
     end
   }
 
-  use {
-    'hrsh7th/cmp-vsnip', requires = {
-      'hrsh7th/vim-vsnip',
-      'rafamadriz/friendly-snippets',
-    }
-  }
-
+  -- Nvim CMP for completion
   use {
     'hrsh7th/nvim-cmp',
     requires = {
@@ -186,6 +176,7 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- LuaSnip snippet engine
   use {
     'L3MON4D3/LuaSnip',
     config = function()
@@ -193,18 +184,19 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- Treesitter for syntax highlighting
   use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     requires = {
       'nvim-treesitter/playground',
       'nvim-treesitter/nvim-treesitter-textobjects',
-      'lewis6991/spellsitter.nvim',
       'JoosepAlviste/nvim-ts-context-commentstring',
     },
     config = function()
       require('user.plugins.treesitter')
-      require('spellsitter').setup()
+      require('ts_context_commentstring').setup {}
+      vim.g.skip_ts_context_commentstring_module = true
     end
   }
 

@@ -1,48 +1,37 @@
-local parser_config = require('nvim-treesitter.parsers').get_parser_configs();
--- parser_config.solidity = {
---   install_info = {
---     url = '~/Code/JoranHonig/tree-sitter-solidity/', -- local path or git repo
---     files = { 'src/parser.c' },
---   },
--- }
+-- Set up Treesitter parser configurations
+local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
 
+-- Treesitter configuration
 require('nvim-treesitter.configs').setup {
-  ensure_installed = 'all',
+  -- List of parsers to install
+  ensure_installed = { 'solidity', 'go', 'html', 'css', 'javascript', 'typescript' },
+  -- List of parsers to ignore during installation
   ignore_install = { "phpdoc" },
+  -- Enable indentation based on Treesitter for specified languages
   indent = {
-    enable = { 'solidity', 'go', 'html', 'blade' ,'css', 'javascript', 'typescript'},
+    enable = { 'solidity', 'go', 'html', 'css', 'javascript', 'typescript' },
   },
+  -- Enable syntax highlighting based on Treesitter
   highlight = {
     enable = true,
+    -- Disable highlighting for NvimTree
     disable = { 'NvimTree' },
+    -- Enable additional Vim regex-based highlighting
     additional_vim_regex_highlighting = true,
-  },
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true,
-      keymaps = {
-        ['ia'] = '@parameter.inner',
-        -- ['aa'] = {
-        --   php = "" '@parameter.outer',
-
-        --   python = "(function_definition) @function",
-        --   cpp = "(function_definition) @function",
-        --   c = "(function_definition) @function",
-        --   java = "(method_declaration) @function",
-        -- },
-      },
-    },
-  },
-  context_commentstring = {
-    enable = true,
   },
 }
 
+-- ts_context_commentstring configuration for context-aware comments
+require('ts_context_commentstring').setup {}
+
+-- Option to skip ts_context_commentstring module
+vim.g.skip_ts_context_commentstring_module = true
+
+-- Treesitter-based folding settings
 vim.api.nvim_exec([[
-  set foldexpr=nvim_treesitter#foldexpr()
-  set foldmethod=expr
-  set nofoldenable
-  set foldlevel=1
-  set foldnestmax=1
+  set foldexpr=nvim_treesitter#foldexpr()  " Use Treesitter for fold expressions
+  set foldmethod=expr  " Use expression folding method
+  set nofoldenable  " Do not enable folding by default
+  set foldlevel=1  " Set initial fold level
+  set foldnestmax=1  " Set maximum nesting level for folds
 ]], true)

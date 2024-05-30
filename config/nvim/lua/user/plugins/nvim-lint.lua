@@ -1,9 +1,5 @@
 require('lint').linters_by_ft = {
   go = {'golangcilint'}
-  -- typescript = {'eslint'},
-  -- javascript = {'eslint'},
-  -- lua = {'luacheck'},
-  -- markdown = {'markdownlint', 'proselint'},
 }
 
 vim.cmd([[
