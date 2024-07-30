@@ -10,9 +10,13 @@ return {
     }
   },
   {
+    'onsails/lspkind-nvim',
+  },
+  {
     "hrsh7th/nvim-cmp",
     config = function()
       local cmp = require'cmp'
+      local lspkind = require'lspkind'
       require("luasnip.loaders.from_vscode").lazy_load()
 
       cmp.setup({
@@ -37,6 +41,13 @@ return {
           ['<C-e>'] = cmp.mapping.abort(),
           ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
         }),
+        formatting = {
+          format = lspkind.cmp_format({
+            mode = 'symbol_text',
+            maxwidth = 70,
+            show_labelDetails = true
+          })
+        },
         sources = cmp.config.sources({
           { name = 'nvim_lsp' },
           -- { name = 'vsnip' }, -- For vsnip users.
