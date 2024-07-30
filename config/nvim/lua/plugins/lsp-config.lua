@@ -22,6 +22,43 @@ return {
       local buf_option = vim.api.nvim_buf_set_option
       local buf_keymap = require 'lib.utils'.buf_keymap
 
+      -- Define diagnostic signs
+      local signs = {
+        { name = "DiagnosticSignError", text = "" },
+        { name = "DiagnosticSignWarn", text = "" },
+        { name = "DiagnosticSignHint", text = "󰌶" },
+        { name = "DiagnosticSignInfo", text = "" }
+      }
+      for _, sign in ipairs(signs) do
+        vim.fn.sign_define(sign.name, { text = sign.text, texthl = sign.name, numhl = "" })
+      end
+
+      -- Configure diagnostics to use both virtual text and floating windows with LunarVim settings
+      vim.diagnostic.config({
+        virtual_text = {
+          spacing = 4,
+          prefix = '●',
+        },
+        signs = {
+          active = true,
+          values = signs,
+          linehl = {},
+          numhl = { "DiagnosticSignError", "DiagnosticSignWarn", "DiagnosticSignInfo", "DiagnosticSignHint" },
+          text = { " ", " ", " ", "󰌶 " }
+        },
+        underline = true,
+        update_in_insert = false,
+        float = {
+          focusable = true,
+          style = "minimal",
+          border = "rounded",
+          source = "always",
+          header = "",
+          prefix = "",
+        },
+        severity_sort = true,
+      })
+
       -- Function to run when language server attaches to buffer
       local on_attach = function(_, bufnr)
         -- Set omnifunc for LSP
@@ -45,7 +82,7 @@ return {
         vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
       end
 
-      -- -- Setup capabilities for nvim-cmp (completion plugin)
+      -- Setup capabilities for nvim-cmp (completion plugin)
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
       -- Configure servers via mason-lspconfig
@@ -54,7 +91,7 @@ return {
       })
       lspconfig.gopls.setup({
         on_attach = on_attach,
-        capabilities = capabilities, -- Uncomment this line if using nvim-cmp capabilities
+        capabilities = capabilities,
         flags = {
           debounce_text_changes = 150,
         },
