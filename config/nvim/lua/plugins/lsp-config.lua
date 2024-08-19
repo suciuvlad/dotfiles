@@ -9,7 +9,7 @@ return {
     'williamboman/mason-lspconfig.nvim',
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { 'solidity', 'gopls', 'html', 'cssls', 'lua_ls', 'tsserver', 'tailwindcss' }
+        ensure_installed = { 'solidity', 'gopls', 'html', 'cssls', 'lua_ls', 'tsserver', 'tailwindcss', 'graphql' }
       })
     end
   },
