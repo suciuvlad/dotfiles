@@ -5,7 +5,7 @@ vim.g.maplocalleader = ','
 
 keymap('n', '<leader><leader>', '<c-^>')
 
-keymap('n', '<leader>k', ':nohlsearch<CR>')
+keymap('n', '<leader>/', ':nohlsearch<CR>')
 keymap('n', '<leader>Q', ':bufdo bdelete<CR>')
 
 -- Allow gf to open non-existent files
