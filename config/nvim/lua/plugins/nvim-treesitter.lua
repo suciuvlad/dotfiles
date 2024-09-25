@@ -18,7 +18,7 @@ return {
         -- List of parsers to ignore during installation
         ignore_install = { "phpdoc" },
         -- Enable indentation based on Treesitter for specified languages
-        indent = { enable = true, },
+        indent = { enable = true },
         -- Enable syntax highlighting based on Treesitter
         highlight = {
           enable = true,
@@ -43,8 +43,6 @@ return {
         set foldlevel=1  " Set initial fold level
         set foldnestmax=1  " Set maximum nesting level for folds
       ]], true)
-      require('ts_context_commentstring').setup {}
-      vim.g.skip_ts_context_commentstring_module = true
     end
   }
 }

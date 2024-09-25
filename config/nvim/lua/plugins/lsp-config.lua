@@ -9,7 +9,7 @@ return {
     'williamboman/mason-lspconfig.nvim',
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { 'solidity', 'gopls', 'html', 'cssls', 'lua_ls', 'tsserver', 'tailwindcss', 'graphql' }
+        ensure_installed = { 'solidity', 'gopls', 'html', 'cssls', 'lua_ls', 'tsserver', 'tailwindcss', 'graphql', 'eslint' }  -- Added 'eslint'
       })
     end
   },
@@ -18,7 +18,7 @@ return {
     config = function()
       local lspconfig = require('lspconfig')
 
-      -- Utilities for setting buffer options and keymaps
+      -- Utility for setting buffer options and keymaps
       local buf_option = vim.api.nvim_buf_set_option
       local buf_keymap = require 'lib.utils'.buf_keymap
 
@@ -33,19 +33,10 @@ return {
         vim.fn.sign_define(sign.name, { text = sign.text, texthl = sign.name, numhl = "" })
       end
 
-      -- Configure diagnostics to use both virtual text and floating windows with LunarVim settings
+      -- Configure diagnostics to use virtual text, signs, and floating windows
       vim.diagnostic.config({
-        virtual_text = {
-          spacing = 4,
-          prefix = '●',
-        },
-        signs = {
-          active = true,
-          values = signs,
-          linehl = {},
-          numhl = { "DiagnosticSignError", "DiagnosticSignWarn", "DiagnosticSignInfo", "DiagnosticSignHint" },
-          text = { " ", " ", " ", "󰌶 " }
-        },
+        virtual_text = false,  -- Disabling virtual text for clarity and performance
+        signs = true,
         underline = true,
         update_in_insert = false,
         float = {
@@ -79,7 +70,9 @@ return {
         buf_keymap(bufnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>')
 
         -- Create a command for formatting
-        vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
+        vim.api.nvim_buf_create_user_command(bufnr, 'Format', function()
+          vim.lsp.buf.format({ async = true })
+        end, { nargs = 0 })
       end
 
       -- Setup capabilities for nvim-cmp (completion plugin)
@@ -87,13 +80,15 @@ return {
 
       -- Configure servers via mason-lspconfig
       lspconfig.lua_ls.setup({
-        capabilities = capabilities
+        capabilities = capabilities,
+        on_attach = on_attach,
       })
+
       lspconfig.gopls.setup({
         on_attach = on_attach,
         capabilities = capabilities,
         flags = {
-          debounce_text_changes = 150,
+          debounce_text_changes = 150,  -- Debouncing text changes for better performance
         },
         settings = {
           gopls = {
@@ -108,6 +103,52 @@ return {
         init_options = {
           usePlaceholders = true,
         }
+      })
+
+      lspconfig.tsserver.setup({
+        on_attach = function(client, bufnr)
+          client.server_capabilities.documentFormattingProvider = false  -- Disable tsserver formatting if using null-ls or prettier
+          on_attach(client, bufnr)  -- Call the common on_attach function
+        end,
+        capabilities = capabilities,
+      })
+
+      lspconfig.eslint.setup({
+        on_attach = function(client, bufnr)
+          -- Enable ESLint code actions and diagnostics
+          client.server_capabilities.documentFormattingProvider = true  -- Use ESLint formatting if needed
+          buf_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')  -- Enable code actions for ESLint
+        end,
+        root_dir = function() return vim.loop.cwd() end,  -- Ensures it looks for ESLint in the current project
+        settings = {
+          workingDirectory = { mode = 'auto' }  -- Automatically use the working directory with ESLint
+        },
+        capabilities = capabilities,
+      })
+
+      lspconfig.html.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
+
+      lspconfig.cssls.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
+
+      lspconfig.tailwindcss.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
+
+      lspconfig.graphql.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
+
+      lspconfig.solidity.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
       })
     end
   },
