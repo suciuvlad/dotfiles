@@ -35,7 +35,7 @@ return {
 
       -- Configure diagnostics to use virtual text, signs, and floating windows
       vim.diagnostic.config({
-        virtual_text = false,  -- Disabling virtual text for clarity and performance
+        virtual_text = true,  -- Disabling virtual text for clarity and performance
         signs = true,
         underline = true,
         update_in_insert = false,
