@@ -9,7 +9,7 @@ return {
     'williamboman/mason-lspconfig.nvim',
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { 'solidity', 'gopls', 'html', 'cssls', 'lua_ls', 'tsserver', 'tailwindcss', 'graphql', 'eslint' }  -- Added 'eslint'
+        ensure_installed = { 'solidity', 'gopls', 'html', 'cssls', 'lua_ls', 'ts_ls', 'tailwindcss', 'graphql', 'eslint' }  -- Added 'eslint'
       })
     end
   },
@@ -102,12 +102,12 @@ return {
         },
         init_options = {
           usePlaceholders = true,
-        }
+        },
       })
 
-      lspconfig.tsserver.setup({
+      lspconfig.ts_ls.setup({
         on_attach = function(client, bufnr)
-          client.server_capabilities.documentFormattingProvider = false  -- Disable tsserver formatting if using null-ls or prettier
+          client.server_capabilities.documentFormattingProvider = false  -- Disable ts_ls formatting if using null-ls or prettier
           on_attach(client, bufnr)  -- Call the common on_attach function
         end,
         capabilities = capabilities,
