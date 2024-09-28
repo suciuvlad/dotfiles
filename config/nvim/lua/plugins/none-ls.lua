@@ -7,14 +7,28 @@ return {
     null_ls.setup({
       sources = {
         -- Go-specific tools
-        null_ls.builtins.diagnostics.golangci_lint,  -- Linting with golangci-lint
-        null_ls.builtins.formatting.gofumpt,         -- Formatting with gofumpt
-        null_ls.builtins.formatting.goimports,       -- Automatically format imports
+        null_ls.builtins.formatting.gofumpt.with({
+          filetypes = { "go" },
+        }),  -- Formatting with gofumpt
 
+        -- Go linting with golangci-lint
+        -- null_ls.builtins.diagnostics.golangci_lint.with({
+        --   filetypes = { "go" },
+        -- }),  -- Linting with golangci-lint
+        
+        null_ls.builtins.formatting.goimports.with({
+          filetypes = { "go" },
+        }),  -- Automatically format imports
+    
         -- Go code actions
-        null_ls.builtins.code_actions.gomodifytags,  -- Modify struct tags
-        null_ls.builtins.code_actions.impl,          -- Generate method stubs for implementing an interface
-
+        null_ls.builtins.code_actions.gomodifytags.with({
+          filetypes = { "go" },
+        }),  -- Modify struct tags
+    
+        null_ls.builtins.code_actions.impl.with({
+          filetypes = { "go" },  -- Only apply impl to Go files
+        }),  -- Generate method stubs for implementing an interface
+    
         -- JavaScript/TypeScript/React tools
         null_ls.builtins.formatting.prettier.with({
           filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "json" },
