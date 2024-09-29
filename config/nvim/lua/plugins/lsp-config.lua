@@ -9,7 +9,7 @@ return {
     'williamboman/mason-lspconfig.nvim',
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { 'solidity', 'gopls', 'html', 'cssls', 'lua_ls', 'ts_ls', 'tailwindcss', 'graphql', 'eslint' }  -- Added 'eslint'
+        ensure_installed = { 'solidity', 'gopls', 'html', 'cssls', 'lua_ls', 'ts_ls', 'tailwindcss', 'graphql', 'eslint', 'yamlls', 'jsonls' }
       })
     end
   },
@@ -149,6 +149,34 @@ return {
       lspconfig.solidity.setup({
         on_attach = on_attach,
         capabilities = capabilities,
+      })
+
+      lspconfig.yamlls.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+        settings = {
+          yaml = {
+            hover = true,        -- Enable hover
+            completion = true,   -- Enable autocompletion
+            validate = true,     -- Enable validation
+            schemaStore = {
+              enable = true,
+              url = "https://www.schemastore.org/api/json/catalog.json",
+            },
+            schemas = require("schemastore").yaml.schemas(),  -- Auto-load schemas
+          },
+        },
+      })
+
+      lspconfig.jsonls.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+        settings = {
+          json = {
+            schemas = require('schemastore').json.schemas(),  -- Automatically load schemas from SchemaStore
+            validate = { enable = true },  -- Enable validation
+          },
+        },
       })
     end
   },
