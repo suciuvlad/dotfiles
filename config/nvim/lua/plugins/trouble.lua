@@ -1,16 +1,18 @@
-local keymap = require 'lib.utils'.keymap
-
 return {
   {
     'folke/trouble.nvim',
     dependencies = { 'kyazdani42/nvim-web-devicons' },
+    opts = {},  -- Optional, can be customized
+    keys = {
+      { '<leader>xx', '<cmd>Trouble diagnostics toggle<CR>', desc = "Toggle Diagnostics (Trouble)" },
+      { '<leader>xw', '<cmd>Trouble workspace_diagnostics<CR>', desc = "Workspace Diagnostics (Trouble)" },
+      { '<leader>xd', '<cmd>Trouble document_diagnostics<CR>', desc = "Document Diagnostics (Trouble)" },
+      { '<leader>xl', '<cmd>Trouble loclist<CR>', desc = "Location List (Trouble)" },
+      { '<leader>xq', '<cmd>Trouble quickfix<CR>', desc = "Quickfix List (Trouble)" },
+      { '<leader>gR', '<cmd>Trouble lsp_references<CR>', desc = "LSP References (Trouble)" },
+    },
     config = function()
-      keymap('n', '<leader>xx', [[<cmd>Trouble<CR>]])
-      keymap('n', '<leader>xw', [[<cmd>Trouble workspace_diagnostics<CR>]])
-      keymap('n', '<leader>xd', [[<cmd>Trouble document_diagnostics<CR>]])
-      keymap('n', '<leader>xl', [[<cmd>Trouble loclist<CR>]])
-      keymap('n', '<leader>xq', [[<cmd>Trouble quickfix<CR>]])
-      keymap('n', '<leader>gR', [[<cmd>Trouble lsp_references<CR>]])
+      require('trouble').setup({})
     end
   }
 }
