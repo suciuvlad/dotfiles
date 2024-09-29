@@ -48,8 +48,9 @@ return {
       -- Keymaps for Telescope commands
       keymap('n', '<leader>f', [[<cmd>Telescope find_files<CR>]])
       keymap('n', '<leader>F', [[<cmd>Telescope find_files { no_ignore = true, prompt_title = 'All Files' }<CR>]])
-      keymap('n', '<leader>b', [[<cmd>Telescope buffers<CR>]])
-      keymap('n', '<leader>r', [[<cmd>Telescope live_grep<CR>]])
+      keymap('n', '<leader>lb', [[<cmd>Telescope buffers<CR>]])
+      keymap('n', '<leader>lg', [[<cmd>Telescope live_grep<CR>]])
+      keymap('n', '<leader>ld', [[<cmd>Telescope diagnostics<CR>]])
       keymap('n', '<leader>h', [[<cmd>Telescope oldfiles<CR>]])
       keymap('n', '<leader>gd', [[<cmd>Telescope lsp_definitions<CR>]], { desc = '[G]oto [D]efinition with Telescope' })
     end
