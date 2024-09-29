@@ -36,3 +36,4 @@ vim.o.fillchars = 'eob: '
 vim.o.smartindent = true
 vim.o.autoindent = true
 vim.o.swapfile = false
+vim.opt.cursorline = true
