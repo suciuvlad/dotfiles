@@ -14,7 +14,7 @@ return {
       -- Treesitter configuration
       require('nvim-treesitter.configs').setup {
         -- List of parsers to install
-        ensure_installed = { 'solidity', 'go', 'html', 'css', 'lua', 'javascript', 'typescript' },
+        ensure_installed = { 'solidity', 'go', 'html', 'css', 'lua', 'javascript', 'typescript', 'tsx' },
         -- List of parsers to ignore during installation
         ignore_install = { "phpdoc" },
         -- Enable indentation based on Treesitter for specified languages
