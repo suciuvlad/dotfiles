@@ -5,6 +5,9 @@ return {
 
     -- Configure null-ls with Go, JS, TS, and React tools
     null_ls.setup({
+      debug = false,
+      update_in_insert = false,
+      debounce = 150,
       sources = {
         -- Go-specific tools
         null_ls.builtins.formatting.gofumpt.with({
@@ -50,11 +53,19 @@ return {
       end,
     })
 
-    -- Optional: format on save for supported filetypes (comment out if not needed)
+    -- Format on save with size limit for better performance
     vim.api.nvim_create_autocmd("BufWritePre", {
       pattern = { "*.go", "*.js", "*.jsx", "*.ts", "*.tsx" },
       callback = function(args)
-        vim.lsp.buf.format({ bufnr = args.buf })
+        -- Skip formatting for large files (over 100KB)
+        if vim.fn.getfsize(vim.fn.expand('%')) > 100000 then
+          vim.notify("File too large, skipping format on save", vim.log.levels.WARN)
+          return
+        end
+        vim.lsp.buf.format({ 
+          bufnr = args.buf,
+          timeout_ms = 2000  -- Timeout after 2 seconds
+        })
       end,
     })
   end

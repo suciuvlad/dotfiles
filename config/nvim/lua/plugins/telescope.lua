@@ -16,6 +16,18 @@ return {
           layout_config = {
             prompt_position = 'top',
           },
+          preview = {
+            timeout = 200,
+            filesize_limit = 1,  -- MB
+            treesitter = {
+              enable = true,
+              max_lines = 250  -- Limit for treesitter parsing
+            }
+          },
+          file_previewer = {
+            truncate_line = true,
+            max_lines = 250  -- More aggressive preview limit
+          },
           sorting_strategy = 'ascending',
           mappings = {
             i = {
@@ -24,7 +36,22 @@ return {
               ['<C-Up>'] = actions.cycle_history_prev,
             },
           },
-          file_ignore_patterns = { '.git/', 'vendor' },
+          file_ignore_patterns = { 
+            '.git/',
+            'vendor',
+            'node_modules',
+            '%.lock',
+            '%.sqlite3',
+            '%.ipynb',
+            'yarn.lock',
+            'package-lock.json',
+            '%.jpg',
+            '%.jpeg',
+            '%.png',
+            '%.svg',
+            '%.otf',
+            '%.ttf',
+          },
         },
         pickers = {
           find_files = {

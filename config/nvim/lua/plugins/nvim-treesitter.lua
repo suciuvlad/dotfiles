@@ -24,8 +24,18 @@ return {
           enable = true,
           -- Disable highlighting for NvimTree
           disable = { 'NvimTree' },
-          -- Enable additional Vim regex-based highlighting
-          additional_vim_regex_highlighting = true,
+        -- Disable additional Vim regex-based highlighting for better performance
+        additional_vim_regex_highlighting = false,
+        },
+        -- Enable incremental selection for better memory usage
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = "gnn",
+            node_incremental = "grn",
+            scope_incremental = "grc",
+            node_decremental = "grm",
+          },
         },
       }
 
