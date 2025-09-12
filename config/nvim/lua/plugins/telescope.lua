@@ -86,7 +86,7 @@ return {
   -- FZF-native extension for faster sorting
   {
     'nvim-telescope/telescope-fzf-native.nvim',
-    run = 'make',
+    build = 'make',
     config = function()
       require('telescope').setup {
         extensions = {
