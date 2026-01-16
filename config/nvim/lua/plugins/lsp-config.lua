@@ -66,7 +66,7 @@ return {
         buf_keymap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
         buf_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
         buf_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
-        buf_keymap(bufnr, 'n', 'gr', ':Telescope lsp_references<CR>')
+        buf_keymap(bufnr, 'n', 'gr', '<cmd>FzfLua lsp_references<CR>')
         buf_keymap(bufnr, 'n', '<leader>d', '<cmd>lua vim.diagnostic.open_float()<CR>')
         buf_keymap(bufnr, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>')
         buf_keymap(bufnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>')
@@ -77,8 +77,8 @@ return {
         end, { nargs = 0 })
       end
 
-      -- Enhanced LSP capabilities for nvim-cmp (completion plugin)
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      -- Enhanced LSP capabilities for blink.cmp (completion plugin)
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       -- Common LSP settings for better performance
       local default_lsp_config = {
