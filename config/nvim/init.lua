@@ -1,3 +1,6 @@
+-- Enable faster Lua module loading (Neovim 0.9+)
+vim.loader.enable()
+
 -- Define the installation path for lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
