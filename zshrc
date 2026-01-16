@@ -217,3 +217,11 @@ esac
 
 export PATH="$HOME/.local/bin:$PATH"
 export FPATH="~/.config/eza/completions/zsh:$FPATH"
+export PATH="$HOME/.local/bin:$PATH"
+
+# bun completions
+[ -s "/Users/vladsuciu/.bun/_bun" ] && source "/Users/vladsuciu/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
