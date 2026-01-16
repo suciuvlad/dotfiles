@@ -5,12 +5,18 @@ return {
     'leoluz/nvim-dap-go',
     'nvim-neotest/nvim-nio',
   },
+  keys = {
+    { '<leader>dt', function() require('dap').toggle_breakpoint() end, desc = "Toggle Breakpoint" },
+    { '<leader>dc', function() require('dap').continue() end, desc = "Continue" },
+    { '<leader>di', function() require('dap').step_into() end, desc = "Step Into" },
+    { '<leader>do', function() require('dap').step_over() end, desc = "Step Over" },
+    { '<leader>dO', function() require('dap').step_out() end, desc = "Step Out" },
+    { '<leader>dr', function() require('dap').repl.open() end, desc = "Open REPL" },
+    { '<leader>du', function() require('dapui').toggle() end, desc = "Toggle DAP UI" },
+  },
   config = function()
     local dap = require('dap')
     local dapui = require('dapui')
-
-    vim.keymap.set('n', '<leader>dt', dap.toggle_breakpoint, {})
-    vim.keymap.set('n', '<leader>dc', dap.continue, {})
 
     require('dapui').setup()
     require('dap-go').setup()

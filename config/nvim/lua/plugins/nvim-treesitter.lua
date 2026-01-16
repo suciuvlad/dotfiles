@@ -2,10 +2,13 @@ return {
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    event = { "BufReadPost", "BufNewFile" },
+    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     dependencies = {
-      'nvim-treesitter/playground',
       'nvim-treesitter/nvim-treesitter-textobjects',
       'JoosepAlviste/nvim-ts-context-commentstring',
+      -- Playground only when needed
+      { 'nvim-treesitter/playground', cmd = "TSPlaygroundToggle" },
     },
     config = function()
       -- Set up Treesitter parser configurations
