@@ -1,0 +1,30 @@
+font-family = MesloLGS Nerd Font Mono
+font-size = 12
+font-thicken = true
+cursor-style = block
+cursor-click-to-move = true
+
+shell-integration-features = no-cursor, sudo, no-title
+
+theme = GitHub Dark
+
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2
+
+window-padding-balance = true
+window-save-state = always
+window-colorspace = display-p3
+macos-titlebar-style = tabs
+quit-after-last-window-closed = true
+
+adjust-cell-width = -5%
+adjust-cell-height = 5%
+
+clipboard-trim-trailing-spaces = true
+clipboard-paste-protection = true
+
+unfocused-split-opacity = 0.85
+
+notify-on-command-finish = unfocused
+
+selection-word-chars = @-./_~?&=%+#
