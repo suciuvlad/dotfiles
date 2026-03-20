@@ -53,8 +53,7 @@ return {
     input = { enabled = true },
     -- Scope detection for indent
     scope = { enabled = true },
-    -- Scroll animations
-    scroll = { enabled = true },
+    scroll = { enabled = false },
   },
   keys = {
     { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss Notifications" },
