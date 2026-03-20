@@ -20,9 +20,5 @@ return {
         group_empty = true,
       },
     },
-    config = function(_, opts)
-      require("nvim-tree").setup(opts)
-      vim.cmd [[highlight NvimTreeIndentMarker guifg=#30323E]]
-    end
   }
 }

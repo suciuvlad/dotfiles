@@ -9,7 +9,6 @@ return {
     { "<leader>lb", "<cmd>FzfLua buffers<cr>", desc = "Buffers" },
     { "<leader>h", "<cmd>FzfLua oldfiles<cr>", desc = "Recent Files" },
     { "<leader>ld", "<cmd>FzfLua diagnostics_workspace<cr>", desc = "Diagnostics" },
-    { "gr", "<cmd>FzfLua lsp_references<cr>", desc = "LSP References" },
     { "<leader>gd", "<cmd>FzfLua lsp_definitions<cr>", desc = "LSP Definitions" },
   },
   opts = {

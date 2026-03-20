@@ -41,12 +41,4 @@ return {
       },
     },
   },
-
-  -- mini.pairs - Auto pairs (alternative to nvim-autopairs, lighter)
-  -- Uncomment if you want to replace nvim-autopairs
-  -- {
-  --   "echasnovski/mini.pairs",
-  --   event = "VeryLazy",
-  --   opts = {},
-  -- },
 }

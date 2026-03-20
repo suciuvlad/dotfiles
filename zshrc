@@ -80,7 +80,9 @@ if command -v mise &> /dev/null; then
 fi
 
 # fzf
-source <(fzf --zsh)
+if command -v fzf &> /dev/null; then
+  source <(fzf --zsh)
+fi
 
 # Windsurf
 export PATH="/Users/vladsuciu/.codeium/windsurf/bin:$PATH"
@@ -93,7 +95,7 @@ case ":$PATH:" in
 esac
 
 export PATH="$HOME/.local/bin:$PATH"
-export FPATH="~/.config/eza/completions/zsh:$FPATH"
+export FPATH="$HOME/.config/eza/completions/zsh:$FPATH"
 
 # bun
 [ -s "/Users/vladsuciu/.bun/_bun" ] && source "/Users/vladsuciu/.bun/_bun"

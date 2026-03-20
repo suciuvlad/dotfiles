@@ -27,7 +27,7 @@ map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true })
 map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true })
 
 -- Paste replace visual selection without copying it
-map('v', 'p', '"_dP') -- TODO: vim-pasta is breaking this :(
+map('v', 'p', '"_dP')
 
 -- Easy insertion of a trailing ; or , from insert mode
 map('i', ';;', '<Esc>A;<Esc>')
