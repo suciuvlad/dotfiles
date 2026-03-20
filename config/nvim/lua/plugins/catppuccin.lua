@@ -2,7 +2,7 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
-    lazy = false,
+    lazy = true,
     priority = 1000,
     opts = {
       flavour = "mocha", -- latte, frappe, macchiato, mocha
@@ -14,7 +14,6 @@ return {
         gitsigns = true,
         nvimtree = true,
         treesitter = true,
-        fidget = true,
         indent_blankline = {
           enabled = true,
         },

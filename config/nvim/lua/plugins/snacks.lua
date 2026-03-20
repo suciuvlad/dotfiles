@@ -7,12 +7,11 @@ return {
     bigfile = {
       enabled = true,
       size = 1.5 * 1024 * 1024, -- 1.5MB
-      -- Disable these features for big files
       setup = function(ctx)
         vim.b.minianimate_disable = true
-        vim.schedule(function()
-          vim.bo[ctx.buf].syntax = ctx.ft
-        end)
+        vim.cmd("IndentBlanklineDisable")
+        vim.opt_local.foldmethod = "manual"
+        vim.opt_local.spell = false
       end,
     },
     -- Faster file opening

@@ -1,8 +1,2 @@
-return {
-  {
-    'j-hui/fidget.nvim',
-    config = function()
-      require('fidget').setup{}
-    end,
-  }
-}
+-- Removed: fidget is redundant with snacks.notifier
+return {}

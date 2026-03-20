@@ -2,7 +2,7 @@ return {
   {
     'nvim-lualine/lualine.nvim',
     event = "VeryLazy",
-    dependencies = { 'kyazdani42/nvim-web-devicons' },
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
       options = {
         theme = 'tokyonight',

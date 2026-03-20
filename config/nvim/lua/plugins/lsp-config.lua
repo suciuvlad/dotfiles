@@ -2,113 +2,103 @@ return {
   {
     'williamboman/mason.nvim',
     config = function()
-      -- Setup Mason (LSP/DAP/formatter installer)
       require("mason").setup()
     end
   },
   {
     'williamboman/mason-lspconfig.nvim',
+    dependencies = { 'williamboman/mason.nvim' },
     config = function()
-      -- Automatically configure installed LSP servers
       require("mason-lspconfig").setup({
         ensure_installed = { 'solidity', 'gopls', 'html', 'cssls', 'lua_ls', 'ts_ls', 'tailwindcss', 'graphql', 'eslint', 'yamlls', 'jsonls' }
       })
     end
   },
   {
+    -- Keep as dependency for mason-lspconfig compatibility
     'neovim/nvim-lspconfig',
     config = function()
-      local lspconfig = require('lspconfig')
-
-      -- Utility functions for buffer options and key mappings
-      local buf_option = vim.api.nvim_buf_set_option
-      local buf_keymap = require 'lib.utils'.buf_keymap
-
-      -- Define diagnostic signs for LSP errors and warnings
-      local signs = {
-        { name = "DiagnosticSignError", text = "" },
-        { name = "DiagnosticSignWarn", text = "" },
-        { name = "DiagnosticSignHint", text = "󰌶" },
-        { name = "DiagnosticSignInfo", text = "" }
-      }
-      for _, sign in ipairs(signs) do
-        vim.fn.sign_define(sign.name, { text = sign.text, texthl = sign.name, numhl = "" })
-      end
-
-      -- Configure diagnostics to display errors, warnings, etc.
+      -- Configure diagnostics
       vim.diagnostic.config({
-        virtual_text = true,  -- Show inline diagnostics
-        signs = true,         -- Show diagnostic signs in the gutter
-        underline = true,     -- Underline problematic code
-        update_in_insert = false, -- Don't update diagnostics in insert mode
+        virtual_text = true,
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = "",
+            [vim.diagnostic.severity.WARN] = "",
+            [vim.diagnostic.severity.HINT] = "󰌶",
+            [vim.diagnostic.severity.INFO] = "",
+          },
+        },
+        underline = true,
+        update_in_insert = false,
         float = {
           focusable = true,
           style = "minimal",
           border = "rounded",
-          source = "always",
+          source = true,
           header = "",
           prefix = "",
         },
-        severity_sort = true, -- Sort diagnostics by severity
+        severity_sort = true,
       })
 
-      -- Common function to run when an LSP attaches to a buffer
-      local on_attach = function(_, bufnr)
-        -- Set omnifunction for LSP completion
-        buf_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+      -- LSP keymaps via LspAttach autocmd
+      vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+          local bufnr = args.buf
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
 
-        -- Key mappings for LSP actions
-        buf_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>')
-        buf_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
-        buf_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>')
-        buf_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
-        buf_keymap(bufnr, 'n', '<leader>k', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
-        buf_keymap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
-        buf_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
-        buf_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
-        buf_keymap(bufnr, 'n', 'gr', '<cmd>FzfLua lsp_references<CR>')
-        buf_keymap(bufnr, 'n', '<leader>d', '<cmd>lua vim.diagnostic.open_float()<CR>')
-        buf_keymap(bufnr, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>')
-        buf_keymap(bufnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>')
+          vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-        -- Command for formatting the buffer
-        vim.api.nvim_buf_create_user_command(bufnr, 'Format', function()
-          vim.lsp.buf.format({ async = true })
-        end, { nargs = 0 })
-      end
+          local map = function(mode, lhs, rhs, desc)
+            vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
+          end
 
-      -- Enhanced LSP capabilities for blink.cmp (completion plugin)
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
+          map('n', 'gD', vim.lsp.buf.declaration, 'Go to declaration')
+          map('n', 'gd', vim.lsp.buf.definition, 'Go to definition')
+          map('n', 'K', vim.lsp.buf.hover, 'Hover')
+          map('n', 'gi', vim.lsp.buf.implementation, 'Go to implementation')
+          map('n', '<leader>k', vim.lsp.buf.signature_help, 'Signature help')
+          map('n', '<leader>D', vim.lsp.buf.type_definition, 'Type definition')
+          map('n', '<leader>rn', vim.lsp.buf.rename, 'Rename')
+          map('n', '<leader>ca', vim.lsp.buf.code_action, 'Code action')
+          map('n', 'gr', '<cmd>FzfLua lsp_references<CR>', 'References')
+          map('n', '<leader>d', vim.diagnostic.open_float, 'Open diagnostic float')
+          map('n', '[d', function() vim.diagnostic.jump({ count = -1 }) end, 'Previous diagnostic')
+          map('n', ']d', function() vim.diagnostic.jump({ count = 1 }) end, 'Next diagnostic')
 
-      -- Common LSP settings for better performance
-      local default_lsp_config = {
-        capabilities = capabilities,
-        on_attach = on_attach,
-        flags = {
-          debounce_text_changes = 150,
-        },
-      }
+          -- Disable ts_ls formatting (using Prettier via null-ls instead)
+          if client and client.name == 'ts_ls' then
+            client.server_capabilities.documentFormattingProvider = false
+          end
 
-      -- Configure individual LSP servers
-      lspconfig.lua_ls.setup(vim.tbl_deep_extend("force", default_lsp_config, {
+          -- Enable ESLint formatting
+          if client and client.name == 'eslint' then
+            client.server_capabilities.documentFormattingProvider = true
+          end
+
+          vim.api.nvim_buf_create_user_command(bufnr, 'Format', function()
+            vim.lsp.buf.format({ async = true })
+          end, { nargs = 0 })
+        end,
+      })
+
+      -- Default capabilities for all LSP servers (blink.cmp integration)
+      vim.lsp.config('*', {
+        capabilities = require('blink.cmp').get_lsp_capabilities(),
+      })
+
+      -- Server-specific configurations
+      vim.lsp.config('lua_ls', {
         settings = {
           Lua = {
-            diagnostics = {
-              globals = { 'vim' }
-            },
-            workspace = {
-              checkThirdParty = false, -- Improves startup time
-            },
-          }
-        }
-      }))
-
-      lspconfig.gopls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        flags = {
-          debounce_text_changes = 150, -- Debounce changes for performance
+            diagnostics = { globals = { 'vim' } },
+            workspace = { checkThirdParty = false },
+          },
         },
+      })
+
+      vim.lsp.config('gopls', {
         settings = {
           gopls = {
             experimentalPostfixCompletions = true,
@@ -124,37 +114,14 @@ return {
         },
       })
 
-      -- TypeScript server (ts_ls)
-      lspconfig.ts_ls.setup({
-        on_attach = function(client, bufnr)
-          client.server_capabilities.documentFormattingProvider = false -- Disable ts_ls formatting if using Prettier or null-ls
-          on_attach(client, bufnr) -- Call the common on_attach function
-        end,
-        capabilities = capabilities,
-      })
-
-      lspconfig.eslint.setup({
-        on_attach = function(client, bufnr)
-          client.server_capabilities.documentFormattingProvider = true -- Enable ESLint for formatting
-          buf_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>') -- Code actions
-        end,
-        root_dir = require('lspconfig.util').root_pattern('.eslintrc', '.eslintrc.json', '.eslintrc.js'),
+      vim.lsp.config('eslint', {
+        root_markers = { '.eslintrc', '.eslintrc.json', '.eslintrc.js', 'eslint.config.js', 'eslint.config.mjs' },
         settings = {
           workingDirectory = { mode = 'auto' },
         },
-        capabilities = capabilities,
       })
 
-      -- Simple LSP servers with default performance config
-      local simple_servers = { 'html', 'cssls', 'tailwindcss', 'graphql', 'solidity' }
-      for _, server in ipairs(simple_servers) do
-        lspconfig[server].setup(default_lsp_config)
-      end
-
-      -- YAML server with explicit GitHub Actions schema
-      lspconfig.yamlls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
+      vim.lsp.config('yamlls', {
         settings = {
           yaml = {
             hover = true,
@@ -165,16 +132,13 @@ return {
               url = "https://www.schemastore.org/api/json/catalog.json",
             },
             schemas = {
-              ["https://json.schemastore.org/github-workflow"] = ".github/workflows/*", -- GitHub Actions schema
+              ["https://json.schemastore.org/github-workflow"] = ".github/workflows/*",
             },
           },
         },
       })
 
-      -- JSON server with GitHub Actions schema included
-      lspconfig.jsonls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
+      vim.lsp.config('jsonls', {
         settings = {
           json = {
             schemas = vim.list_extend(require('schemastore').json.schemas(), {
@@ -187,6 +151,13 @@ return {
             validate = { enable = true },
           },
         },
+      })
+
+      -- Enable all configured servers
+      vim.lsp.enable({
+        'lua_ls', 'gopls', 'ts_ls', 'eslint',
+        'html', 'cssls', 'tailwindcss', 'graphql', 'solidity',
+        'yamlls', 'jsonls',
       })
     end
   },

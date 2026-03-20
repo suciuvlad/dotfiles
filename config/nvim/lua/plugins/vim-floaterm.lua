@@ -1,12 +1,10 @@
-local keymap = require 'lib.utils'.keymap
-
 return {
   -- Floaterm plugin
   {
     'voldikss/vim-floaterm',
     config = function()
-      keymap('n', '<F1>', ':FloatermToggle scratch<CR>')
-      keymap('t', '<F1>', '<C-\\><C-n>:FloatermToggle scratch<CR>')
+      vim.keymap.set('n', '<F1>', ':FloatermToggle scratch<CR>', { silent = true })
+      vim.keymap.set('t', '<F1>', '<C-\\><C-n>:FloatermToggle scratch<CR>', { silent = true })
       
       vim.g.floaterm_gitcommit='floaterm'
       vim.g.floaterm_autoinsert=1

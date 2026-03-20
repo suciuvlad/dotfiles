@@ -1,5 +1,3 @@
-local keymap = require 'lib.utils'.keymap
-
 return {
   {
     'vim-test/vim-test',
@@ -7,11 +5,11 @@ return {
       'preservim/vimux'
     },
     config = function()
-      keymap('n', '<Leader>tn', ':TestNearest<CR>', { silent = false })
-      keymap('n', '<Leader>tf', ':TestFile<CR>', { silent = false })
-      keymap('n', '<Leader>ts', ':TestSuite<CR>', { silent = false })
-      keymap('n', '<Leader>tl', ':TestLast<CR>', { silent = false })
-      keymap('n', '<Leader>tv', ':TestVisit<CR>', { silent = false })
+      vim.keymap.set('n', '<Leader>tn', ':TestNearest<CR>')
+      vim.keymap.set('n', '<Leader>tf', ':TestFile<CR>')
+      vim.keymap.set('n', '<Leader>ts', ':TestSuite<CR>')
+      vim.keymap.set('n', '<Leader>tl', ':TestLast<CR>')
+      vim.keymap.set('n', '<Leader>tv', ':TestVisit<CR>')
 
       -- Define the FloatermStrategy
       vim.cmd([[
