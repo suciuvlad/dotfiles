@@ -14,7 +14,7 @@ return {
 
       -- Treesitter configuration
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'solidity', 'go', 'html', 'css', 'lua', 'javascript', 'typescript', 'tsx' },
+        ensure_installed = { 'solidity', 'go', 'html', 'css', 'lua', 'javascript', 'typescript', 'tsx', 'markdown', 'markdown_inline' },
         ignore_install = { "phpdoc" },
         indent = { enable = true },
         highlight = {

@@ -44,7 +44,13 @@ alias g='git'
 # Tools
 alias d='docker'
 alias r='rails'
+alias c='claude'
+alias cc='claude --enable-auto-mode'
+alias t='tmux attach || tmux new -s Work'
 n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
+
+# Tmux layout functions (tdl, tdlm, tsl)
+source "$HOME/dotfiles/tmux-functions.zsh"
 
 # Directories
 alias ..='cd ..'
@@ -57,7 +63,9 @@ alias lsa='ls -a'
 alias lt='eza --tree --level=2 --long --icons --git'
 alias lta='lt -a'
 
+# File system
 alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
+alias eff='$EDITOR "$(ff)"'
 alias cl='clear'
 
 # Google Cloud SDK
@@ -104,3 +112,4 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # opencode
 export PATH=/Users/vladsuciu/.opencode/bin:$PATH
+alias lzd='lazydocker'

@@ -10,7 +10,7 @@ return {
     dependencies = { 'williamboman/mason.nvim' },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { 'solidity', 'gopls', 'html', 'cssls', 'lua_ls', 'ts_ls', 'tailwindcss', 'graphql', 'eslint', 'yamlls', 'jsonls' }
+        ensure_installed = { 'solidity', 'gopls', 'html', 'cssls', 'lua_ls', 'ts_ls', 'tailwindcss', 'graphql', 'eslint', 'yamlls', 'jsonls', 'marksman' }
       })
     end
   },
@@ -157,7 +157,7 @@ return {
       vim.lsp.enable({
         'lua_ls', 'gopls', 'ts_ls', 'eslint',
         'html', 'cssls', 'tailwindcss', 'graphql', 'solidity',
-        'yamlls', 'jsonls',
+        'yamlls', 'jsonls', 'marksman',
       })
     end
   },

@@ -14,7 +14,7 @@ return {
 
         -- JS/TS
         null_ls.builtins.formatting.prettier.with({
-          filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "json" },
+          filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "json", "markdown" },
           extra_args = { "--cache" },
         }),
       },
