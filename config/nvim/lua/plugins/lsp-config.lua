@@ -67,6 +67,13 @@ return {
           map('n', '[d', function() vim.diagnostic.jump({ count = -1 }) end, 'Previous diagnostic')
           map('n', ']d', function() vim.diagnostic.jump({ count = 1 }) end, 'Next diagnostic')
 
+          if client and client:supports_method('textDocument/inlayHint') then
+            vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+            map('n', '<leader>uh', function()
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+            end, 'Toggle inlay hints')
+          end
+
           -- Disable ts_ls formatting (using Prettier via null-ls instead)
           if client and client.name == 'ts_ls' then
             client.server_capabilities.documentFormattingProvider = false

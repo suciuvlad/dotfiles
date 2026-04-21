@@ -106,7 +106,6 @@ symbol = " "
 
 [nodejs]
 symbol = " "
-detect_extensions = []
 
 [ocaml]
 symbol = " "
