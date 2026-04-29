@@ -19,8 +19,10 @@ brew "starship"
 brew "stow"
 brew "tmux"
 brew "tmuxinator"
+brew "tldr"
 brew "tree"
 brew "yarn"
+brew "zoxide"
 
 # CLI — TUI / system
 brew "btop"

@@ -98,5 +98,8 @@ command -v mise &>/dev/null && eval "$(mise activate zsh)"
 # fzf
 command -v fzf &>/dev/null && source <(fzf --zsh)
 
+# zoxide (smarter cd: 'z <pat>' jumps to a frecent dir, 'zi' picks via fzf)
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
+
 ## ── Per-machine overrides (untracked) ───────────────────────────
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
