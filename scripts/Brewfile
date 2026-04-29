@@ -61,6 +61,18 @@ brew "nmap"
 brew "nuclei"
 brew "testssl"
 
+# Cloud / data
+brew "ansible"
+brew "awscli"
+brew "supabase/tap/supabase"
+
+# Media
+brew "ffmpeg"
+brew "poppler"
+
+# Alt terminal multiplexer
+brew "zellij"
+
 # Casks — productivity
 cask "1password"
 cask "alfred"
