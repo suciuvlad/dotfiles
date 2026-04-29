@@ -101,5 +101,11 @@ command -v fzf &>/dev/null && source <(fzf --zsh)
 # zoxide (smarter cd: 'z <pat>' jumps to a frecent dir, 'zi' picks via fzf)
 command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
 
+# direnv (per-project envs via .envrc; pairs with mise)
+command -v direnv &>/dev/null && eval "$(direnv hook zsh)"
+
+# atuin (history search; --disable-up-arrow keeps history-substring-search bindings)
+command -v atuin &>/dev/null && eval "$(atuin init zsh --disable-up-arrow)"
+
 ## ── Per-machine overrides (untracked) ───────────────────────────
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"

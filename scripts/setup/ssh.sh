@@ -27,6 +27,14 @@ fi
 
 ssh-add --apple-use-keychain "$KEY" 2>/dev/null || true
 
+# Allowed signers file for git ssh commit-signing verification
+ALLOWED="$HOME/.ssh/allowed_signers"
+PUBKEY_LINE="$EMAIL namespaces=\"git\" $(cat "$KEY.pub")"
+if [ ! -f "$ALLOWED" ] || ! grep -qF "$(cat "$KEY.pub")" "$ALLOWED"; then
+  echo "$PUBKEY_LINE" >> "$ALLOWED"
+  chmod 600 "$ALLOWED"
+fi
+
 echo ""
 echo "Public key (paste into https://github.com/settings/keys):"
 echo ""

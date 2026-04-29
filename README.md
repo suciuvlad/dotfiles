@@ -9,7 +9,7 @@ Each top-level directory is a Stow package whose contents mirror `$HOME`.
 | `claude`   | `~/.claude/CLAUDE.md` (Claude Code behavior)            |
 | `ghostty`  | `~/.config/ghostty/config`                              |
 | `git`      | `~/.gitconfig`, `~/.gitignore`, `~/.gitmessage`         |
-| `mise`     | `~/.tool-versions` (global node/runtime versions)       |
+| `mise`     | `~/.tool-versions` (global node/go/runtime versions)    |
 | `nvim`     | `~/.config/nvim/` (init, options, keymaps, plugins)     |
 | `scripts`  | `~/.bin/macoss`, `~/.bin/tmuxinator.zsh`                |
 | `shell`    | `~/.agignore`, `~/.eslintrc`, `~/.xterm-256color.ti`    |
@@ -39,16 +39,21 @@ After cloning, run:
 
 Each step is idempotent and can be re-run on its own:
 
-| Step                        | Re-run with             |
-|-----------------------------|-------------------------|
-| Homebrew + `Brewfile`       | `~/.bin/macoss brew`    |
-| node@lts via mise           | `~/.bin/macoss node`    |
-| SSH key (ed25519)           | `~/.bin/macoss ssh`     |
-| macOS `defaults` settings   | `~/.bin/macoss defaults`|
-| iTerm2 shell integration    | `~/.bin/macoss iterm`   |
+| Step                              | Re-run with             |
+|-----------------------------------|-------------------------|
+| Homebrew + `Brewfile`             | `~/.bin/macoss brew`    |
+| Runtimes via mise (node, go, …)   | `~/.bin/macoss node`    |
+| SSH key + allowed_signers         | `~/.bin/macoss ssh`     |
+| macOS `defaults` settings         | `~/.bin/macoss defaults`|
+| iTerm2 shell integration          | `~/.bin/macoss iterm`   |
 
 The packages it installs live in `scripts/Brewfile`; edit there to add or
 remove apps.
+
+After `make ssh`, register the printed public key on GitHub **twice** —
+once as an **Authentication Key** (push/pull) and once as a **Signing
+Key** (so signed commits show "Verified"). Both at
+<https://github.com/settings/keys>.
 
 Maintenance
 -----------
@@ -86,5 +91,8 @@ cd ~/dotfiles && stow -R -t ~ */
 
 Inspiration
 -----------
-* [Thoughtbot dotfiles](https://github.com/thoughtbot/dotfiles)
+* [thoughtbot/dotfiles](https://github.com/thoughtbot/dotfiles)
 * [mathiasbynens/dotfiles](https://github.com/mathiasbynens/dotfiles)
+* [caarlos0/dotfiles](https://github.com/caarlos0/dotfiles)
+* [paulirish/dotfiles](https://github.com/paulirish/dotfiles)
+* [alrra/dotfiles](https://github.com/alrra/dotfiles)
