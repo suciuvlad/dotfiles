@@ -2,14 +2,34 @@
   name = Vlad Suciu
   email = suciu.vlad@gmail.com
 [alias]
-  co = checkout
-  ci = commit
+  # status / branch
+  s = status --short
   st = status --short
   br = branch
+  ba = branch -a
+  # commit
+  ci = commit
+  c = commit -m
+  ca = commit -a -m
+  cad = commit -a --amend
+  # checkout / reset
+  co = checkout
+  coall = checkout -- .
+  re = reset
+  # add
+  ap = add -p
+  # remote / push / pull
+  r = remote
+  p = push origin HEAD
+  pu = pull origin
+  # diff / log
+  d = diff
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  lg = log --oneline --decorate --all --graph
+  glog = log --graph --topo-order --pretty='%w(100,0,6)%C(yellow)%h%C(bold)%C(black)%d %C(cyan)%ar %C(green)%an%n%C(bold)%C(white)%s %N' --abbrev-commit
+  # plumbing
   type = cat-file -t
   dump = cat-file -p
-  lg = log --oneline --decorate --all --graph
 [core]
   excludesfile = ~/.gitignore
   editor = nvim
@@ -19,9 +39,11 @@
   template = ~/.gitmessage
 [push]
   default = simple
+[pull]
+  rebase = true
 [branch]
   autosetuprebase = always
+[init]
+  defaultBranch = main
 [url "git@github.com:"]
 	insteadOf = https://github.com/
-[init]
-	defaultBranch = main

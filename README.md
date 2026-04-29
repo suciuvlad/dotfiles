@@ -8,6 +8,7 @@ Each top-level directory is a Stow package whose contents mirror `$HOME`.
 |------------|---------------------------------------------------------|
 | `ghostty`  | `~/.config/ghostty/config`                              |
 | `git`      | `~/.gitconfig`, `~/.gitignore`, `~/.gitmessage`         |
+| `mise`     | `~/.tool-versions` (global node/runtime versions)       |
 | `nvim`     | `~/.config/nvim/` (init, options, keymaps, plugins)     |
 | `scripts`  | `~/.bin/macoss`, `~/.bin/tmuxinator.zsh`                |
 | `shell`    | `~/.agignore`, `~/.eslintrc`, `~/.xterm-256color.ti`    |
@@ -22,7 +23,7 @@ Setup
 brew install stow
 git clone git@github.com:suciuvlad/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-stow -t ~ ghostty git nvim scripts shell starship tmux zsh
+stow -t ~ ghostty git mise nvim scripts shell starship tmux zsh
 ```
 
 Fresh-Mac provisioning

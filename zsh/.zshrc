@@ -1,61 +1,64 @@
-# Path to oh-my-zsh
-export ZSH="$HOME/.oh-my-zsh"
-
-plugins=(
-	git
-	zsh-syntax-highlighting
-	zsh-completions
-	zsh-autosuggestions
-	zsh-history-substring-search
-)
-
-source $ZSH/oh-my-zsh.sh
-
-# Editor
+## ── Editor / dev env ────────────────────────────────────────────
 export EDITOR='nvim'
-
-# Go
 export GOPRIVATE=github.com/purposeinplay/*
 export GOPATH="${GOPATH:-$HOME/go}"
-export PATH=$PATH:$GOPATH/bin
+
+## ── PATH ────────────────────────────────────────────────────────
+export BUN_INSTALL="$HOME/.bun"
+export PNPM_HOME="$HOME/Library/pnpm"
+typeset -U path  # de-dupe
+path=(
+  "$HOME/.local/bin"
+  "$HOME/.codeium/windsurf/bin"
+  "$HOME/.opencode/bin"
+  "$BUN_INSTALL/bin"
+  "$PNPM_HOME"
+  "$GOPATH/bin"
+  "/opt/homebrew/opt/ruby/bin"
+  $path
+)
+
+export FPATH="$HOME/.config/eza/completions/zsh:$FPATH"
+
+## ── History ─────────────────────────────────────────────────────
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
+
+## ── Completion ──────────────────────────────────────────────────
+# zsh-completions must be on fpath BEFORE compinit
+[ -d /opt/homebrew/share/zsh-completions ] && \
+  fpath=(/opt/homebrew/share/zsh-completions $fpath)
+autoload -Uz compinit && compinit
+
+## ── Plugins (Homebrew) ──────────────────────────────────────────
+HBSHARE="/opt/homebrew/share"
+[ -f "$HBSHARE/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
+  source "$HBSHARE/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[ -f "$HBSHARE/zsh-history-substring-search/zsh-history-substring-search.zsh" ] && \
+  source "$HBSHARE/zsh-history-substring-search/zsh-history-substring-search.zsh"
+# syntax-highlighting MUST be sourced last
+[ -f "$HBSHARE/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
+  source "$HBSHARE/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+# Up/Down arrow → history-substring-search
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+## ── Aliases ─────────────────────────────────────────────────────
+# Git aliases live in ~/.gitconfig — invoke as `g <alias>` (e.g. `g st`).
+alias g='git'
 
 alias la=tree
 alias cat=bat
-
-# Git
-alias gc="git commit -m"
-alias gca="git commit -a -m"
-alias gcad='git commit -a --amend'
-alias gp="git push origin HEAD"
-alias gpu="git pull origin"
-alias gst="git status"
-alias glog="git log --graph --topo-order --pretty='%w(100,0,6)%C(yellow)%h%C(bold)%C(black)%d %C(cyan)%ar %C(green)%an%n%C(bold)%C(white)%s %N' --abbrev-commit"
-alias gdiff="git diff"
-alias gco="git checkout"
-alias gb='git branch'
-alias gba='git branch -a'
-alias gadd='git add'
-alias ga='git add -p'
-alias gcoall='git checkout -- .'
-alias gr='git remote'
-alias gre='git reset'
-alias g='git'
-
-# Tools
 alias d='docker'
 alias r='rails'
 alias c='claude'
 alias cc='claude --enable-auto-mode'
 alias t='tmux attach || tmux new -s Work'
-n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
-
-# Tmux layout functions (tdl, tdlm, tsl)
-source "$HOME/.tmux-functions.zsh"
-
-# Directories
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
+alias cl='clear'
+alias lzd='lazydocker'
 
 # Eza
 alias ls='eza -lh --group-directories-first --icons=auto'
@@ -63,53 +66,37 @@ alias lsa='ls -a'
 alias lt='eza --tree --level=2 --long --icons --git'
 alias lta='lt -a'
 
-# File system
+# Directories
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# fzf / file picking
 alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
 alias eff='$EDITOR "$(ff)"'
-alias cl='clear'
 
+## ── Functions ───────────────────────────────────────────────────
+n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
+
+# Tmux layout helpers (tdl, tdlm, tsl)
+[ -f "$HOME/.tmux-functions.zsh" ] && source "$HOME/.tmux-functions.zsh"
+
+## ── Tools ───────────────────────────────────────────────────────
 # Google Cloud SDK
-if [ -f '/Users/vladsuciu/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/vladsuciu/google-cloud-sdk/path.zsh.inc'; fi
-if [ -f '/Users/vladsuciu/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/vladsuciu/google-cloud-sdk/completion.zsh.inc'; fi
+[ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]       && source "$HOME/google-cloud-sdk/path.zsh.inc"
+[ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ] && source "$HOME/google-cloud-sdk/completion.zsh.inc"
 
-# Ruby (via mise — gem path resolved lazily)
-if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
-  export PATH=/opt/homebrew/opt/ruby/bin:$PATH
-fi
+# Bun completions
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
 # Starship prompt
-if command -v starship &> /dev/null; then
-  eval "$(starship init zsh)"
-fi
+command -v starship &>/dev/null && eval "$(starship init zsh)"
 
-# Mise (version manager for Node, Ruby, etc.)
-if command -v mise &> /dev/null; then
-  eval "$(mise activate zsh)"
-fi
+# Mise (version manager)
+command -v mise &>/dev/null && eval "$(mise activate zsh)"
 
 # fzf
-if command -v fzf &> /dev/null; then
-  source <(fzf --zsh)
-fi
+command -v fzf &>/dev/null && source <(fzf --zsh)
 
-# Windsurf
-export PATH="/Users/vladsuciu/.codeium/windsurf/bin:$PATH"
-
-# pnpm
-export PNPM_HOME="/Users/vladsuciu/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-
-export PATH="$HOME/.local/bin:$PATH"
-export FPATH="$HOME/.config/eza/completions/zsh:$FPATH"
-
-# bun
-[ -s "/Users/vladsuciu/.bun/_bun" ] && source "/Users/vladsuciu/.bun/_bun"
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# opencode
-export PATH=/Users/vladsuciu/.opencode/bin:$PATH
-alias lzd='lazydocker'
+## ── Per-machine overrides (untracked) ───────────────────────────
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
