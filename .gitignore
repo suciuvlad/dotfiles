@@ -1,3 +1,4 @@
 .DS_Store
 tmux-client-*.log
 .claude/
+scripts/Brewfile.lock.json
