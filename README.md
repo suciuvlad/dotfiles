@@ -33,7 +33,7 @@ Fresh-Mac provisioning
 After cloning, run:
 
 ```sh
-~/.bin/macoss        # everything (brew, zsh, node, ssh, macOS defaults, iterm)
+~/.bin/macoss        # everything (brew, node, ssh, macOS defaults, iterm)
 ~/.bin/macoss help   # list individual steps
 ```
 
@@ -42,7 +42,6 @@ Each step is idempotent and can be re-run on its own:
 | Step                        | Re-run with             |
 |-----------------------------|-------------------------|
 | Homebrew + `Brewfile`       | `~/.bin/macoss brew`    |
-| Oh My Zsh + plugins + p10k  | `~/.bin/macoss zsh`     |
 | node@lts via mise           | `~/.bin/macoss node`    |
 | SSH key (ed25519)           | `~/.bin/macoss ssh`     |
 | macOS `defaults` settings   | `~/.bin/macoss defaults`|
