@@ -24,7 +24,7 @@ Setup
 brew install stow
 git clone git@github.com:suciuvlad/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-stow -t ~ claude ghostty git mise nvim scripts shell starship tmux zsh
+stow -t ~ */
 ```
 
 Fresh-Mac provisioning
@@ -67,7 +67,7 @@ Common operations
 
 | Action                          | Command (run from `~/dotfiles`)         |
 |---------------------------------|-----------------------------------------|
-| Install everything              | `stow -t ~ <pkg1> <pkg2> ...`           |
+| Install everything              | `stow -t ~ */`                          |
 | Install one package             | `stow -t ~ nvim`                        |
 | Refresh after adding/removing   | `stow -R -t ~ nvim`                     |
 | Refresh everything              | `stow -R -t ~ */`                       |
