@@ -30,7 +30,7 @@ setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
 # zsh-completions must be on fpath BEFORE compinit
 [ -d /opt/homebrew/share/zsh-completions ] && \
   fpath=(/opt/homebrew/share/zsh-completions $fpath)
-autoload -Uz compinit && compinit
+autoload -Uz compinit && compinit -i  # -i: silently skip insecure dirs instead of prompting
 
 ## ── Plugins (Homebrew) ──────────────────────────────────────────
 HBSHARE="/opt/homebrew/share"
