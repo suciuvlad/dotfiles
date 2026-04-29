@@ -6,6 +6,7 @@ Each top-level directory is a Stow package whose contents mirror `$HOME`.
 
 | Package    | What it provides                                        |
 |------------|---------------------------------------------------------|
+| `claude`   | `~/.claude/CLAUDE.md` (Claude Code behavior)            |
 | `ghostty`  | `~/.config/ghostty/config`                              |
 | `git`      | `~/.gitconfig`, `~/.gitignore`, `~/.gitmessage`         |
 | `mise`     | `~/.tool-versions` (global node/runtime versions)       |
@@ -23,7 +24,7 @@ Setup
 brew install stow
 git clone git@github.com:suciuvlad/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-stow -t ~ ghostty git mise nvim scripts shell starship tmux zsh
+stow -t ~ claude ghostty git mise nvim scripts shell starship tmux zsh
 ```
 
 Fresh-Mac provisioning
@@ -49,6 +50,18 @@ Each step is idempotent and can be re-run on its own:
 
 The packages it installs live in `scripts/Brewfile`; edit there to add or
 remove apps.
+
+Maintenance
+-----------
+
+| Command                | What it does                                              |
+|------------------------|-----------------------------------------------------------|
+| `~/.bin/macoss check`  | audit symlinks, required CLI tools, Brewfile, git identity, stow packages |
+| `~/.bin/macoss lint`   | shellcheck `scripts/setup/*.sh` and `macoss` itself       |
+
+Run `make check` after pulling, after `stow -R`, or whenever something
+feels off — it'll surface dangling symlinks and missing dependencies in
+one shot.
 
 Common operations
 -----------------
