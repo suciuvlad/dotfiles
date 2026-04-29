@@ -50,7 +50,7 @@ alias t='tmux attach || tmux new -s Work'
 n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
 
 # Tmux layout functions (tdl, tdlm, tsl)
-source "$HOME/dotfiles/tmux-functions.zsh"
+source "$HOME/.tmux-functions.zsh"
 
 # Directories
 alias ..='cd ..'

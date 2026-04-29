@@ -1,47 +1,40 @@
 dotfiles
 ========
 
-Clone repo
--------
+Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
-Clone onto your laptop:
+Setup
+-----
 
-    git clone git://github.com/suciuvlad/dotfiles.git ~/dotfiles
+Clone the repo:
 
+    git clone git@github.com:suciuvlad/dotfiles.git ~/dotfiles
 
-### Install software & configure some sensible macOS defaults
-When setting up a new Mac, you may want to set some sensible macOS defaults:
+Install Stow:
 
-```bash
-./bin/macos
-```
- 
-### Install Thoughtbot's rcm
-Install [rcm](https://github.com/thoughtbot/rcm):
+    brew install stow
 
-    brew tap thoughtbot/formulae
-    brew install rcm
+Optionally apply macOS defaults:
 
-Symlink the dotfiles:
+    ./scripts/.bin/macoss
 
-    env RCRC=$HOME/dotfiles/rcrc rcup
- 
-After the initial installation, you can run `rcup` without the one-time variable
-`RCRC` being set (`rcup` will symlink the repo's `rcrc` to `~/.rcrc` for future
-runs of `rcup`).
+Symlink everything from `~/dotfiles` into `$HOME`:
 
-Update
-------
+    cd ~/dotfiles
+    stow -t ~ ghostty git nvim scripts shell starship tmux zsh
 
-From time to time you should pull down any updates to these dotfiles, and run
+Each top-level directory is a Stow package whose contents mirror `$HOME`. To
+install just one package: `stow -t ~ nvim`. To remove: `stow -D -t ~ nvim`.
+After adding or removing files inside a package, run `stow -R -t ~ <package>`
+(restow) to sync the symlinks.
 
-    rcup
+Updating
+--------
 
-to link any new files and install new vim plugins. **Note** You _must_ run
-`rcup` after pulling to ensure that all files in plugins are properly installed,
-but you can safely run `rcup` multiple times so update early and update often!
+    git pull
+    cd ~/dotfiles && stow -R -t ~ ghostty git nvim scripts shell starship tmux zsh
 
 Inspiration
------------------
+-----------
 * [Thoughtbot](https://github.com/thoughtbot/dotfiles)
 * [mathiasbynens](https://github.com/mathiasbynens/dotfiles)
