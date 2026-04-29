@@ -79,6 +79,7 @@ cask "alfred"
 cask "bartender"
 cask "betterzip"
 cask "fantastical"
+cask "obsidian"
 cask "tresorit"
 
 # Casks — browsers
