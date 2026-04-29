@@ -115,9 +115,9 @@ cask "vlc"
 cask "aerospace"
 cask "expressvpn"
 cask "folx"
-cask "google-cloud-sdk"
+cask "gcloud-cli"
 cask "microsoft-office"
-cask "sip"
+cask "sip-app"
 
 # Mac App Store
 mas "Magnet", id: 441258766
