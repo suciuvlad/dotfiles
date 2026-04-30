@@ -47,26 +47,25 @@ bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
 ## ── Aliases ─────────────────────────────────────────────────────
-# Git aliases live in ~/.gitconfig — invoke as `g <alias>` (e.g. `g st`)
-# or via the OMZ-style shorthands below.
+# `g <alias>` uses the gitconfig aliases (e.g. `g st`).
+# OMZ-style shell shorthands below mirror the originals (verbose `git status`, etc.).
 alias g='git'
-alias gst='git st'
-alias gs='git s'
-alias gb='git br'
-alias gba='git ba'
-alias gc='git c'
-alias gca='git ca'
-alias gcad='git cad'
-alias gco='git co'
-alias gcoall='git coall'
-alias gre='git re'
+alias gst='git status'
+alias gco='git checkout'
+alias gp='git push origin HEAD'
+alias gpu='git pull origin'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gc='git commit -m'
+alias gca='git commit -a -m'
+alias gcad='git commit -a --amend'
+alias gcoall='git checkout -- .'
 alias gadd='git add'
-alias ga='git ap'
-alias gp='git p'
-alias gpu='git pu'
-alias gdiff='git d'
-alias glog='git glog'
-alias gr='git r'
+alias ga='git add -p'
+alias gdiff='git diff'
+alias gr='git remote'
+alias gre='git reset'
+alias glog="git log --graph --topo-order --pretty='%w(100,0,6)%C(yellow)%h%C(bold)%C(black)%d %C(cyan)%ar %C(green)%an%n%C(bold)%C(white)%s %N' --abbrev-commit"
 
 alias la=tree
 alias cat=bat
