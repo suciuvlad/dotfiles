@@ -47,8 +47,26 @@ bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
 ## ── Aliases ─────────────────────────────────────────────────────
-# Git aliases live in ~/.gitconfig — invoke as `g <alias>` (e.g. `g st`).
+# Git aliases live in ~/.gitconfig — invoke as `g <alias>` (e.g. `g st`)
+# or via the OMZ-style shorthands below.
 alias g='git'
+alias gst='git st'
+alias gs='git s'
+alias gb='git br'
+alias gba='git ba'
+alias gc='git c'
+alias gca='git ca'
+alias gcad='git cad'
+alias gco='git co'
+alias gcoall='git coall'
+alias gre='git re'
+alias gadd='git add'
+alias ga='git ap'
+alias gp='git p'
+alias gpu='git pu'
+alias gdiff='git d'
+alias glog='git glog'
+alias gr='git r'
 
 alias la=tree
 alias cat=bat
