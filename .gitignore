@@ -2,4 +2,7 @@
 tmux-client-*.log
 .claude/
 !claude/.claude/
+!/.claude/
+/.claude/*
+!/.claude/skills/
 scripts/Brewfile.lock.json

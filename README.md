@@ -4,6 +4,9 @@ dotfiles
 Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 Each top-level directory is a Stow package whose contents mirror `$HOME`.
 
+**Manual:** see [`docs/`](docs/README.md) for hotkeys, shell tools, TUIs,
+dev stacks, apps, and setup walkthroughs.
+
 | Package    | What it provides                                        |
 |------------|---------------------------------------------------------|
 | `claude`   | `~/.claude/CLAUDE.md` (Claude Code behavior)            |
