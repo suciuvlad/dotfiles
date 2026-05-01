@@ -9,6 +9,9 @@ set -uo pipefail
 FILE="${1:-}"
 [ -n "$FILE" ] && [ -r "$FILE" ] || { echo "brew-optional: cannot read '$FILE'" >&2; exit 1; }
 
+# shellcheck source=_lib.sh
+. "$(dirname "$0")/_lib.sh"
+
 LOG="${DOTFILES_BREW_LOG:-/tmp/dotfiles-brew-optional.log}"
 : > "$LOG"
 
@@ -72,6 +75,9 @@ if [ "${#failed[@]}" -gt 0 ]; then
   done
   echo ""
   echo "Full output captured at: $LOG"
+  emit_result "brew-optional" "warn" "$ok/$total (${#failed[@]} failed)" "${failed[@]}"
+else
+  emit_result "brew-optional" "ok" "$ok/$total installed"
 fi
 
 exit 0

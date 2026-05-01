@@ -5,30 +5,36 @@ SETUP := $(SCRIPTS_DIR)/setup
 PACKAGES := claude ghostty git mise nvim scripts shell starship tmux zsh
 REQUIRED_CMDS := stow brew git nvim mise tmux fzf starship
 
-.PHONY: all help brew runtimes ssh defaults iterm check lint
+.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm check lint
 
-all: brew runtimes ssh defaults iterm
-	@echo ""
-	@echo "All steps complete. Re-run a single step any time, e.g.:"
-	@echo "    make defaults"
+all: install
+
+install:
+	@bash $(SCRIPTS_DIR)/install.sh
 
 help:
 	@echo "Provisioning:"
-	@echo "  make all        run brew → runtimes → ssh → defaults → iterm"
-	@echo "  make brew       install Homebrew if needed, run 'brew bundle' on the strict"
-	@echo "                  Brewfile, then prompt (gum) to pick from Brewfile.optional"
+	@echo "  make all        alias for 'make install'"
+	@echo "  make install    pretty orchestrator with spinners + summary; falls back to"
+	@echo "                  the plain make chain when VERBOSE=1 or stdout isn't a TTY"
+	@echo "  make brew       full brew step: strict bundle + Brewfile.optional picker"
 	@echo "  make runtimes   run 'mise install' for ~/.tool-versions (node, go, python, ruby)"
 	@echo "  make ssh        generate ed25519 SSH key + ssh config (idempotent)"
 	@echo "  make defaults   apply all macOS 'defaults write' settings"
 	@echo "  make iterm      install iTerm2 shell integration"
 	@echo ""
 	@echo "Maintenance:"
-	@echo "  make check      audit symlinks, required commands, brew packages, git identity"
-	@echo "  make lint       shellcheck setup scripts and macoss"
+	@echo "  make check      audit symlinks, required commands, brew packages, git identity,"
+	@echo "                  cask trust, CVE scan"
+	@echo "  make lint       shellcheck setup scripts, install.sh, bootstrap.sh, macoss"
 
-brew:
+brew: brew-strict brew-pick-optional
+
+brew-strict:
 	@command -v brew >/dev/null 2>&1 || /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	brew bundle --file=$(SCRIPTS_DIR)/Brewfile
+
+brew-pick-optional:
 	@bash $(SETUP)/pick-optional.sh
 
 runtimes:
@@ -97,5 +103,5 @@ check:
 
 lint:
 	@command -v shellcheck >/dev/null 2>&1 || { echo "shellcheck not found — run 'make brew'" >&2; exit 1; }
-	shellcheck $(SETUP)/*.sh $(SCRIPTS_DIR)/.bin/macoss $(DOTFILES_DIR)/bootstrap.sh
+	shellcheck -x --source-path=SCRIPTDIR $(SETUP)/*.sh $(SCRIPTS_DIR)/install.sh $(SCRIPTS_DIR)/.bin/macoss $(DOTFILES_DIR)/bootstrap.sh
 	@echo "  ✓ shellcheck clean"

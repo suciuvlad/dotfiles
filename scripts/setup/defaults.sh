@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# shellcheck source=_lib.sh
+. "$(dirname "$0")/_lib.sh"
+
 # Close any open System Preferences panes so they don't override settings.
 osascript -e 'tell application "System Preferences" to quit' 2>/dev/null || true
 
@@ -66,3 +69,4 @@ defaults write com.apple.commerce       AutoUpdate                 -bool true
 defaults write com.apple.commerce       AutoUpdateRestartRequired  -bool true
 
 echo "Defaults applied. Some changes require a Finder/Dock restart or logout."
+emit_result "defaults" "ok" "applied"

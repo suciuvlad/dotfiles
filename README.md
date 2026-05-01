@@ -49,8 +49,16 @@ make -C scripts all
 Per-step provisioning
 ---------------------
 
-`make all` runs `brew → runtimes → ssh → defaults → iterm`. Each step is
-idempotent and re-runnable:
+`make all` runs `brew → runtimes → ssh → defaults → iterm` through a
+spinner-driven orchestrator (`scripts/install.sh`) that ends with a styled
+summary box: per-step status icons, durations, and any per-package
+failures (e.g., region-locked casks). Output is captured to
+`/tmp/dotfiles-install.log` for after-the-fact debugging.
+
+Bypass the orchestrator for raw output: `VERBOSE=1 make all`. CI / `curl |
+bash` flows fall through automatically when stdout isn't a TTY.
+
+Each step is idempotent and re-runnable:
 
 | Step                                       | Re-run with               |
 |--------------------------------------------|---------------------------|
