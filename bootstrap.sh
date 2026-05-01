@@ -6,7 +6,8 @@
 # Idempotent — safe to re-run.
 set -euo pipefail
 
-REPO="${DOTFILES_REPO:-https://github.com/suciuvlad/dotfiles.git}"
+REPO_HTTPS="${DOTFILES_REPO_HTTPS:-https://github.com/suciuvlad/dotfiles.git}"
+REPO_SSH="${DOTFILES_REPO_SSH:-git@github.com:suciuvlad/dotfiles.git}"
 DEST="${DOTFILES_DIR:-$HOME/dotfiles}"
 
 say() { printf "\n── %s ──\n" "$*"; }
@@ -36,7 +37,19 @@ brew install git stow
 
 say "Clone dotfiles → $DEST"
 if [ ! -d "$DEST/.git" ]; then
-  git clone "$REPO" "$DEST"
+  # Prefer SSH if GitHub auth already works on this Mac. BatchMode=yes
+  # disables passphrase/password prompts so a missing/locked key fails
+  # fast and falls through to HTTPS. accept-new silently adds github.com
+  # to known_hosts on first run.
+  if ssh -o BatchMode=yes -o ConnectTimeout=5 \
+         -o StrictHostKeyChecking=accept-new \
+         -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+    echo "→ GitHub SSH already works — cloning via SSH"
+    git clone "$REPO_SSH" "$DEST"
+  else
+    echo "→ Cloning via HTTPS (make ssh will switch to SSH after key registration)"
+    git clone "$REPO_HTTPS" "$DEST"
+  fi
 else
   echo "✓ already cloned"
 fi
