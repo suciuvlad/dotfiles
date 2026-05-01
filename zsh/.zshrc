@@ -14,7 +14,6 @@ path=(
   "$BUN_INSTALL/bin"
   "$PNPM_HOME"
   "$GOPATH/bin"
-  "/opt/homebrew/opt/ruby/bin"
   $path
 )
 

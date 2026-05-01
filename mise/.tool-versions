@@ -1,2 +1,4 @@
 node lts
 go latest
+python 3.13
+ruby latest

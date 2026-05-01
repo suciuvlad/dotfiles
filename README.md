@@ -9,7 +9,7 @@ Each top-level directory is a Stow package whose contents mirror `$HOME`.
 | `claude`   | `~/.claude/CLAUDE.md` (Claude Code behavior)            |
 | `ghostty`  | `~/.config/ghostty/config`                              |
 | `git`      | `~/.gitconfig`, `~/.gitignore`, `~/.gitmessage`         |
-| `mise`     | `~/.tool-versions` (global node/go/runtime versions)    |
+| `mise`     | `~/.tool-versions` (global node/go/python/ruby versions)|
 | `nvim`     | `~/.config/nvim/` (init, options, keymaps, plugins)     |
 | `scripts`  | `~/.bin/macoss`, `~/.bin/tmuxinator.zsh`                |
 | `shell`    | `~/.agignore`, `~/.eslintrc`, `~/.xterm-256color.ti`    |
@@ -20,35 +20,58 @@ Each top-level directory is a Stow package whose contents mirror `$HOME`.
 Setup
 -----
 
+### Fresh Mac (one command)
+
 ```sh
-brew install stow
+curl -fsSL https://raw.githubusercontent.com/suciuvlad/dotfiles/master/bootstrap.sh | bash
+```
+
+`bootstrap.sh` installs Xcode CLT → Homebrew → git/stow, clones this repo
+**via HTTPS** to `~/dotfiles`, stows everything, and runs `make all`. It is
+idempotent — safe to re-run.
+
+You'll be prompted to register the SSH key (printed by `make ssh`) on
+GitHub. Once registered, re-run `make ssh` and it will verify GitHub access
+and auto-switch the dotfiles remote from HTTPS to SSH.
+
+### Already have brew + git
+
+```sh
 git clone git@github.com:suciuvlad/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-stow -t ~ */
+stow -R -t ~ */
+make -C scripts all
 ```
 
-Fresh-Mac provisioning
-----------------------
+Per-step provisioning
+---------------------
 
-After cloning, run:
+`make all` runs `brew → runtimes → ssh → defaults → iterm`. Each step is
+idempotent and re-runnable:
 
-```sh
-~/.bin/macoss        # everything (brew, node, ssh, macOS defaults, iterm)
-~/.bin/macoss help   # list individual steps
-```
+| Step                                       | Re-run with               |
+|--------------------------------------------|---------------------------|
+| Homebrew + Brewfiles                       | `~/.bin/macoss brew`      |
+| Runtimes via mise (node, go, python, ruby) | `~/.bin/macoss runtimes`  |
+| SSH key + allowed_signers (+ remote→SSH)   | `~/.bin/macoss ssh`       |
+| macOS `defaults` settings                  | `~/.bin/macoss defaults`  |
+| iTerm2 shell integration                   | `~/.bin/macoss iterm`     |
 
-Each step is idempotent and can be re-run on its own:
+Brewfiles
+---------
 
-| Step                              | Re-run with             |
-|-----------------------------------|-------------------------|
-| Homebrew + `Brewfile`             | `~/.bin/macoss brew`    |
-| Runtimes via mise (node, go, …)   | `~/.bin/macoss node`    |
-| SSH key + allowed_signers         | `~/.bin/macoss ssh`     |
-| macOS `defaults` settings         | `~/.bin/macoss defaults`|
-| iTerm2 shell integration          | `~/.bin/macoss iterm`   |
+The package list is split:
 
-The packages it installs live in `scripts/Brewfile`; edit there to add or
-remove apps.
+| File                       | Behavior                                                              |
+|----------------------------|-----------------------------------------------------------------------|
+| `scripts/Brewfile`         | **Strict.** Core CLI, zsh plugins. Failure aborts `make brew`.        |
+| `scripts/Brewfile.optional`| **Best-effort.** Casks, dev tools, niche CLIs, MAS apps. Failures are summarised at the end of `make brew`; do not abort. |
+
+Add new strictly-required tools to `Brewfile`. Add anything that might be
+renamed/missing/region-locked (casks especially) to `Brewfile.optional`.
+
+SSH key
+-------
 
 After `make ssh`, register the printed public key on GitHub **twice** —
 once as an **Authentication Key** (push/pull) and once as a **Signing

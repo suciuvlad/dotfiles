@@ -5,18 +5,18 @@ SETUP := $(SCRIPTS_DIR)/setup
 PACKAGES := claude ghostty git mise nvim scripts shell starship tmux zsh
 REQUIRED_CMDS := stow brew git nvim mise tmux fzf starship
 
-.PHONY: all help brew node ssh defaults iterm check lint
+.PHONY: all help brew runtimes ssh defaults iterm check lint
 
-all: brew node ssh defaults iterm
+all: brew runtimes ssh defaults iterm
 	@echo ""
 	@echo "All steps complete. Re-run a single step any time, e.g.:"
 	@echo "    make defaults"
 
 help:
 	@echo "Provisioning:"
-	@echo "  make all        run brew → node → ssh → defaults → iterm"
+	@echo "  make all        run brew → runtimes → ssh → defaults → iterm"
 	@echo "  make brew       install Homebrew if needed, then 'brew bundle' (idempotent)"
-	@echo "  make node       run 'mise install' for ~/.tool-versions, set node@lts global"
+	@echo "  make runtimes   run 'mise install' for ~/.tool-versions (node, go, python, ruby)"
 	@echo "  make ssh        generate ed25519 SSH key + ssh config (idempotent)"
 	@echo "  make defaults   apply all macOS 'defaults write' settings"
 	@echo "  make iterm      install iTerm2 shell integration"
@@ -28,11 +28,11 @@ help:
 brew:
 	@command -v brew >/dev/null 2>&1 || /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	brew bundle --file=$(SCRIPTS_DIR)/Brewfile
+	@bash $(SETUP)/brew-optional.sh $(SCRIPTS_DIR)/Brewfile.optional
 
-node:
+runtimes:
 	@command -v mise >/dev/null 2>&1 || { echo "mise not found — run 'make brew' first" >&2; exit 1; }
 	mise install
-	mise use --global node@lts
 
 ssh:
 	bash $(SETUP)/ssh.sh
@@ -86,5 +86,5 @@ check:
 
 lint:
 	@command -v shellcheck >/dev/null 2>&1 || { echo "shellcheck not found — run 'make brew'" >&2; exit 1; }
-	shellcheck $(SETUP)/*.sh $(SCRIPTS_DIR)/.bin/macoss
+	shellcheck $(SETUP)/*.sh $(SCRIPTS_DIR)/.bin/macoss $(DOTFILES_DIR)/bootstrap.sh
 	@echo "  ✓ shellcheck clean"

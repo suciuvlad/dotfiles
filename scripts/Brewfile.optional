@@ -1,0 +1,110 @@
+# Best-effort — failures are collected and printed as a summary at the end of
+# 'make brew' but do not abort. Add new casks / niche tools here.
+
+# Go development
+brew "buf"
+brew "delve"
+brew "golangci-lint"
+brew "grpcurl"
+brew "protobuf"
+
+# Languages / package tools
+brew "uv"
+brew "rust"
+
+# Linters / formatters
+brew "hadolint"
+brew "markdownlint-cli"
+brew "sqlfluff"
+
+# Networking / security
+brew "cloudflared"
+brew "grype"
+brew "mkcert"
+brew "nikto"
+brew "nmap"
+brew "nuclei"
+brew "testssl"
+
+# Cloud / data
+brew "ansible"
+brew "awscli"
+brew "supabase/tap/supabase"
+
+# Media
+brew "ffmpeg"
+brew "poppler"
+
+# Alt terminal multiplexer
+brew "zellij"
+
+# Casks — productivity
+cask "1password"
+cask "1password-cli"
+cask "alfred"
+cask "bartender"
+cask "betterzip"
+cask "chatgpt"
+cask "claude"
+cask "fantastical"
+cask "obsidian"
+cask "tresorit"
+
+# Casks — browsers
+cask "brave-browser"
+cask "firefox"
+
+# Casks — communication
+cask "discord"
+cask "signal"
+cask "slack"
+cask "telegram"
+cask "whatsapp"
+cask "zoom"
+
+# Casks — dev tools
+cask "alacritty"
+cask "codeql"
+cask "codex"
+cask "cursor"
+cask "docker-desktop"
+cask "ghostty"
+cask "goland"
+cask "hyper"
+cask "intellij-idea"
+cask "iterm2"
+cask "postman"
+cask "sublime-text"
+cask "visual-studio-code"
+
+# Casks — design
+cask "figma"
+cask "imagealpha"
+cask "imageoptim"
+cask "sketch"
+cask "zeplin"
+
+# Casks — file sync
+cask "dropbox"
+cask "google-drive"
+
+# Casks — media
+cask "spotify"
+cask "vlc"
+
+# Casks — system / utilities
+cask "expressvpn"
+cask "folx"
+cask "gcloud-cli"
+cask "microsoft-office"
+cask "nordvpn"
+cask "sip-app"
+
+# Casks — fonts
+cask "font-jetbrains-mono-nerd-font"
+
+# Mac App Store
+mas "Magnet",  id: 441258766
+mas "Bear",    id: 1091189122
+mas "Todoist", id: 585829637
+# mas "Xcode",  id: 497799835
