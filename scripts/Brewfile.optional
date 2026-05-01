@@ -9,6 +9,7 @@ brew "grpcurl"
 brew "protobuf"
 
 # Languages / package tools
+brew "oven-sh/bun/bun"
 brew "uv"
 brew "rust"
 

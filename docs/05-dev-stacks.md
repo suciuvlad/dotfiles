@@ -18,7 +18,7 @@ ruby latest
 
 ### Runtime
 - `node` — managed by `mise`. Global default is `lts`. Pin per-project with `mise use node@22`.
-- `bun` — also on PATH (`BUN_INSTALL=$HOME/.bun`, `zsh/.zshrc:7,14`). Install bun separately via its installer; no Brewfile entry.
+- `bun` (Brewfile.optional, `oven-sh/bun` tap) — alt JS runtime + bundler + package manager. `BUN_INSTALL=$HOME/.bun` (`zsh/.zshrc:7,14`) keeps `bun add -g` binaries on PATH; completions via `$BUN_INSTALL/_bun`.
 
 ### Package managers
 - `pnpm` (Brewfile, strict) — preferred for monorepos / disk-efficient installs. `PNPM_HOME=~/Library/pnpm` on PATH.
