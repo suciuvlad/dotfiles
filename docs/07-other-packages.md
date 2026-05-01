@@ -72,15 +72,6 @@ The universal media converter. Cuts video, transcodes audio, extracts frames, ge
 
 **Upstream:** <https://ffmpeg.org>
 
-### `poppler`
-PDF tools (`pdftotext`, `pdftoppm`, `pdfinfo`, `pdfunite`).
-- `pdftotext file.pdf -` — extract text to stdout
-- `pdftoppm -r 200 file.pdf page -png` — rasterize each page to PNG
-- `pdfinfo file.pdf` — metadata
-- `pdfunite a.pdf b.pdf out.pdf` — merge
-
-**Upstream:** <https://poppler.freedesktop.org>
-
 ---
 
 ## Alternate multiplexers

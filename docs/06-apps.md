@@ -8,14 +8,13 @@ Every cask + MAS app from [`scripts/Brewfile.optional`](../scripts/Brewfile.opti
 |---------------|---------------------------------------------------------------------------|
 | `1password`   | Password manager + secrets vault                                          |
 | `1password-cli` | `op` CLI for scripted secret access                                     |
-| `alfred`      | Keyboard launcher / clipboard history / workflows                         |
 | `bartender`   | Hide and reorganize menu bar icons                                        |
 | `betterzip`   | Archive previews + flexible compression                                   |
 | `chatgpt`     | OpenAI's desktop client                                                   |
 | `claude`      | Anthropic's desktop Claude client                                         |
 | `fantastical` | Calendar with natural-language event entry                                |
 | `obsidian`    | Local-first markdown notes                                                |
-| `tresorit`    | Encrypted file sync                                                       |
+| `raycast`     | Keyboard launcher / clipboard / snippets / extension store                |
 
 ## Browsers
 
@@ -42,16 +41,12 @@ Editors + terminals + IDEs + API clients.
 | App                   | What it is                                              |
 |-----------------------|---------------------------------------------------------|
 | `alacritty`           | GPU-accelerated terminal (alt to ghostty/iterm2)        |
-| `codeql`              | Semantic code analysis CLI / engine                     |
 | `codex`               | OpenAI Codex CLI                                        |
 | `cursor`              | AI-first VS Code fork                                   |
 | `docker-desktop`      | Docker engine + GUI                                     |
 | `ghostty`             | The primary terminal (config in `ghostty/`)             |
 | `goland`              | JetBrains Go IDE                                        |
-| `hyper`               | Electron-based terminal                                 |
-| `intellij-idea`       | JetBrains JVM IDE                                       |
 | `iterm2`              | The other terminal (with shell integration via `make iterm`) |
-| `postman`             | HTTP / GraphQL / WebSocket API client                   |
 | `sublime-text`        | Text editor                                             |
 | `visual-studio-code`  | Microsoft VS Code                                       |
 
@@ -62,8 +57,6 @@ Editors + terminals + IDEs + API clients.
 | `figma`       | Collaborative UI design                                 |
 | `imagealpha`  | Lossy PNG compressor (alpha-aware)                      |
 | `imageoptim`  | Lossless image compressor                               |
-| `sketch`      | Vector UI design                                        |
-| `zeplin`      | Designer↔dev handoff                                    |
 
 ## File sync
 
@@ -102,8 +95,6 @@ Installed via `mas` CLI (must be signed into the App Store first).
 
 | App        | ID         | What it is                                  |
 |------------|------------|---------------------------------------------|
-| Magnet     | 441258766  | Window snap / tiling                        |
-| Bear       | 1091189122 | Markdown notes                              |
 | Todoist    | 585829637  | Task manager                                |
 
 `# mas "Xcode", id: 497799835` is in the file but commented out — uncomment if you want Xcode managed by the Brewfile.
