@@ -15,7 +15,8 @@ all: brew runtimes ssh defaults iterm
 help:
 	@echo "Provisioning:"
 	@echo "  make all        run brew → runtimes → ssh → defaults → iterm"
-	@echo "  make brew       install Homebrew if needed, then 'brew bundle' (idempotent)"
+	@echo "  make brew       install Homebrew if needed, run 'brew bundle' on the strict"
+	@echo "                  Brewfile, then prompt (gum) to pick from Brewfile.optional"
 	@echo "  make runtimes   run 'mise install' for ~/.tool-versions (node, go, python, ruby)"
 	@echo "  make ssh        generate ed25519 SSH key + ssh config (idempotent)"
 	@echo "  make defaults   apply all macOS 'defaults write' settings"
@@ -28,7 +29,7 @@ help:
 brew:
 	@command -v brew >/dev/null 2>&1 || /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	brew bundle --file=$(SCRIPTS_DIR)/Brewfile
-	@bash $(SETUP)/brew-optional.sh $(SCRIPTS_DIR)/Brewfile.optional
+	@bash $(SETUP)/pick-optional.sh
 
 runtimes:
 	@command -v mise >/dev/null 2>&1 || { echo "mise not found — run 'make brew' first" >&2; exit 1; }

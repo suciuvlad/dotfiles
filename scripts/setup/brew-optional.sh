@@ -9,6 +9,9 @@ set -uo pipefail
 FILE="${1:-}"
 [ -n "$FILE" ] && [ -r "$FILE" ] || { echo "brew-optional: cannot read '$FILE'" >&2; exit 1; }
 
+LOG="${DOTFILES_BREW_LOG:-/tmp/dotfiles-brew-optional.log}"
+: > "$LOG"
+
 ok=0
 total=0
 failed=()
@@ -17,7 +20,7 @@ run() {  # run <label> <cmd...>
   local label="$1"; shift
   local out
   total=$((total + 1))
-  if out=$("$@" 2>&1); then
+  if out=$("$@" </dev/null 2>&1); then
     ok=$((ok + 1))
     printf "  ✓ %s\n" "$label"
   else
@@ -27,6 +30,10 @@ run() {  # run <label> <cmd...>
     failed+=("$label — $err")
     printf "  ✗ %s\n" "$label"
   fi
+  {
+    printf '\n=== %s ===\n' "$label"
+    printf '%s\n' "$out"
+  } >> "$LOG"
 }
 
 while IFS= read -r line || [ -n "$line" ]; do
@@ -63,6 +70,8 @@ if [ "${#failed[@]}" -gt 0 ]; then
   for f in "${failed[@]}"; do
     printf "     - %s\n" "$f"
   done
+  echo ""
+  echo "Full output captured at: $LOG"
 fi
 
 exit 0
