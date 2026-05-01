@@ -1,8 +1,18 @@
 .DS_Store
 tmux-client-*.log
 .claude/
+
+# Stow package: track only portable user prefs, ignore runtime state
+# (cache/, projects/, sessions/, telemetry/, history.jsonl, plans/, etc.)
 !claude/.claude/
+claude/.claude/*
+!claude/.claude/CLAUDE.md
+!claude/.claude/settings.json
+
+# Project-local Claude Code skills (track skills/, ignore everything else
+# under .claude/ — settings.local.json, projects/, cache/, etc.)
 !/.claude/
 /.claude/*
 !/.claude/skills/
+
 scripts/Brewfile.lock.json

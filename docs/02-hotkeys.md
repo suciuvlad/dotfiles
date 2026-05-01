@@ -135,13 +135,15 @@ Leader is `,`. Press `<leader>?` to surface buffer-local maps via which-key.
 | `Ctrl-↑` / `↓`  | Grow / shrink height |
 | `Ctrl-←` / `→`  | Grow / shrink width  |
 
-### Move lines (alt-j / alt-k)
+### Move lines (Shift-Alt-j / Shift-Alt-k)
 
-| Mode    | Binding         | Action                          |
-|---------|-----------------|---------------------------------|
-| Normal  | `Alt-j` / `Alt-k` | Move current line down / up   |
-| Insert  | `Alt-j` / `Alt-k` | Same, stays in insert         |
-| Visual  | `Alt-j` / `Alt-k` | Move selection, re-select     |
+| Mode    | Binding                 | Action                        |
+|---------|-------------------------|-------------------------------|
+| Normal  | `S-Alt-j` / `S-Alt-k`   | Move current line down / up   |
+| Insert  | `S-Alt-j` / `S-Alt-k`   | Same, stays in insert         |
+| Visual  | `S-Alt-j` / `S-Alt-k`   | Move selection, re-select     |
+
+Plain `Alt-j` / `Alt-k` are reserved for copilot accept-line / accept-word — see below.
 
 ### File picker — fzf-lua
 
@@ -296,7 +298,7 @@ E.g. `vif` selects inner function, `daa` deletes around argument.
 | `Ctrl-]`        | Dismiss                                           |
 | `Alt-Enter`     | Open Copilot panel                                |
 
-> Note: `Alt-j` / `Alt-k` collide with the line-move bindings in `keymaps.lua`. In insert mode, copilot wins when a suggestion is showing; otherwise lines move.
+Line-move uses `Shift-Alt-j` / `Shift-Alt-k` instead of plain Alt to avoid clashing with these.
 
 ### Snacks — notifications + reference jumping
 

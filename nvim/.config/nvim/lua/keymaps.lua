@@ -45,10 +45,11 @@ map('n', '<C-Down>', ':resize -2<CR>')
 map('n', '<C-Left>', ':vertical resize -2<CR>')
 map('n', '<C-Right>', ':vertical resize +2<CR>')
 
--- Move text up and down
-map('n', '<A-j>', ':move .+1<CR>==') -- TODO: Something seems to be sending Alt occasionally and makes me mess up
-map('n', '<A-k>', ':move .-2<CR>==') -- TODO: Something seems to be sending Alt occasionally and makes me mess up
-map('i', '<A-j>', '<Esc>:move .+1<CR>==gi')
-map('i', '<A-k>', '<Esc>:move .-2<CR>==gi')
-map('x', '<A-j>', ":move '>+1<CR>gv-gv")
-map('x', '<A-k>', ":move '<-2<CR>gv-gv")
+-- Move text up and down. Shift-Alt instead of plain Alt so copilot keeps
+-- M-j/M-k for accept-line/accept-word.
+map('n', '<S-A-j>', ':move .+1<CR>==')
+map('n', '<S-A-k>', ':move .-2<CR>==')
+map('i', '<S-A-j>', '<Esc>:move .+1<CR>==gi')
+map('i', '<S-A-k>', '<Esc>:move .-2<CR>==gi')
+map('x', '<S-A-j>', ":move '>+1<CR>gv-gv")
+map('x', '<S-A-k>', ":move '<-2<CR>gv-gv")

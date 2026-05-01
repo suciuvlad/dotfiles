@@ -56,8 +56,45 @@ fi
 
 say "Stow packages"
 cd "$DEST"
+PACKAGES=(claude ghostty git mise nvim scripts shell starship tmux zsh)
+
+# Pre-flight: dry-run stow to detect real files that would block linking
+# (e.g. a hand-written ~/.zshrc on a previously-used Mac).
+stow_rc=0
+stow_dryrun=$(stow -n -R -t "$HOME" "${PACKAGES[@]}" 2>&1) || stow_rc=$?
+
+if [ "$stow_rc" -ne 0 ]; then
+  conflicts=()
+  while IFS= read -r line; do
+    # Matches both "is neither a link nor a directory: <path>"
+    # and "is not owned by stow: <path>".
+    if [[ "$line" =~ existing\ target\ is\ [^:]*:\ (.+)$ ]]; then
+      conflicts+=("${BASH_REMATCH[1]}")
+    fi
+  done <<< "$stow_dryrun"
+
+  if [ ${#conflicts[@]} -eq 0 ]; then
+    echo "✗ Stow dry-run failed but no parseable conflicts:" >&2
+    while IFS= read -r ln; do echo "    $ln" >&2; done <<< "$stow_dryrun"
+    exit 1
+  fi
+
+  backup_dir="$HOME/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
+  echo "→ Found ${#conflicts[@]} existing file(s) blocking stow:"
+  printf '    %s\n' "${conflicts[@]}"
+  echo "→ Backing up to $backup_dir"
+  mkdir -p "$backup_dir"
+  for rel in "${conflicts[@]}"; do
+    target="$HOME/$rel"
+    [ -e "$target" ] || continue
+    bp="$backup_dir/$rel"
+    mkdir -p "$(dirname "$bp")"
+    mv "$target" "$bp"
+  done
+fi
+
 # -R = restow (idempotent — re-link without erroring on existing links)
-stow -R -t "$HOME" claude ghostty git mise nvim scripts shell starship tmux zsh
+stow -R -t "$HOME" "${PACKAGES[@]}"
 
 say "Run provisioning (make all)"
 make -C "$DEST/scripts" all

@@ -16,7 +16,7 @@ What it does, in order:
 2. **Homebrew** — installs if missing.
 3. **`git` + `stow`** — installed via brew so we can clone and symlink.
 4. **Clone** to `~/dotfiles`. Tries SSH first (in case GitHub is already authorized on this Mac); falls back to HTTPS.
-5. **Stow** all 10 packages into `$HOME`.
+5. **Stow** all 10 packages into `$HOME`. If any existing real files conflict (e.g. a hand-written `~/.zshrc` from a previous setup), they're moved to `~/.dotfiles-backup-<timestamp>/` first so stow can proceed cleanly.
 6. **`make all`** — runs the full provisioning chain.
 
 It is idempotent. Re-running it on a partially-set-up machine just fills in what's missing.
