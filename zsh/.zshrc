@@ -125,3 +125,6 @@ command -v atuin &>/dev/null && eval "$(atuin init zsh --disable-up-arrow)"
 
 ## ── Per-machine overrides (untracked) ───────────────────────────
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh" || true
+
