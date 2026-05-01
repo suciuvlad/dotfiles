@@ -86,12 +86,26 @@ Maintenance
 
 | Command                | What it does                                              |
 |------------------------|-----------------------------------------------------------|
-| `~/.bin/macoss check`  | audit symlinks, required CLI tools, Brewfile, git identity, stow packages |
+| `~/.bin/macoss check`  | audit symlinks, required CLI tools, Brewfile, git identity, stow packages, cask trust, CVE scan |
 | `~/.bin/macoss lint`   | shellcheck `scripts/setup/*.sh` and `macoss` itself       |
 
 Run `make check` after pulling, after `stow -R`, or whenever something
 feels off — it'll surface dangling symlinks and missing dependencies in
 one shot.
+
+The two security sections audit your existing install — they run as part
+of `make check`, not during `make brew`:
+
+- **Cask trust** — `spctl --assess` on every `.app` in `/Applications`;
+  reports how many are signed + Apple-notarized and classifies any that
+  aren't (ad-hoc signed, Developer ID without notarization, dev cert,
+  unsigned). Gatekeeper's runtime check is launch-time only — this
+  surfaces problems before you double-click.
+- **CVE scan** — `grype` against `$(brew --prefix)/Cellar` *and*
+  `/Applications`, grouped by severity (Critical → High → Medium → Low).
+  Catches known vulnerabilities in CLI tools and bundled libraries
+  inside Electron / Java apps. First run downloads ~500 MB of vuln DB;
+  subsequent runs hit the local cache.
 
 Common operations
 -----------------

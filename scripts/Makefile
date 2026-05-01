@@ -84,6 +84,16 @@ check:
 			printf "  ✗ %s/ MISSING\n" $$pkg; \
 		fi; \
 	done
+	@echo ""
+	@echo "── Cask trust (signed + notarized) ───────────"
+	@bash $(SETUP)/cask-audit.sh
+	@echo ""
+	@echo "── Vulnerability scan (grype) ────────────────"
+	@if ! command -v grype >/dev/null 2>&1; then \
+		echo "  ⚠ grype not installed (run 'make brew')"; \
+	else \
+		bash $(SETUP)/grype-check.sh; \
+	fi
 
 lint:
 	@command -v shellcheck >/dev/null 2>&1 || { echo "shellcheck not found — run 'make brew'" >&2; exit 1; }

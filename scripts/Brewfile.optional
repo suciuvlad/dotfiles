@@ -19,7 +19,6 @@ brew "sqlfluff"
 
 # Networking / security
 brew "cloudflared"
-brew "grype"
 brew "mkcert"
 brew "nikto"
 brew "nmap"
@@ -48,6 +47,7 @@ cask "chatgpt"
 cask "claude"
 cask "fantastical"
 cask "obsidian"
+cask "raycast"
 cask "tresorit"
 
 # Casks — browsers
