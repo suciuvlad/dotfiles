@@ -57,6 +57,8 @@ Two files, two policies:
 
 Add new strictly-required CLI to `Brewfile`. Add anything that might be renamed, region-locked, or non-essential (casks especially) to `Brewfile.optional`.
 
+`zsh/.zshrc` exports `HOMEBREW_VERIFY_ATTESTATIONS=1`, so every bottle install/upgrade verifies a Sigstore attestation proving the binary was built by Homebrew's official CI. Tampered bottles in storage are rejected before install.
+
 ## Stow workflow
 
 | Action                          | Command (run from `~/dotfiles`)         |

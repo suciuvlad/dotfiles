@@ -3,6 +3,11 @@ export EDITOR='nvim'
 export GOPRIVATE=github.com/purposeinplay/*
 export GOPATH="${GOPATH:-$HOME/go}"
 
+## ── Homebrew ────────────────────────────────────────────────────
+# Verify Sigstore attestations on every bottle install/upgrade —
+# rejects bottles that weren't built by Homebrew's official CI.
+export HOMEBREW_VERIFY_ATTESTATIONS=1
+
 ## ── PATH ────────────────────────────────────────────────────────
 export BUN_INSTALL="$HOME/.bun"
 export PNPM_HOME="$HOME/Library/pnpm"
