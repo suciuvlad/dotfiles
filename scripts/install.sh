@@ -64,8 +64,11 @@ SUDO_KEEPALIVE_PID=$!
 # PATH before we try to use it. Re-evaluated after brew-strict to pick up
 # packages installed *during* this run.
 brew_shellenv() {
-  [ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-  [ -x /usr/local/bin/brew    ] && eval "$(/usr/local/bin/brew shellenv)"
+  # Return 0 even when the second prefix doesn't exist — under `set -e`, a
+  # short-circuited `&&` chain as the function's last command would abort.
+  if [ -x /opt/homebrew/bin/brew ]; then eval "$(/opt/homebrew/bin/brew shellenv)"; fi
+  if [ -x /usr/local/bin/brew    ]; then eval "$(/usr/local/bin/brew shellenv)"; fi
+  return 0
 }
 brew_shellenv
 
