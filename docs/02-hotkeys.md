@@ -362,7 +362,7 @@ Source: [`zsh/.zshrc`](../zsh/.zshrc)
 | `..`/`...`/`....` | `cd ..` / `cd ../..` / `cd ../../..`            |
 | `d`             | `docker`                                          |
 | `r`             | `rails`                                           |
-| `c` / `cc`      | `claude` / `claude --enable-auto-mode`            |
+| `c` / `cc`      | `claude` / `claude --permission-mode auto`        |
 | `t`             | `tmux attach \|\| tmux new -s Work`               |
 | `cl`            | `clear`                                           |
 | `lzd`           | `lazydocker`                                      |
