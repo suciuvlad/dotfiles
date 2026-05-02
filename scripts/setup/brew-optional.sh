@@ -7,7 +7,10 @@
 set -uo pipefail
 
 FILE="${1:-}"
-[ -n "$FILE" ] && [ -r "$FILE" ] || { echo "brew-optional: cannot read '$FILE'" >&2; exit 1; }
+if [ -z "$FILE" ] || [ ! -r "$FILE" ]; then
+  echo "brew-optional: cannot read '$FILE'" >&2
+  exit 1
+fi
 
 # shellcheck source=_lib.sh
 . "$(dirname "$0")/_lib.sh"

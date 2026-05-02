@@ -13,7 +13,7 @@ jobs:
       - name: shellcheck
         run: |
           shopt -s globstar nullglob
-          shellcheck scripts/setup/*.sh
+          shellcheck -x --source-path=SCRIPTDIR scripts/setup/*.sh
 
   brewfile:
     runs-on: macos-latest
