@@ -12,6 +12,7 @@ dev stacks, apps, and setup walkthroughs.
 | `claude`   | `~/.claude/CLAUDE.md` (Claude Code behavior)            |
 | `ghostty`  | `~/.config/ghostty/config`                              |
 | `git`      | `~/.gitconfig`, `~/.gitignore`, `~/.gitmessage`         |
+| `launchagents` | `~/Library/LaunchAgents/*.plist` (login-time hidutil remaps) |
 | `mise`     | `~/.tool-versions` (global node/go/python/ruby versions)|
 | `nvim`     | `~/.config/nvim/` (init, options, keymaps, plugins)     |
 | `scripts`  | `~/.bin/macoss`, `~/.bin/tmuxinator.zsh`                |
@@ -49,7 +50,7 @@ make -C scripts all
 Per-step provisioning
 ---------------------
 
-`make all` runs `brew → runtimes → ssh → defaults → iterm` through a
+`make all` runs `brew → runtimes → ssh → defaults → iterm → agents` through a
 spinner-driven orchestrator (`scripts/install.sh`) that ends with a styled
 summary box: per-step status icons, durations, and any per-package
 failures (e.g., region-locked casks). Output is captured to
@@ -67,6 +68,7 @@ Each step is idempotent and re-runnable:
 | SSH key + allowed_signers (+ remote→SSH)   | `~/.bin/macoss ssh`       |
 | macOS `defaults` settings                  | `~/.bin/macoss defaults`  |
 | iTerm2 shell integration                   | `~/.bin/macoss iterm`     |
+| LaunchAgents (CapsLock→Escape via hidutil) | `~/.bin/macoss agents`    |
 
 Brewfiles
 ---------

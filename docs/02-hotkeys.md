@@ -7,6 +7,18 @@ Every binding documented here is extracted from a config file in this repo. When
 
 ---
 
+## macOS keyboard
+
+Source: [`launchagents/Library/LaunchAgents/com.vladsuciu.keyremap.plist`](../launchagents/Library/LaunchAgents/com.vladsuciu.keyremap.plist)
+
+| Binding    | Action                                                                |
+|------------|-----------------------------------------------------------------------|
+| `CapsLock` | `Escape` — system-wide remap via `hidutil`, applies to every keyboard |
+
+System-level: the keystroke is rewritten in IOKit before any app sees it, so it works in nvim, terminals, browsers, IDEs alike. Loaded by `make agents`; re-applied at every login by the LaunchAgent (`hidutil` mappings reset on logout/reboot, hence the agent).
+
+---
+
 ## tmux
 
 Source: [`tmux/.tmux.conf`](../tmux/.tmux.conf), [`tmux/.tmux-functions.zsh`](../tmux/.tmux-functions.zsh)

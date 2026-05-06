@@ -56,7 +56,7 @@ fi
 
 say "Stow packages"
 cd "$DEST"
-PACKAGES=(claude ghostty git mise nvim scripts shell starship tmux zsh)
+PACKAGES=(claude ghostty git launchagents mise nvim scripts shell starship tmux zsh)
 
 # Pre-flight: dry-run stow to detect real files that would block linking
 # (e.g. a hand-written ~/.zshrc on a previously-used Mac).

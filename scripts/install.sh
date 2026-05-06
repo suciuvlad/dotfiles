@@ -48,7 +48,7 @@ trap on_exit EXIT
 # verbose output, when stdout isn't a TTY (CI, pipes), or when the script is
 # being driven by something that wants raw logs.
 if [ "${VERBOSE:-0}" = "1" ] || [ ! -t 1 ]; then
-  exec make -C "$SCRIPTS_DIR" brew runtimes ssh defaults iterm
+  exec make -C "$SCRIPTS_DIR" brew runtimes ssh defaults iterm agents
 fi
 
 # Pre-flight: prime sudo so defaults.sh doesn't prompt mid-spinner.
@@ -284,6 +284,9 @@ run_step "⚙️ " "macOS defaults" "defaults" 0 \
 
 run_step "📦" "iTerm2 integration" "iterm" 0 \
   bash "$SETUP_DIR/iterm.sh"
+
+run_step "⌨️ " "LaunchAgents" "agents" 0 \
+  bash "$SETUP_DIR/agents.sh"
 
 # Falls through to the on_exit trap, which renders the summary and exits with
 # whatever rc the script reached (0 here on the happy path).

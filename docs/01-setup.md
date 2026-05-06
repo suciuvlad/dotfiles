@@ -16,14 +16,14 @@ What it does, in order:
 2. **Homebrew** — installs if missing.
 3. **`git` + `stow`** — installed via brew so we can clone and symlink.
 4. **Clone** to `~/dotfiles`. Tries SSH first (in case GitHub is already authorized on this Mac); falls back to HTTPS.
-5. **Stow** all 10 packages into `$HOME`. If any existing real files conflict (e.g. a hand-written `~/.zshrc` from a previous setup), they're moved to `~/.dotfiles-backup-<timestamp>/` first so stow can proceed cleanly.
+5. **Stow** all 11 packages into `$HOME`. If any existing real files conflict (e.g. a hand-written `~/.zshrc` from a previous setup), they're moved to `~/.dotfiles-backup-<timestamp>/` first so stow can proceed cleanly.
 6. **`make all`** — runs the full provisioning chain.
 
 It is idempotent. Re-running it on a partially-set-up machine just fills in what's missing.
 
 ## `make all` — the provisioning chain
 
-`make all` runs five steps. Each is independently re-runnable:
+`make all` runs six steps. Each is independently re-runnable:
 
 | Target              | Re-run with            | What it does                                                                        |
 |---------------------|------------------------|-------------------------------------------------------------------------------------|
@@ -32,6 +32,7 @@ It is idempotent. Re-running it on a partially-set-up machine just fills in what
 | `make ssh`          | `~/.bin/macoss ssh`    | Generates `~/.ssh/id_ed25519`, writes `~/.ssh/config`, prints public key for GitHub. Auto-switches dotfiles remote from HTTPS→SSH once registered. |
 | `make defaults`     | `~/.bin/macoss defaults` | Applies `defaults write` settings (Finder, Dock, screenshots, keyboard repeat, …). Requires sudo. |
 | `make iterm`        | `~/.bin/macoss iterm`  | Installs iTerm2 shell integration (appends a source line to `~/.zshrc`).            |
+| `make agents`       | `~/.bin/macoss agents` | Loads `~/Library/LaunchAgents/*.plist` via `launchctl bootstrap` (e.g. CapsLock→Escape via `hidutil`). |
 
 `~/.bin/macoss` is just a shim: `exec make -C ~/dotfiles/scripts "${@:-all}"`.
 
@@ -125,9 +126,9 @@ dotfiles/
 │   ├── Makefile                    # all/brew/runtimes/ssh/defaults/iterm/check/lint
 │   ├── Brewfile                    # strict: core CLI + zsh plugins
 │   ├── Brewfile.optional           # best-effort: casks, MAS, niche CLIs
-│   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, brew-optional.sh
+│   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, agents.sh, brew-optional.sh
 │   └── .bin/                       # macoss, tmuxinator.zsh — stowed to ~/.bin/
-├── claude/    ghostty/    git/     mise/    nvim/
+├── claude/    ghostty/    git/     launchagents/  mise/    nvim/
 ├── shell/     starship/   tmux/    zsh/
 └── docs/                           # this manual
 ```
