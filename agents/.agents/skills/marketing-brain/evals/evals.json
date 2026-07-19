@@ -1,0 +1,37 @@
+{
+  "skill_name": "marketing-brain",
+  "version": "0.1.5",
+  "evals": [
+    {
+      "id": 1,
+      "name": "offline-saas-happy-path",
+      "prompt": "Build the deterministic Marketing Brain demo vault for a synthetic B2B SaaS site. Run scaffold, fixture import, keyword workbook build, PAA digest creation, synthesis, report HTML smoke, and vault lint.",
+      "expected_output": "examples/sample-vault exists, has no real client data, passes vault lint, includes keywords-2026-05-11.csv/xlsx, has a populated ULTIMATE BEAST Plan with source citations, and renders HTML without local filesystem paths."
+    },
+    {
+      "id": 2,
+      "name": "different-vertical-local-services",
+      "prompt": "Scaffold a Marketing Brain vault for a synthetic local services company using local-seo-services. Verify the active business-type overlay is copied and no SaaS-specific assumptions dominate the core flow.",
+      "expected_output": "The vault has local SEO overlay content, Day 0 measurement gate, GBP/review/citation considerations, and passes vault lint."
+    },
+    {
+      "id": 3,
+      "name": "missing-credentials-error",
+      "prompt": "Attempt a live DataForSEO command without DATAFORSEO_LOGIN or DATAFORSEO_PASSWORD.",
+      "expected_output": "The command exits non-zero before paid API calls and prints a clear error naming both required environment variables."
+    },
+    {
+      "id": 4,
+      "name": "dry-run-cost-preview",
+      "prompt": "Run competitor, ranked-keyword, and PAA commands with --dry-run.",
+      "expected_output": "Each command prints planned endpoints, call counts, estimated cost, and writes no paid API response files."
+    },
+    {
+      "id": 5,
+      "name": "release-package-secret-scan",
+      "prompt": "Build v0.1.5 release ZIP artifacts.",
+      "expected_output": "Template, sample-vault, source ZIPs, RELEASE_MANIFEST.json, and SHA256SUMS are created; scans reject secrets, .env files, private keys, local home paths, cache folders, and real client domains."
+    }
+  ],
+  "notes": "All default evals use synthetic domains and fixtures. Live DataForSEO verification is a separate gated release check when credentials are available."
+}

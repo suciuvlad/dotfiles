@@ -1,0 +1,24 @@
+{
+  "name": "marketing-brain",
+  "version": "0.1.5",
+  "description": "Source-available SEO and content marketing strategy brain. Scaffolds an Obsidian vault, pulls DataForSEO research, builds keyword workbooks, synthesizes source-cited BEAST plans, and renders reports for Codex, Claude, and shell operators.",
+  "author": {
+    "name": "Daniel Agrici",
+    "url": "https://github.com/AgriciDaniel"
+  },
+  "license": "Proprietary source-available",
+  "homepage": "https://github.com/AgriciDaniel/marketing-brain",
+  "repository": "https://github.com/AgriciDaniel/marketing-brain",
+  "keywords": [
+    "seo",
+    "marketing",
+    "obsidian",
+    "dataforseo",
+    "keyword-research",
+    "competitor-analysis",
+    "ai-overviews",
+    "flow-framework",
+    "hcu-recovery",
+    "white-hat-seo"
+  ]
+}

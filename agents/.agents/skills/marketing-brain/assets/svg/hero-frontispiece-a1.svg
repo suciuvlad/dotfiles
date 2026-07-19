@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Marketing Brain">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#0b1720"/>
+      <stop offset="0.45" stop-color="#12324a"/>
+      <stop offset="1" stop-color="#1f4e45"/>
+    </linearGradient>
+    <style>
+      .title{font:700 56px Arial,sans-serif;fill:#f7fbff}
+      .sub{font:400 24px Arial,sans-serif;fill:#c7d7e2}
+      .label{font:700 19px Arial,sans-serif;fill:#10202b}
+      .small{font:500 15px Arial,sans-serif;fill:#314655}
+      .node{rx:8;stroke:#ffffff;stroke-width:2}
+      .line{stroke:#c7d7e2;stroke-width:4;stroke-linecap:round;opacity:.75}
+    </style>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="48" y="48" width="1104" height="534" rx="18" fill="none" stroke="#d7efe8" stroke-width="2" opacity=".5"/>
+  <text x="82" y="126" class="title">Marketing Brain</text>
+  <text x="86" y="166" class="sub">Obsidian strategy OS for search, content, and AI-era measurement</text>
+
+  <path class="line" d="M145 395 C310 260 420 495 565 352 S855 250 1010 386"/>
+  <rect class="node" x="94" y="294" width="190" height="88" fill="#66d9b8"/>
+  <text class="label" x="122" y="330">Source Truth</text><text class="small" x="122" y="356">raw exports + docs</text>
+  <rect class="node" x="372" y="392" width="190" height="88" fill="#ffd166"/>
+  <text class="label" x="404" y="428">Search Signals</text><text class="small" x="404" y="454">keywords + SERPs</text>
+  <rect class="node" x="650" y="292" width="190" height="88" fill="#ef767a"/>
+  <text class="label" x="684" y="328">BEAST Plan</text><text class="small" x="684" y="354">source-cited actions</text>
+  <rect class="node" x="928" y="390" width="190" height="88" fill="#8ecae6"/>
+  <text class="label" x="964" y="426">Client Report</text><text class="small" x="964" y="452">HTML + PDF</text>
+
+</svg>

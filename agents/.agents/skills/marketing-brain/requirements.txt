@@ -1,0 +1,32 @@
+# marketing-brain — fully resolved dependency lock.
+#
+# generated 2026-05-05 against python 3.12 on linux-x86_64.
+# regenerate with: pip-compile --generate-hashes --upgrade requirements.in
+#
+# install in a fresh venv:
+#   python -m venv .venv && source .venv/bin/activate
+#   pip install -r requirements.txt
+#
+# v0.1.2 backlog: add --hash entries via `pip-compile --generate-hashes`
+# for byte-level integrity verification.
+
+# top-level
+openpyxl==3.1.5
+weasyprint==68.1
+
+# transitive (openpyxl)
+et_xmlfile==2.0.0
+
+# transitive (weasyprint)
+brotli==1.2.0
+cffi==2.0.0
+cssselect2==0.8.0
+fonttools==4.61.1
+pillow==10.4.0
+pycparser==3.0
+pydyf==0.12.1
+pyphen==0.17.2
+tinycss2==1.5.1
+tinyhtml5==2.0.0
+webencodings==0.5.1
+zopfli==0.4.0

@@ -1,0 +1,54 @@
+{
+  "skill_name": "go-best-practices",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm adding payments to our Go service. I need to support creating a payment, voiding it, and listing payments for a customer. How do I structure the domain, repository, and handlers?",
+      "expected_output": "Should organise under a bounded context package (not per-entity), use exported fields, go-commons/errors for domain errors, CQRS handlers with business verbs (VoidPayment not DeletePayment), repository interface in domain, private GORM model in adapter.",
+      "assertions": [
+        {"text": "Organises domain code under a bounded context package (e.g. payments/) not one package per entity", "type": "qualitative"},
+        {"text": "Domain struct uses exported fields", "type": "qualitative"},
+        {"text": "Uses go-commons/errors for domain error definitions (not raw errors.New)", "type": "qualitative"},
+        {"text": "Command handlers use business verbs — VoidPayment or CancelPayment, not DeletePayment", "type": "qualitative"},
+        {"text": "Repository interface is defined in the domain package", "type": "qualitative"},
+        {"text": "GORM model struct is private and lives in the adapter, not the domain", "type": "qualitative"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review this Go code and tell me what's wrong with it:\n\n```go\npackage domain\n\nimport (\n    \"database/sql\"\n    \"errors\"\n)\n\nvar ErrNotFound = errors.New(\"order not found\")\n\ntype Order struct {\n    ID    string\n    Total sql.NullFloat64\n}\n```",
+      "expected_output": "Should flag: raw errors.New() in domain (should use go-commons/errors with ErrorType), sql.NullFloat64 (infrastructure leak, should use *float64 pointer instead), database/sql import in domain package.",
+      "assertions": [
+        {"text": "Flags raw errors.New() — domain errors should use go-commons/errors with ErrorType and ErrorCode", "type": "qualitative"},
+        {"text": "Flags sql.NullFloat64 as an infrastructure type that leaks database/sql into the domain", "type": "qualitative"},
+        {"text": "Recommends *float64 pointer as the correct nullable type (not sql.NullFloat64, not null.Val)", "type": "qualitative"},
+        {"text": "Flags the database/sql import as a domain purity violation", "type": "qualitative"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I need to add a PATCH /items/{id} endpoint to my Go service. Walk me through the full process from the OpenAPI spec through to the handler implementation.",
+      "expected_output": "Should start with openapi.yaml edit, then go generate, then implement StrictServerInterface method, then add UpdateItem command handler. Handler should delegate immediately to app layer with no business logic. Errors should be mapped via go-commons/errors HTTPStatus().",
+      "assertions": [
+        {"text": "Starts with editing openapi.yaml before writing any Go code", "type": "qualitative"},
+        {"text": "Shows the go generate command to regenerate openapi.gen.go", "type": "qualitative"},
+        {"text": "Handler method implements StrictServerInterface and delegates immediately to app.Commands", "type": "qualitative"},
+        {"text": "Handler contains no business logic — validation is in the command handler", "type": "qualitative"},
+        {"text": "Error mapping uses go-commons/errors HTTPStatus() method", "type": "qualitative"}
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I'm modeling a Wallet for a crypto exchange. It needs an ETH balance (always present) and a nullable pending_credit (set only when there's an in-flight deposit). What Postgres column types and Go types should I use, and how should the amount appear on the gRPC API?",
+      "expected_output": "Should use NUMERIC(38, 18) for both columns (NOT NULL DEFAULT 0 for balance, nullable for pending_credit). Go types: decimal.Decimal for balance, *decimal.Decimal for pending_credit (NOT decimal.NullDecimal). gRPC field is a string, parsed via decimal.NewFromString. No BIGINT. No float64. No int64 wei subunits on the wire.",
+      "assertions": [
+        {"text": "Recommends NUMERIC(38, 18) for both balance and pending_credit columns", "type": "qualitative"},
+        {"text": "Uses decimal.Decimal (from shopspring/decimal) for the NOT NULL balance field", "type": "qualitative"},
+        {"text": "Uses *decimal.Decimal for the nullable pending_credit field — NOT decimal.NullDecimal", "type": "qualitative"},
+        {"text": "Rejects BIGINT / int64 subunits (overflows past 9.2 ETH-as-wei)", "type": "qualitative"},
+        {"text": "Rejects DOUBLE PRECISION / float64 anywhere in the money path", "type": "qualitative"},
+        {"text": "gRPC / wire amounts are strings, parsed via decimal.NewFromString and emitted via .String()", "type": "qualitative"}
+      ]
+    }
+  ]
+}

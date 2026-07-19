@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{client_name}} — ULTIMATE BEAST Plan</title>
+<!--
+  ============================================================
+  marketing-brain — ULTIMATE BEAST Plan (editorial PDF template)
+  ============================================================
+
+  Rendered by scripts/render_beast_pdf.py via WeasyPrint.
+
+  Placeholders (replaced at render time):
+    {{client_name}}             e.g. "Acme Outdoors"
+    {{site_url}}                e.g. "www.example.com"
+    {{date}}                    YYYY-MM-DD
+    {{audit_date_dot}}          YYYY.MM.DD (used in cover footer)
+    {{vol_label}}               "VOL. I · ISSUE 01 · MAY 2026"
+    {{publication_identity}}    "AI Marketing Hub · ULTIMATE BEAST Plan"
+    {{owner_name}}              "Daniel Agrici"
+    {{owner_role}}              "Founder, AI Marketing Hub"
+    {{owner_repo}}              "github.com/AgriciDaniel/flow"
+    {{cover_eyebrow}}           "ULTIMATE BEAST Plan · prepared for"
+    {{cover_title_html}}        Display headline; HTML allowed (e.g. "Acme &amp; the<br/>open <em>water.</em>")
+    {{cover_sub_html}}          Subhead; HTML allowed
+    {{kpi1_value}}, {{kpi1_label}}    First cover stat
+    {{kpi2_value}}, {{kpi2_label}}    Second cover stat (use <em>...</em> to highlight in rust)
+    {{kpi3_value}}, {{kpi3_label}}    Third cover stat
+    {{tldr_li_1}} ... {{tldr_li_5}}   The five TL;DR bullets (HTML allowed)
+    {{section_2_lede}}          Lede for "Where You Stand"
+    {{kpi_strip_html}}          The 4-cell KPI strip for section 2 (rendered as a block)
+    {{wins_table_html}}         Top wins table
+    {{push_table_html}}         Top push targets table
+    {{section_2_source_note}}   "All numbers from DataForSEO ranked_keywords pull..."
+    {{cluster_table_html}}      Cannibalization clusters table for section 3
+    {{strategy_oneliner_html}}  Pull-quote in section 4
+    {{flow_two_col_html}}       Section 4's four FLOW two-col blocks
+    {{day_blocks_html}}         Day 0..30 blocks for section 5
+    {{quick_wins_table_html}}   Section 6 table
+    {{section_7_html}}          Section 7: AI Overview tactics
+    {{section_8_html}}          Section 8: AI search tactics
+    {{section_9_html}}          Section 9: Google SERP tactics
+    {{section_10_html}}         Section 10: white-hat guardrails (the honesty contract)
+    {{next_actions_html}}       Section 11 (closing) — three concrete actions
+    {{closing_signoff_html}}    Closing signoff message
+
+  Implementation note for render_beast_pdf.py:
+    Use Python's str.replace() for placeholder substitution rather
+    than f-strings or .format() so curly braces in the CSS / HTML
+    don't conflict. All placeholders are wrapped in {{...}}.
+
+  Print rules + drop-cap workaround live in editorial-pdf.css (loaded
+  via <link> below). See the CSS file's top comment for why we use
+  ::first-line emphasis instead of a ::first-letter float.
+-->
+<link rel="stylesheet" href="editorial-pdf.css">
+</head>
+<body>
+
+<!-- ============================================================
+     COVER PAGE
+     ============================================================ -->
+<div class="cover">
+  <div class="cover-rule-top"></div>
+
+  <div class="cover-meta">
+    <span class="vol">{{vol_label}}</span>
+    <span class="sep"></span>
+    <span class="pub">{{publication_identity}}</span>
+  </div>
+
+  <div class="cover-eyebrow">{{cover_eyebrow}}</div>
+
+  <h1 class="cover-title">{{cover_title_html}}</h1>
+
+  <p class="cover-sub">{{cover_sub_html}}</p>
+
+  <div class="cover-stats">
+    <div class="cover-stat">
+      <div class="num">{{kpi1_value}}</div>
+      <div class="lbl">{{kpi1_label}}</div>
+    </div>
+    <div class="cover-stat">
+      <div class="num">{{kpi2_value}}</div>
+      <div class="lbl">{{kpi2_label}}</div>
+    </div>
+    <div class="cover-stat">
+      <div class="num">{{kpi3_value}}</div>
+      <div class="lbl">{{kpi3_label}}</div>
+    </div>
+  </div>
+
+  <div class="cover-spacer"></div>
+
+  <div class="cover-foot">
+    <div class="left">
+      Prepared by <strong>{{owner_name}}</strong><br/>
+      {{owner_role}} · {{owner_repo}}
+    </div>
+    <div class="right">
+      Audit date · {{audit_date_dot}}<br/>
+      Source · DataForSEO + direct site fetch
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     CONTENTS
+     ============================================================ -->
+<div class="page-section">
+  <div class="section-head">
+    <div class="lhs">
+      <span class="section-num">§ 00</span>
+      <h2>Contents</h2>
+    </div>
+    <span class="eyebrow muted">{{read_time_label}}</span>
+  </div>
+
+  <p class="lede">A short brief, structured as a magazine. Read top to bottom in fifteen minutes, or jump to whichever section solves the problem in front of you.</p>
+
+  <div class="toc">
+    <div class="toc-row">
+      <span class="num">01</span>
+      <div>
+        <span class="title">The 60-Second Version</span>
+        <span class="desc">Five facts that change how we think about your strategy.</span>
+      </div>
+      <span class="pgno">p. 03</span>
+    </div>
+    <div class="toc-row">
+      <span class="num">02</span>
+      <div>
+        <span class="title">Where You Stand Today</span>
+        <span class="desc">The actual baseline — every number traceable to a source.</span>
+      </div>
+      <span class="pgno">p. 04</span>
+    </div>
+    <div class="toc-row">
+      <span class="num">03</span>
+      <div>
+        <span class="title">The Real Problem</span>
+        <span class="desc">What the data says is actually blocking the next ranking.</span>
+      </div>
+      <span class="pgno">p. 05</span>
+    </div>
+    <div class="toc-row">
+      <span class="num">04</span>
+      <div>
+        <span class="title">The Strategy in One Paragraph</span>
+        <span class="desc">FLOW — Find, Leverage, Optimize, Win — adapted for {{client_name}}.</span>
+      </div>
+      <span class="pgno">p. 06</span>
+    </div>
+    <div class="toc-row">
+      <span class="num">05</span>
+      <div>
+        <span class="title">The 30-Day Sprint</span>
+        <span class="desc">Day 0 through Day 30 — what happens, in order.</span>
+      </div>
+      <span class="pgno">p. 07</span>
+    </div>
+    <div class="toc-row">
+      <span class="num">06</span>
+      <div>
+        <span class="title">Top Quick Wins</span>
+        <span class="desc">Where the fastest impressions live.</span>
+      </div>
+      <span class="pgno">p. 09</span>
+    </div>
+    <div class="toc-row">
+      <span class="num">07</span>
+      <div>
+        <span class="title">Two Things You'll Want to Know</span>
+        <span class="desc">Discoveries from the audit that change the next decision.</span>
+      </div>
+      <span class="pgno">p. 10</span>
+    </div>
+    <div class="toc-row">
+      <span class="num">08</span>
+      <div>
+        <span class="title">What I'm NOT Promising</span>
+        <span class="desc">An honesty contract — read this, then we begin.</span>
+      </div>
+      <span class="pgno">p. 11</span>
+    </div>
+    <div class="toc-row">
+      <span class="num">09</span>
+      <div>
+        <span class="title">Your Next Three Actions</span>
+        <span class="desc">Concrete steps that unblock everything.</span>
+      </div>
+      <span class="pgno">p. 12</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 01 — TL;DR
+     ============================================================ -->
+<div class="page-section">
+  <div class="section-head">
+    <div class="lhs">
+      <span class="section-num">§ 01</span>
+      <h2>The 60-Second Version</h2>
+    </div>
+    <span class="eyebrow muted">Read this first</span>
+  </div>
+
+  <p class="lede drop-cap">If you have one minute before getting back to work, this is the part you read. Five facts, in order of weight. Each one is unpacked later in the brief.</p>
+
+  <div class="tldr">
+    <h3>The Five Facts</h3>
+    <ol>
+      <li>{{tldr_li_1}}</li>
+      <li>{{tldr_li_2}}</li>
+      <li>{{tldr_li_3}}</li>
+      <li>{{tldr_li_4}}</li>
+      <li>{{tldr_li_5}}</li>
+    </ol>
+  </div>
+
+  <div class="callout good">
+    <div class="tag">Why this is good news</div>
+    <p>{{tldr_good_news_html}}</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 02 — Where you stand
+     ============================================================ -->
+<div class="page-section">
+  <div class="section-head">
+    <div class="lhs">
+      <span class="section-num">§ 02</span>
+      <h2>Where You Stand Today</h2>
+    </div>
+    <span class="eyebrow muted">DataForSEO baseline · {{date}}</span>
+  </div>
+
+  <p class="lede">{{section_2_lede}}</p>
+
+  {{kpi_strip_html}}
+
+  <h3 style="margin-top:24px;">Where you already win (positions 1&ndash;3)</h3>
+  {{wins_table_html}}
+
+  <h3 style="margin-top:24px;">Where you almost win (top 5 push targets)</h3>
+  {{push_table_html}}
+
+  <p class="muted" style="font-size:9pt; font-style:italic; margin-top:16px;">{{section_2_source_note}}</p>
+</div>
+
+<!-- ============================================================
+     SECTION 03 — The Real Problem
+     ============================================================ -->
+<div class="page-section">
+  <div class="section-head">
+    <div class="lhs">
+      <span class="section-num">§ 03</span>
+      <h2>The Real Problem</h2>
+    </div>
+    <span class="eyebrow muted">{{section_3_eyebrow}}</span>
+  </div>
+
+  <p class="lede">{{section_3_lede}}</p>
+
+  <div class="callout warn">
+    <div class="tag">The math</div>
+    <p>{{section_3_math_html}}</p>
+  </div>
+
+  <h3>Cannibalization clusters identified</h3>
+  {{cluster_table_html}}
+
+  <h3 style="margin-top: 24px;">Two technical fixes that ship in week one</h3>
+  {{section_3_tech_fixes_html}}
+</div>
+
+<!-- ============================================================
+     SECTION 04 — Strategy
+     ============================================================ -->
+<div class="page-section">
+  <div class="section-head">
+    <div class="lhs">
+      <span class="section-num">§ 04</span>
+      <h2>The Strategy</h2>
+    </div>
+    <span class="eyebrow muted">FLOW · Find, Leverage, Optimize, Win</span>
+  </div>
+
+  <div class="pullquote">
+    {{strategy_oneliner_html}}
+    <span class="attr">— The whole strategy in one sentence</span>
+  </div>
+
+  <p>{{strategy_paragraph_1_html}}</p>
+
+  <p>This is FLOW (Find &rarr; Leverage &rarr; Optimize &rarr; Win), the framework I built and open-sourced at <code>github.com/AgriciDaniel/flow</code>. Based on 58 books and 1,700+ pages of 2026 SEO research. For {{client_name}}'s situation specifically:</p>
+
+  {{flow_two_col_html}}
+</div>
+
+<!-- ============================================================
+     SECTION 05 — 30-Day Sprint
+     ============================================================ -->
+<div class="page-section">
+  <div class="section-head">
+    <div class="lhs">
+      <span class="section-num">§ 05</span>
+      <h2>The 30-Day Sprint</h2>
+    </div>
+    <span class="eyebrow muted">Day 0 through Day 30</span>
+  </div>
+
+  <p class="lede">Each phase has a detailed brief in your vault. Names in <code>brackets</code> map to specific files inside <code>wiki/flows/</code>.</p>
+
+  {{day_blocks_html}}
+</div>
+
+<!-- ============================================================
+     SECTION 06 — Quick Wins
+     ============================================================ -->
+<div class="page-section">
+  <div class="section-head">
+    <div class="lhs">
+      <span class="section-num">§ 06</span>
+      <h2>Top Quick Wins</h2>
+    </div>
+    <span class="eyebrow muted">By traffic potential</span>
+  </div>
+
+  <p class="lede">{{section_6_lede}}</p>
+
+  {{quick_wins_table_html}}
+
+  <div class="callout info">
+    <div class="tag">{{section_6_callout_tag}}</div>
+    <p>{{section_6_callout_html}}</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 07 — Two Things to Know
+     ============================================================ -->
+<div class="page-section">
+  <div class="section-head">
+    <div class="lhs">
+      <span class="section-num">§ 07</span>
+      <h2>Two Things You'll Want to Know</h2>
+    </div>
+    <span class="eyebrow muted">Discovered during the audit</span>
+  </div>
+
+  {{section_7_html}}
+</div>
+
+<!-- ============================================================
+     SECTION 08 — Honesty Contract
+     ============================================================ -->
+<div class="page-section">
+  <div class="section-head">
+    <div class="lhs">
+      <span class="section-num">§ 08</span>
+      <h2>What I'm NOT Promising</h2>
+    </div>
+    <span class="eyebrow muted">An honesty contract</span>
+  </div>
+
+  <p class="lede">I'm telling you this up front because the SEO industry is full of people who promise things they can't deliver.</p>
+
+  <div class="callout warn">
+    <div class="tag">Out of scope for this engagement</div>
+    {{section_8_not_promising_html}}
+  </div>
+
+  <div class="callout good">
+    <div class="tag">What I am committing to</div>
+    {{section_8_committing_html}}
+  </div>
+
+  <div class="pullquote" style="margin-top: 32px;">
+    Confidence is <em>earned</em>, not asserted.
+    <span class="attr">— from the shipping rules at the root of your vault</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 09 — Next Actions
+     ============================================================ -->
+<div class="page-section">
+  <div class="section-head">
+    <div class="lhs">
+      <span class="section-num">§ 09</span>
+      <h2>Your Next Three Actions</h2>
+    </div>
+    <span class="eyebrow muted">In order · this week</span>
+  </div>
+
+  {{next_actions_html}}
+
+  <div class="callout info" style="margin-top: 28px;">
+    <div class="tag">If you only read three other things in your vault</div>
+    {{section_9_callout_html}}
+  </div>
+
+  <div class="signoff">
+    <div class="name">— {{owner_first_name}}</div>
+    <div class="role">{{owner_role}} · {{owner_repo}}</div>
+    <p style="margin-top:18px; font-size: 9.5pt; color: var(--muted); font-style: italic;">
+      {{closing_signoff_html}}
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

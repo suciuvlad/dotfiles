@@ -16,14 +16,14 @@ What it does, in order:
 2. **Homebrew** — installs if missing.
 3. **`git` + `stow`** — installed via brew so we can clone and symlink.
 4. **Clone** to `~/dotfiles`. Tries SSH first (in case GitHub is already authorized on this Mac); falls back to HTTPS.
-5. **Stow** all 11 packages into `$HOME`. If any existing real files conflict (e.g. a hand-written `~/.zshrc` from a previous setup), they're moved to `~/.dotfiles-backup-<timestamp>/` first so stow can proceed cleanly.
+5. **Stow** all 12 packages into `$HOME`. If any existing real files conflict (e.g. a hand-written `~/.zshrc` from a previous setup), they're moved to `~/.dotfiles-backup-<timestamp>/` first so stow can proceed cleanly.
 6. **`make all`** — runs the full provisioning chain.
 
 It is idempotent. Re-running it on a partially-set-up machine just fills in what's missing.
 
 ## `make all` — the provisioning chain
 
-`make all` runs six steps. Each is independently re-runnable:
+`make all` runs seven steps. Each is independently re-runnable:
 
 | Target              | Re-run with            | What it does                                                                        |
 |---------------------|------------------------|-------------------------------------------------------------------------------------|
@@ -33,6 +33,7 @@ It is idempotent. Re-running it on a partially-set-up machine just fills in what
 | `make defaults`     | `~/.bin/macoss defaults` | Applies `defaults write` settings (Finder, Dock, screenshots, keyboard repeat, …). Requires sudo. |
 | `make iterm`        | `~/.bin/macoss iterm`  | Installs iTerm2 shell integration (appends a source line to `~/.zshrc`).            |
 | `make agents`       | `~/.bin/macoss agents` | Loads `~/Library/LaunchAgents/*.plist` via `launchctl bootstrap` (e.g. CapsLock→Escape via `hidutil`). |
+| `make skills`       | `~/.bin/macoss skills` | Symlinks AI-agent skills from the stowed `~/.agents/skills` store into `~/.cursor/skills` and `~/.codex/skills` (see [AI-agent skills](#ai-agent-skills)). |
 
 `~/.bin/macoss` is just a shim: `exec make -C ~/dotfiles/scripts "${@:-all}"`.
 
@@ -59,6 +60,22 @@ Two files, two policies:
 Add new strictly-required CLI to `Brewfile`. Add anything that might be renamed, region-locked, or non-essential (casks especially) to `Brewfile.optional`.
 
 `zsh/.zshrc` exports `HOMEBREW_VERIFY_ATTESTATIONS=1`, so every bottle install/upgrade verifies a Sigstore attestation proving the binary was built by Homebrew's official CI. Tampered bottles in storage are rejected before install.
+
+## AI-agent skills
+
+All agent skills (Claude Code, Cursor, Codex) live in **one git-tracked store**: `agents/.agents/skills/`, stowed to `~/.agents/skills`. Agent directories never hold real skill content, only symlinks:
+
+- `~/.claude/skills/<name>` → `../../../../.agents/skills/<name>` — these relative symlinks live *inside the repo* (`claude/.claude/skills/`) and are themselves git-tracked, so Claude's skill selection survives a fresh clone with zero extra steps.
+- `~/.cursor/skills` and `~/.codex/skills` are runtime dirs (not stowed), so `make skills` (`scripts/setup/agent-skills.sh`) recreates their symlinks. Per-agent skill lists live at the top of that script; edit them to change which skills an agent sees.
+
+Installing a new skill from [skills.sh](https://www.skills.sh/):
+
+```sh
+npx skills add <owner/repo> -g        # writes into ~/.agents/skills + symlinks ~/.claude/skills
+cd ~/dotfiles && git add agents claude/.claude/skills && git commit
+```
+
+Because `~/.agents` is a stow symlink into the repo, the CLI's output lands directly in git's working tree — `git status` shows the new skill ready to commit. Skills not from skills.sh follow the same pattern: drop the folder in `agents/.agents/skills/` and symlink it where needed.
 
 ## Stow workflow
 
@@ -126,8 +143,9 @@ dotfiles/
 │   ├── Makefile                    # all/brew/runtimes/ssh/defaults/iterm/check/lint
 │   ├── Brewfile                    # strict: core CLI + zsh plugins
 │   ├── Brewfile.optional           # best-effort: casks, MAS, niche CLIs
-│   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, agents.sh, brew-optional.sh
+│   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, agents.sh, agent-skills.sh, brew-optional.sh
 │   └── .bin/                       # macoss, tmuxinator.zsh — stowed to ~/.bin/
+├── agents/                         # ~/.agents/skills — central AI-agent skill store
 ├── claude/    ghostty/    git/     launchagents/  mise/    nvim/
 ├── shell/     starship/   tmux/    zsh/
 └── docs/                           # this manual

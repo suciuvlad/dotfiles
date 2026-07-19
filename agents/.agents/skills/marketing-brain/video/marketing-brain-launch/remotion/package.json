@@ -1,0 +1,23 @@
+{
+  "name": "marketing-brain-launch-remotion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "compositions": "remotion compositions src/index.ts",
+    "still": "remotion still src/index.ts MarketingBrainLaunch --frame=120 --output=out/still-frame-120.png",
+    "render": "remotion render src/index.ts MarketingBrainLaunch out/marketing-brain-launch.mp4 --codec=h264 --pixel-format=yuv420p"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.379",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.379"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^18.3.7",
+    "typescript": "^5.9.3"
+  }
+}

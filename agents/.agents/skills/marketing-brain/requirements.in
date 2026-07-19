@@ -1,0 +1,6 @@
+# top-level dependencies for marketing-brain.
+# regenerate `requirements.txt` from this file with:
+#   pip install pip-tools
+#   pip-compile --generate-hashes --upgrade requirements.in
+openpyxl==3.1.5
+weasyprint==68.1

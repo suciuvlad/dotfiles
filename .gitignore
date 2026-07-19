@@ -8,6 +8,8 @@ tmux-client-*.log
 claude/.claude/*
 !claude/.claude/CLAUDE.md
 !claude/.claude/settings.json
+# skills/ holds only symlinks into agents/.agents/skills (the tracked store)
+!claude/.claude/skills
 
 # Project-local Claude Code skills (track skills/, ignore everything else
 # under .claude/ — settings.local.json, projects/, cache/, etc.)

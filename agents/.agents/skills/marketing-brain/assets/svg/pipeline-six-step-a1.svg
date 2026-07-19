@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Six-Step Pipeline">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#0b1720"/>
+      <stop offset="0.45" stop-color="#12324a"/>
+      <stop offset="1" stop-color="#1f4e45"/>
+    </linearGradient>
+    <style>
+      .title{font:700 56px Arial,sans-serif;fill:#f7fbff}
+      .sub{font:400 24px Arial,sans-serif;fill:#c7d7e2}
+      .label{font:700 19px Arial,sans-serif;fill:#10202b}
+      .small{font:500 15px Arial,sans-serif;fill:#314655}
+      .node{rx:8;stroke:#ffffff;stroke-width:2}
+      .line{stroke:#c7d7e2;stroke-width:4;stroke-linecap:round;opacity:.75}
+    </style>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="48" y="48" width="1104" height="534" rx="18" fill="none" stroke="#d7efe8" stroke-width="2" opacity=".5"/>
+  <text x="82" y="126" class="title">Six-Step Pipeline</text>
+  <text x="86" y="166" class="sub">Deterministic demo first, live DataForSEO behind caps</text>
+<rect class="node" x="95" y="310" width="142" height="92" fill="#66d9b8"/>
+<text class="label" x="114" y="360">Scaffold</text>
+<path class="line" d="M240 356 H269"/>
+<rect class="node" x="273" y="310" width="142" height="92" fill="#8ecae6"/>
+<text class="label" x="292" y="360">Competitors</text>
+<path class="line" d="M418 356 H447"/>
+<rect class="node" x="451" y="310" width="142" height="92" fill="#ffd166"/>
+<text class="label" x="470" y="360">Keywords</text>
+<path class="line" d="M596 356 H625"/>
+<rect class="node" x="629" y="310" width="142" height="92" fill="#f4a261"/>
+<text class="label" x="648" y="360">PAA</text>
+<path class="line" d="M774 356 H803"/>
+<rect class="node" x="807" y="310" width="142" height="92" fill="#ef767a"/>
+<text class="label" x="826" y="360">Synthesize</text>
+<path class="line" d="M952 356 H981"/>
+<rect class="node" x="985" y="310" width="142" height="92" fill="#b8a1ff"/>
+<text class="label" x="1004" y="360">Report</text>
+
+</svg>

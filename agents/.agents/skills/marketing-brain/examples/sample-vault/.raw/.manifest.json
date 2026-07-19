@@ -1,0 +1,27 @@
+{
+  "last_updated": "2026-05-11",
+  "manifest_owner": "Strategy Owner",
+  "scaffold_history": [
+    {
+      "action": "scaffold",
+      "business_type": "saas",
+      "client_name": "Demo Growth Co",
+      "client_slug": "demo-growth",
+      "files_preserved": 0,
+      "files_written": 98,
+      "overlay": {
+        "copied_to": "wiki/concepts/Business Type Overlay.md",
+        "notes": [],
+        "removals": [],
+        "source": "SaaS.md"
+      },
+      "owner": "Strategy Owner",
+      "ran_at": "2026-05-11",
+      "site_url": "https://www.example.com"
+    }
+  ],
+  "schema_version": "1.0",
+  "site_under_audit": "https://www.example.com",
+  "sources": {},
+  "vault": "Demo Growth Co marketing-brain"
+}

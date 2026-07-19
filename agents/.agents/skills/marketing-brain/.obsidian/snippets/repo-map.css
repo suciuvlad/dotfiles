@@ -1,0 +1,77 @@
+/*
+ * repo-map.css
+ *
+ * Obsidian styling for the marketing-brain repository root.
+ * The generated client vault has its own snippet under
+ * assets/template-brain/.obsidian/snippets/.
+ */
+
+:root {
+  --mb-agents: #9cdcfe;
+  --mb-scripts: #42a8a8;
+  --mb-assets: #d97742;
+  --mb-template: #6a9955;
+  --mb-references: #6b8aa0;
+  --mb-evals: #c586c0;
+  --mb-docs: #c9a45b;
+  --mb-security: #d16969;
+  --mb-graphite: #6b6b6b;
+}
+
+.nav-folder-title,
+.nav-file-title {
+  border-radius: 6px;
+}
+
+.nav-folder[data-path="agents"] > .nav-folder-title {
+  color: var(--mb-agents);
+  background: rgba(156, 220, 254, 0.08);
+}
+
+.nav-folder[data-path="scripts"] > .nav-folder-title {
+  color: var(--mb-scripts);
+  background: rgba(66, 168, 168, 0.08);
+}
+
+.nav-folder[data-path="assets"] > .nav-folder-title {
+  color: var(--mb-assets);
+  background: rgba(217, 119, 66, 0.08);
+}
+
+.nav-folder[data-path="assets/template-brain"] > .nav-folder-title {
+  color: var(--mb-template);
+  background: rgba(106, 153, 85, 0.08);
+}
+
+.nav-folder[data-path="references"] > .nav-folder-title {
+  color: var(--mb-references);
+  background: rgba(107, 138, 160, 0.08);
+}
+
+.nav-folder[data-path="evals"] > .nav-folder-title {
+  color: var(--mb-evals);
+  background: rgba(197, 134, 192, 0.08);
+}
+
+.nav-file-title[data-path="README.md"],
+.nav-file-title[data-path="SKILL.md"],
+.nav-file-title[data-path="CHANGELOG.md"] {
+  color: var(--mb-docs);
+  font-weight: 700;
+}
+
+.nav-file-title[data-path="SECURITY.md"] {
+  color: var(--mb-security);
+  font-weight: 700;
+}
+
+.nav-file-title[data-path^="agents/"] { border-left: 2px solid rgba(156, 220, 254, 0.45); }
+.nav-file-title[data-path^="scripts/"] { border-left: 2px solid rgba(66, 168, 168, 0.45); }
+.nav-file-title[data-path^="assets/"] { border-left: 2px solid rgba(217, 119, 66, 0.42); }
+.nav-file-title[data-path^="assets/template-brain/"] { border-left-color: rgba(106, 153, 85, 0.52); }
+.nav-file-title[data-path^="references/"] { border-left: 2px solid rgba(107, 138, 160, 0.45); }
+.nav-file-title[data-path^="evals/"] { border-left: 2px solid rgba(197, 134, 192, 0.45); }
+
+.canvas-node-container {
+  border-radius: 8px;
+}

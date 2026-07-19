@@ -9,7 +9,8 @@ dev stacks, apps, and setup walkthroughs.
 
 | Package    | What it provides                                        |
 |------------|---------------------------------------------------------|
-| `claude`   | `~/.claude/CLAUDE.md` (Claude Code behavior)            |
+| `agents`   | `~/.agents/skills/` — central store for AI-agent skills (claude/cursor/codex symlink into it) |
+| `claude`   | `~/.claude/CLAUDE.md`, `settings.json`, `skills/` (symlinks into `agents`) |
 | `ghostty`  | `~/.config/ghostty/config`                              |
 | `git`      | `~/.gitconfig`, `~/.gitignore`, `~/.gitmessage`         |
 | `launchagents` | `~/Library/LaunchAgents/*.plist` (login-time hidutil remaps) |
@@ -50,7 +51,7 @@ make -C scripts all
 Per-step provisioning
 ---------------------
 
-`make all` runs `brew → runtimes → ssh → defaults → iterm → agents` through a
+`make all` runs `brew → runtimes → ssh → defaults → iterm → agents → skills` through a
 spinner-driven orchestrator (`scripts/install.sh`) that ends with a styled
 summary box: per-step status icons, durations, and any per-package
 failures (e.g., region-locked casks). Output is captured to
@@ -69,6 +70,7 @@ Each step is idempotent and re-runnable:
 | macOS `defaults` settings                  | `~/.bin/macoss defaults`  |
 | iTerm2 shell integration                   | `~/.bin/macoss iterm`     |
 | LaunchAgents (CapsLock→Escape via hidutil) | `~/.bin/macoss agents`    |
+| AI-agent skills → cursor/codex symlinks    | `~/.bin/macoss skills`    |
 
 Brewfiles
 ---------

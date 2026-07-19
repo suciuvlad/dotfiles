@@ -1,0 +1,16 @@
+{
+  "version": "2.3.0",
+  "organization": "purposeinplay",
+  "date": "May 2026",
+  "abstract": "Architecture, design, and implementation patterns for purposeinplay Go services. Based on DDD, CQRS, and Clean Architecture principles from Three Dots Labs, extended with org-specific conventions: go-commons/errors, *T pointers for nullables, oapi-codegen OpenAPI-first workflow, GORM adapters, caarlos0/env config, graceful shutdown, and precision-safe monetary amounts (NUMERIC(38,18) + shopspring/decimal end-to-end). Contains 12 rules across three groups: core architecture (5 rules), purposeinplay implementation (4 rules), domain conventions (1 rule), plus security and testing.",
+  "references": [
+    "https://threedots.tech/post/ddd-lite-in-go-introduction/",
+    "https://threedots.tech/post/introducing-clean-architecture/",
+    "https://threedots.tech/post/basic-cqrs-in-go/",
+    "https://threedots.tech/post/repository-pattern-in-go/",
+    "https://github.com/purposeinplay/go-commons",
+    "https://github.com/purposeinplay/go-starter-openapi",
+    "https://github.com/oapi-codegen/oapi-codegen",
+    "https://github.com/shopspring/decimal"
+  ]
+}

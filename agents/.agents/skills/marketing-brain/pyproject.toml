@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "marketing-brain"
+version = "0.1.5"
+description = "Source-available Obsidian marketing strategy brain with DataForSEO research, Codex/Claude skill entrypoint, reports, and release gates."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary source-available" }
+authors = [{ name = "Daniel Agrici" }]
+dependencies = ["openpyxl>=3.1.0"]
+
+[project.optional-dependencies]
+pdf = ["weasyprint>=61"]
+
+[project.scripts]
+marketing-brain = "marketing_brain.cli:main"
+
+[tool.setuptools]
+packages = ["marketing_brain"]
+
+[tool.setuptools.package-data]
+marketing_brain = []

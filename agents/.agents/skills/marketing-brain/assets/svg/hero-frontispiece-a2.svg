@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
+          <title id="title">Marketing Brain editorial frontispiece</title>
+          <desc id="desc">A cream editorial hero with an engraved brain network plate and asymmetrical Marketing Brain title treatment.</desc>
+          <rect width="1280" height="640" fill="#FAFAF7"/>
+
+      <rect x="32" y="32" width="1216" height="576" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.34"/>
+      <rect x="48" y="48" width="1184" height="544" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.18"/>
+
+      <rect x="108" y="112" width="408" height="408" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.48"/>
+      <rect x="120" y="124" width="384" height="384" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.24"/>
+        <g id="hero-brain" aria-label="Editorial brain network engraving">
+        <circle cx="312" cy="320" r="59.92" fill="none" stroke="#8B7355" stroke-width="0.64" opacity="0.24"><animate attributeName="opacity" values="0.08;0.28;0.08" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="312" cy="320" r="98.44" fill="none" stroke="#8B7355" stroke-width="0.43" opacity="0.15"><animate attributeName="opacity" values="0.08;0.28;0.08" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="312" cy="320" r="136.96" fill="none" stroke="#8B7355" stroke-width="0.43" opacity="0.10"><animate attributeName="opacity" values="0.08;0.28;0.08" dur="6s" repeatCount="indefinite"/></circle>
+      <g stroke="#8B7355" stroke-width="0.86" opacity="0.58" fill="none">
+        <line x1="312" y1="320" x2="312" y2="142.38"/>
+<line x1="312" y1="320" x2="366.05" y2="189.51"/>
+<line x1="312" y1="320" x2="427" y2="205"/>
+<line x1="312" y1="320" x2="442.49" y2="265.95"/>
+<line x1="312" y1="320" x2="489.62" y2="320"/>
+<line x1="312" y1="320" x2="442.49" y2="374.05"/>
+<line x1="312" y1="320" x2="427" y2="435"/>
+<line x1="312" y1="320" x2="366.05" y2="450.49"/>
+<line x1="312" y1="320" x2="312" y2="497.62"/>
+<line x1="312" y1="320" x2="257.95" y2="450.49"/>
+<line x1="312" y1="320" x2="197" y2="435"/>
+<line x1="312" y1="320" x2="181.51" y2="374.05"/>
+<line x1="312" y1="320" x2="134.38" y2="320"/>
+<line x1="312" y1="320" x2="181.51" y2="265.95"/>
+<line x1="312" y1="320" x2="197" y2="205"/>
+<line x1="312" y1="320" x2="257.95" y2="189.51"/>
+        <line x1="312" y1="142.38" x2="489.62" y2="320" opacity="0.34"/>
+<line x1="489.62" y1="320" x2="312" y2="497.62" opacity="0.34"/>
+<line x1="312" y1="497.62" x2="134.38" y2="320" opacity="0.34"/>
+<line x1="134.38" y1="320" x2="312" y2="142.38" opacity="0.34"/>
+<line x1="427" y1="205" x2="427" y2="435" opacity="0.34"/>
+<line x1="427" y1="435" x2="197" y2="435" opacity="0.34"/>
+<line x1="197" y1="435" x2="197" y2="205" opacity="0.34"/>
+<line x1="197" y1="205" x2="427" y2="205" opacity="0.34"/>
+      </g>
+      <circle cx="312" cy="320" r="15.8" fill="none" stroke="#1a1a1a" stroke-width="0.86" opacity="0.35"/>
+      <circle cx="312" cy="320" r="11.13" fill="#1a1a1a"><animate attributeName="r" values="11.13;12.69;11.13" dur="6s" repeatCount="indefinite"/></circle>
+      <g fill="#1a1a1a">
+        <circle cx="312" cy="142.38" r="4.07" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0s" repeatCount="indefinite"/></circle>
+<circle cx="366.05" cy="189.51" r="2.35" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.08s" repeatCount="indefinite"/></circle>
+<circle cx="427" cy="205" r="3" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.16s" repeatCount="indefinite"/></circle>
+<circle cx="442.49" cy="265.95" r="2.35" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.24s" repeatCount="indefinite"/></circle>
+<circle cx="489.62" cy="320" r="4.07" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.32s" repeatCount="indefinite"/></circle>
+<circle cx="442.49" cy="374.05" r="2.35" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.4s" repeatCount="indefinite"/></circle>
+<circle cx="427" cy="435" r="3" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.48s" repeatCount="indefinite"/></circle>
+<circle cx="366.05" cy="450.49" r="2.35" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.56s" repeatCount="indefinite"/></circle>
+<circle cx="312" cy="497.62" r="4.07" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.64s" repeatCount="indefinite"/></circle>
+<circle cx="257.95" cy="450.49" r="2.35" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.72s" repeatCount="indefinite"/></circle>
+<circle cx="197" cy="435" r="3" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.8s" repeatCount="indefinite"/></circle>
+<circle cx="181.51" cy="374.05" r="2.35" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.88s" repeatCount="indefinite"/></circle>
+<circle cx="134.38" cy="320" r="4.07" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.96s" repeatCount="indefinite"/></circle>
+<circle cx="181.51" cy="265.95" r="2.35" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="1.04s" repeatCount="indefinite"/></circle>
+<circle cx="197" cy="205" r="3" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="1.12s" repeatCount="indefinite"/></circle>
+<circle cx="257.95" cy="189.51" r="2.35" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="1.2s" repeatCount="indefinite"/></circle>
+      </g>
+    </g>
+
+      <text x="640" y="204" fill="#8B7355" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" letter-spacing="4" text-transform="uppercase">VOL &#183; I  |  A FIELD MANUAL</text>
+      <text x="640" y="276" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="74" font-style="italic" font-weight="400">Marketing</text>
+      <text x="640" y="352" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="74" font-style="italic" font-weight="400">Brain</text>
+      <line x1="642" y1="384" x2="724" y2="384" stroke="#1a1a1a" stroke-width="1.5"/>
+      <text x="640" y="426" fill="#4a4a4a" font-family="Georgia, 'Times New Roman', serif" font-size="22" line-height="1.45">
+        <tspan x="640" dy="0">Strategic SEO, orchestrated by artificial intelligence.</tspan>
+        <tspan x="640" dy="33">A complete pipeline from competitor mining</tspan>
+        <tspan x="640" dy="33">to the ULTIMATE BEAST plan.</tspan>
+      </text>
+      <text x="640" y="548" fill="#8B7355" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" letter-spacing="4">FLOW &#183; DATAFORSEO &#183; CLAUDE &#183; OBSIDIAN</text>
+
+        </svg>

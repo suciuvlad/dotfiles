@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: python -m pip install -e .
+      - name: Compile
+        run: python -m compileall scripts marketing_brain tests
+      - name: CLI smoke
+        run: marketing-brain --help
+      - name: Editorial assets
+        run: |
+          python scripts/generate_editorial_assets.py
+          git diff --exit-code -- assets/svg assets/template-brain/_attachments
+      - name: Template vault lint
+        run: python scripts/lint_vault.py --vault assets/template-brain --template
+      - name: Pipeline tests
+        run: python tests/test_pipeline.py
+      - name: Demo vault
+        run: |
+          python scripts/build_demo_vault.py
+          git diff --exit-code -- examples/sample-vault
+      - name: Release package and audit
+        run: python scripts/package_release.py --version 0.1.5

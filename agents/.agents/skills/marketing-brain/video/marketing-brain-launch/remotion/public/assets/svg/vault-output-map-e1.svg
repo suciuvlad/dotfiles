@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="480" viewBox="0 0 1000 480" role="img" aria-labelledby="title desc">
+          <title id="title">Marketing Brain vault output map</title>
+          <desc id="desc">An editorial map of the generated vault outputs: raw sources, workbook, Obsidian wiki, deliverables, and visual references.</desc>
+          <rect width="1000" height="480" fill="#FAFAF7"/>
+
+      <rect x="24" y="24" width="952" height="432" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.34"/>
+      <rect x="38" y="38" width="924" height="404" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.18"/>
+      <text x="500" y="82" text-anchor="middle" fill="#8B7355" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" letter-spacing="4">WHAT COMES BACK PER RUN</text>
+      <text x="500" y="126" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="40" font-style="italic">A working strategy vault</text>
+      <g>
+        <line x1="500" y1="256" x2="188" y2="226" stroke="#8B7355" stroke-width="1" opacity="0.45"><animate attributeName="opacity" values="0.24;0.7;0.24" dur="6s" begin="0s" repeatCount="indefinite"/></line><line x1="500" y1="256" x2="372" y2="320" stroke="#8B7355" stroke-width="1" opacity="0.45"><animate attributeName="opacity" values="0.24;0.7;0.24" dur="6s" begin="0.2s" repeatCount="indefinite"/></line><line x1="500" y1="256" x2="500" y2="192" stroke="#8B7355" stroke-width="1" opacity="0.45"><animate attributeName="opacity" values="0.24;0.7;0.24" dur="6s" begin="0.4s" repeatCount="indefinite"/></line><line x1="500" y1="256" x2="628" y2="320" stroke="#8B7355" stroke-width="1" opacity="0.45"><animate attributeName="opacity" values="0.24;0.7;0.24" dur="6s" begin="0.6s" repeatCount="indefinite"/></line><line x1="500" y1="256" x2="812" y2="226" stroke="#8B7355" stroke-width="1" opacity="0.45"><animate attributeName="opacity" values="0.24;0.7;0.24" dur="6s" begin="0.8s" repeatCount="indefinite"/></line>
+      </g>
+        <g id="vault-brain" aria-label="Editorial brain network engraving">
+        <circle cx="500" cy="256" r="21.84" fill="none" stroke="#8B7355" stroke-width="0.23" opacity="0.24"><animate attributeName="opacity" values="0.08;0.28;0.08" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="500" cy="256" r="35.88" fill="none" stroke="#8B7355" stroke-width="0.16" opacity="0.15"><animate attributeName="opacity" values="0.08;0.28;0.08" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="500" cy="256" r="49.92" fill="none" stroke="#8B7355" stroke-width="0.16" opacity="0.10"><animate attributeName="opacity" values="0.08;0.28;0.08" dur="6s" repeatCount="indefinite"/></circle>
+      <g stroke="#8B7355" stroke-width="0.31" opacity="0.58" fill="none">
+        <line x1="500" y1="256" x2="500" y2="191.26"/>
+<line x1="500" y1="256" x2="519.7" y2="208.44"/>
+<line x1="500" y1="256" x2="541.92" y2="214.08"/>
+<line x1="500" y1="256" x2="547.56" y2="236.3"/>
+<line x1="500" y1="256" x2="564.74" y2="256"/>
+<line x1="500" y1="256" x2="547.56" y2="275.7"/>
+<line x1="500" y1="256" x2="541.92" y2="297.92"/>
+<line x1="500" y1="256" x2="519.7" y2="303.56"/>
+<line x1="500" y1="256" x2="500" y2="320.74"/>
+<line x1="500" y1="256" x2="480.3" y2="303.56"/>
+<line x1="500" y1="256" x2="458.08" y2="297.92"/>
+<line x1="500" y1="256" x2="452.44" y2="275.7"/>
+<line x1="500" y1="256" x2="435.26" y2="256"/>
+<line x1="500" y1="256" x2="452.44" y2="236.3"/>
+<line x1="500" y1="256" x2="458.08" y2="214.08"/>
+<line x1="500" y1="256" x2="480.3" y2="208.44"/>
+        <line x1="500" y1="191.26" x2="564.74" y2="256" opacity="0.34"/>
+<line x1="564.74" y1="256" x2="500" y2="320.74" opacity="0.34"/>
+<line x1="500" y1="320.74" x2="435.26" y2="256" opacity="0.34"/>
+<line x1="435.26" y1="256" x2="500" y2="191.26" opacity="0.34"/>
+<line x1="541.92" y1="214.08" x2="541.92" y2="297.92" opacity="0.34"/>
+<line x1="541.92" y1="297.92" x2="458.08" y2="297.92" opacity="0.34"/>
+<line x1="458.08" y1="297.92" x2="458.08" y2="214.08" opacity="0.34"/>
+<line x1="458.08" y1="214.08" x2="541.92" y2="214.08" opacity="0.34"/>
+      </g>
+      <circle cx="500" cy="256" r="5.76" fill="none" stroke="#1a1a1a" stroke-width="0.31" opacity="0.35"/>
+      <circle cx="500" cy="256" r="4.06" fill="#1a1a1a"><animate attributeName="r" values="4.06;4.62;4.06" dur="6s" repeatCount="indefinite"/></circle>
+      <g fill="#1a1a1a">
+        <circle cx="500" cy="191.26" r="1.48" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0s" repeatCount="indefinite"/></circle>
+<circle cx="519.7" cy="208.44" r="0.86" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.08s" repeatCount="indefinite"/></circle>
+<circle cx="541.92" cy="214.08" r="1.09" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.16s" repeatCount="indefinite"/></circle>
+<circle cx="547.56" cy="236.3" r="0.86" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.24s" repeatCount="indefinite"/></circle>
+<circle cx="564.74" cy="256" r="1.48" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.32s" repeatCount="indefinite"/></circle>
+<circle cx="547.56" cy="275.7" r="0.86" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.4s" repeatCount="indefinite"/></circle>
+<circle cx="541.92" cy="297.92" r="1.09" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.48s" repeatCount="indefinite"/></circle>
+<circle cx="519.7" cy="303.56" r="0.86" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.56s" repeatCount="indefinite"/></circle>
+<circle cx="500" cy="320.74" r="1.48" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.64s" repeatCount="indefinite"/></circle>
+<circle cx="480.3" cy="303.56" r="0.86" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.72s" repeatCount="indefinite"/></circle>
+<circle cx="458.08" cy="297.92" r="1.09" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.8s" repeatCount="indefinite"/></circle>
+<circle cx="452.44" cy="275.7" r="0.86" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.88s" repeatCount="indefinite"/></circle>
+<circle cx="435.26" cy="256" r="1.48" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="0.96s" repeatCount="indefinite"/></circle>
+<circle cx="452.44" cy="236.3" r="0.86" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="1.04s" repeatCount="indefinite"/></circle>
+<circle cx="458.08" cy="214.08" r="1.09" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="1.12s" repeatCount="indefinite"/></circle>
+<circle cx="480.3" cy="208.44" r="0.86" fill="#1a1a1a" opacity="0.82"><animate attributeName="opacity" values="0.62;1;0.62" dur="5.6s" begin="1.2s" repeatCount="indefinite"/></circle>
+      </g>
+    </g>
+      <text x="500" y="380" text-anchor="middle" fill="#8B7355" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" letter-spacing="3">SOURCES &#183; WIKI &#183; WORKBOOK &#183; DELIVERABLES</text>
+
+        <g>
+          <rect x="96" y="184" width="184" height="84" rx="0" fill="#FAFAF7" stroke="#8B7355" stroke-width="1" opacity="0.92"/>
+          <text x="188" y="219" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-style="italic">Raw sources</text>
+          <text x="188" y="246" text-anchor="middle" fill="#4a4a4a" font-family="Georgia, 'Times New Roman', serif" font-size="13">API JSON + screenshots</text>
+        </g>
+
+        <g>
+          <rect x="280" y="278" width="184" height="84" rx="0" fill="#FAFAF7" stroke="#8B7355" stroke-width="1" opacity="0.92"/>
+          <text x="372" y="313" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-style="italic">Keyword workbook</text>
+          <text x="372" y="340" text-anchor="middle" fill="#4a4a4a" font-family="Georgia, 'Times New Roman', serif" font-size="13">ranked + deduped XLSX</text>
+        </g>
+
+        <g>
+          <rect x="408" y="150" width="184" height="84" rx="0" fill="#FAFAF7" stroke="#8B7355" stroke-width="1" opacity="0.92"/>
+          <text x="500" y="185" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-style="italic">Obsidian wiki</text>
+          <text x="500" y="212" text-anchor="middle" fill="#4a4a4a" font-family="Georgia, 'Times New Roman', serif" font-size="13">hot / index / deep notes</text>
+        </g>
+
+        <g>
+          <rect x="536" y="278" width="184" height="84" rx="0" fill="#FAFAF7" stroke="#8B7355" stroke-width="1" opacity="0.92"/>
+          <text x="628" y="313" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-style="italic">Deliverables</text>
+          <text x="628" y="340" text-anchor="middle" fill="#4a4a4a" font-family="Georgia, 'Times New Roman', serif" font-size="13">BEAST plan + roadmap</text>
+        </g>
+
+        <g>
+          <rect x="720" y="184" width="184" height="84" rx="0" fill="#FAFAF7" stroke="#8B7355" stroke-width="1" opacity="0.92"/>
+          <text x="812" y="219" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-style="italic">Visual references</text>
+          <text x="812" y="246" text-anchor="middle" fill="#4a4a4a" font-family="Georgia, 'Times New Roman', serif" font-size="13">style-matched evidence</text>
+        </g>
+
+
+        </svg>

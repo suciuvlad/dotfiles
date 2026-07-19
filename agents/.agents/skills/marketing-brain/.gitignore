@@ -1,0 +1,52 @@
+# marketing-brain — repo .gitignore
+# Excludes credentials, build artifacts, scaffolded vaults, and per-run outputs.
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+
+# Credentials (env vars only — never commit)
+.env
+.env.*
+*.env
+secrets/
+credentials.json
+
+# Build state
+.scaffold-state.json
+!examples/sample-vault/.raw/.scaffold-state.json
+
+# Per-run DataForSEO research outputs (large + cred-derived)
+.raw/sources/dataforseo/
+!examples/sample-vault/.raw/
+!examples/sample-vault/.raw/sources/
+!examples/sample-vault/.raw/sources/dataforseo/
+!examples/sample-vault/.raw/sources/dataforseo/**
+
+# Generated client deliverables (per-vault, not part of the skill)
+keywords-*.xlsx
+keywords-*.csv
+*-Beast-Plan.pdf
+*-Beast-Plan.html
+!examples/sample-vault/keywords-*.xlsx
+!examples/sample-vault/keywords-*.csv
+!examples/sample-vault/*-Beast-Plan.html
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+.obsidian/workspace*
+Untitled.canvas
+
+# Local handoff artifacts (not for public ship)
+HANDOFF.md

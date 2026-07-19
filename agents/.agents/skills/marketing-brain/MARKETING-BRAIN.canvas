@@ -1,0 +1,221 @@
+{
+  "nodes": [
+    {
+      "id": "title",
+      "type": "text",
+      "text": "# Marketing Brain\n\nRepo map for the skill, the vault template, and the visual evidence loop. Use this Canvas for arrangement; use Graph view for link topology.",
+      "x": -900,
+      "y": -520,
+      "width": 560,
+      "height": 190,
+      "color": "1"
+    },
+    {
+      "id": "skill-readme",
+      "type": "file",
+      "file": "README.md",
+      "x": -900,
+      "y": -240,
+      "width": 330,
+      "height": 170,
+      "color": "4"
+    },
+    {
+      "id": "skill-contract",
+      "type": "file",
+      "file": "SKILL.md",
+      "x": -520,
+      "y": -240,
+      "width": 330,
+      "height": 170,
+      "color": "4"
+    },
+    {
+      "id": "shipping",
+      "type": "file",
+      "file": "references/shipping-rules.md",
+      "x": -140,
+      "y": -240,
+      "width": 330,
+      "height": 170,
+      "color": "2"
+    },
+    {
+      "id": "pipeline-label",
+      "type": "text",
+      "text": "## Pipeline Engine\n\nDataForSEO intake -> keyword workbook -> PAA mining -> vault synthesis -> BEAST plan PDF.",
+      "x": -900,
+      "y": 40,
+      "width": 420,
+      "height": 150,
+      "color": "6"
+    },
+    {
+      "id": "find-competitors",
+      "type": "file",
+      "file": "scripts/find_competitors.py",
+      "x": -420,
+      "y": 40,
+      "width": 310,
+      "height": 150,
+      "color": "6"
+    },
+    {
+      "id": "build-xlsx",
+      "type": "file",
+      "file": "scripts/build_keyword_xlsx.py",
+      "x": -60,
+      "y": 40,
+      "width": 310,
+      "height": 150,
+      "color": "6"
+    },
+    {
+      "id": "synthesize-plan",
+      "type": "file",
+      "file": "scripts/synthesize_beast_plan.py",
+      "x": 300,
+      "y": 40,
+      "width": 310,
+      "height": 150,
+      "color": "6"
+    },
+    {
+      "id": "template-label",
+      "type": "text",
+      "text": "## Vault Template\n\nThe reusable client brain. This is the folder to open when exploring the shipped template as a vault.",
+      "x": 360,
+      "y": -520,
+      "width": 420,
+      "height": 150,
+      "color": "3"
+    },
+    {
+      "id": "template-readme",
+      "type": "file",
+      "file": "assets/template-brain/README.md",
+      "x": 840,
+      "y": -520,
+      "width": 330,
+      "height": 160,
+      "color": "3"
+    },
+    {
+      "id": "start-here",
+      "type": "file",
+      "file": "assets/template-brain/wiki/meta/Start Here.md",
+      "x": 840,
+      "y": -300,
+      "width": 330,
+      "height": 160,
+      "color": "3"
+    },
+    {
+      "id": "onboarding-canvas",
+      "type": "file",
+      "file": "assets/template-brain/wiki/meta/Onboarding Canvas.canvas",
+      "x": 840,
+      "y": -80,
+      "width": 330,
+      "height": 160,
+      "color": "3"
+    },
+    {
+      "id": "agents-label",
+      "type": "text",
+      "text": "## Specialist Agents\n\nCurator, synthesizer, and planner keep the skill output bounded and reviewable.",
+      "x": -900,
+      "y": 300,
+      "width": 420,
+      "height": 150,
+      "color": "5"
+    },
+    {
+      "id": "keyword-curator",
+      "type": "file",
+      "file": "agents/keyword-curator.md",
+      "x": -420,
+      "y": 300,
+      "width": 310,
+      "height": 150,
+      "color": "5"
+    },
+    {
+      "id": "vault-synth",
+      "type": "file",
+      "file": "agents/vault-synthesizer.md",
+      "x": -60,
+      "y": 300,
+      "width": 310,
+      "height": 150,
+      "color": "5"
+    },
+    {
+      "id": "beast-planner",
+      "type": "file",
+      "file": "agents/beast-planner.md",
+      "x": 300,
+      "y": 300,
+      "width": 310,
+      "height": 150,
+      "color": "5"
+    },
+    {
+      "id": "visual-label",
+      "type": "text",
+      "text": "## Visual Evidence Loop\n\nCapture screenshots and source images, store them in `.raw/sources/visuals/`, then reuse the style system without copying unverified assets.",
+      "x": 840,
+      "y": 220,
+      "width": 420,
+      "height": 170,
+      "color": "2"
+    },
+    {
+      "id": "visual-script",
+      "type": "file",
+      "file": "scripts/capture_visual_references.py",
+      "x": 1320,
+      "y": 220,
+      "width": 340,
+      "height": 160,
+      "color": "2"
+    },
+    {
+      "id": "visual-flow",
+      "type": "file",
+      "file": "assets/template-brain/wiki/flows/Visual Reference Capture Workflow.md",
+      "x": 1320,
+      "y": 440,
+      "width": 340,
+      "height": 160,
+      "color": "2"
+    },
+    {
+      "id": "image-speed",
+      "type": "file",
+      "file": "assets/template-brain/wiki/flows/Image and Page Speed Workflow.md",
+      "x": 1320,
+      "y": 660,
+      "width": 340,
+      "height": 160,
+      "color": "2"
+    }
+  ],
+  "edges": [
+    { "id": "e1", "fromNode": "skill-readme", "fromSide": "right", "toNode": "skill-contract", "toSide": "left" },
+    { "id": "e2", "fromNode": "skill-contract", "fromSide": "right", "toNode": "shipping", "toSide": "left" },
+    { "id": "e3", "fromNode": "skill-contract", "fromSide": "bottom", "toNode": "find-competitors", "toSide": "top" },
+    { "id": "e4", "fromNode": "find-competitors", "fromSide": "right", "toNode": "build-xlsx", "toSide": "left" },
+    { "id": "e5", "fromNode": "build-xlsx", "fromSide": "right", "toNode": "synthesize-plan", "toSide": "left" },
+    { "id": "e6", "fromNode": "synthesize-plan", "fromSide": "right", "toNode": "template-readme", "toSide": "left" },
+    { "id": "e7", "fromNode": "template-readme", "fromSide": "bottom", "toNode": "start-here", "toSide": "top" },
+    { "id": "e8", "fromNode": "start-here", "fromSide": "bottom", "toNode": "onboarding-canvas", "toSide": "top" },
+    { "id": "e9", "fromNode": "find-competitors", "fromSide": "bottom", "toNode": "keyword-curator", "toSide": "top" },
+    { "id": "e10", "fromNode": "build-xlsx", "fromSide": "bottom", "toNode": "vault-synth", "toSide": "top" },
+    { "id": "e11", "fromNode": "synthesize-plan", "fromSide": "bottom", "toNode": "beast-planner", "toSide": "top" },
+    { "id": "e12", "fromNode": "onboarding-canvas", "fromSide": "right", "toNode": "visual-label", "toSide": "left" },
+    { "id": "e13", "fromNode": "visual-label", "fromSide": "right", "toNode": "visual-script", "toSide": "left" },
+    { "id": "e14", "fromNode": "visual-script", "fromSide": "bottom", "toNode": "visual-flow", "toSide": "top" },
+    { "id": "e15", "fromNode": "visual-flow", "fromSide": "bottom", "toNode": "image-speed", "toSide": "top" }
+  ]
+}

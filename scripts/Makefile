@@ -2,10 +2,10 @@ SHELL := /usr/bin/env bash
 SCRIPTS_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 DOTFILES_DIR := $(abspath $(SCRIPTS_DIR)/..)
 SETUP := $(SCRIPTS_DIR)/setup
-PACKAGES := claude ghostty git launchagents mise nvim scripts shell starship tmux zsh
+PACKAGES := agents claude ghostty git launchagents mise nvim scripts shell starship tmux zsh
 REQUIRED_CMDS := stow brew git nvim mise tmux fzf starship
 
-.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents check lint
+.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents skills check lint
 
 all: install
 
@@ -23,6 +23,7 @@ help:
 	@echo "  make defaults   apply all macOS 'defaults write' settings"
 	@echo "  make iterm      install iTerm2 shell integration"
 	@echo "  make agents     load ~/Library/LaunchAgents/*.plist (CapsLock→Escape via hidutil)"
+	@echo "  make skills     link AI-agent skills from ~/.agents/skills into cursor/codex"
 	@echo ""
 	@echo "Maintenance:"
 	@echo "  make check      audit symlinks, required commands, brew packages, git identity,"
@@ -53,6 +54,9 @@ iterm:
 
 agents:
 	bash $(SETUP)/agents.sh
+
+skills:
+	bash $(SETUP)/agent-skills.sh
 
 check:
 	@echo "── Symlinks ──────────────────────────────────"

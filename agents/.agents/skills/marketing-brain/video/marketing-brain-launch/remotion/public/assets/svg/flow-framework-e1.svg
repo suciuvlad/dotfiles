@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="950" height="460" viewBox="0 0 950 460" role="img" aria-labelledby="title desc">
+          <title id="title">Marketing Brain FLOW Framework</title>
+          <desc id="desc">A cream editorial diagram explaining the FLOW Framework: Find, Leverage, Optimize, Win.</desc>
+          <rect width="950" height="460" fill="#FAFAF7"/>
+
+<rect x="24" y="24" width="902" height="412" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.34"/>
+<rect x="38" y="38" width="874" height="384" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.18"/>
+<text x="475" y="88" text-anchor="middle" fill="#8B7355" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" letter-spacing="4">THE STRATEGIC SPINE</text>
+<text x="475" y="134" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-style="italic">FLOW Framework</text>
+<line x1="130" y1="230" x2="760" y2="230" stroke="#8B7355" stroke-width="1.2" opacity="0.55"/>
+
+  <g>
+    <circle cx="130" cy="230" r="34" fill="#FAFAF7" stroke="#8B7355" stroke-width="1.2" opacity="0.96"><animate attributeName="opacity" values="0.78;1;0.78" dur="6s" begin="0s" repeatCount="indefinite"/></circle>
+    <circle cx="130" cy="230" r="23" fill="none" stroke="#8B7355" stroke-width="0.8" opacity="0.32"/>
+    <text x="130" y="241" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="36" font-style="italic">F</text>
+    <text x="130" y="304" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-style="italic">Find</text>
+    <text x="130" y="334" text-anchor="middle" fill="#4a4a4a" font-family="Georgia, 'Times New Roman', serif" font-size="13">Demand + gaps</text>
+  </g>
+
+  <g>
+    <circle cx="340" cy="230" r="34" fill="#FAFAF7" stroke="#8B7355" stroke-width="1.2" opacity="0.96"><animate attributeName="opacity" values="0.78;1;0.78" dur="6s" begin="0.25s" repeatCount="indefinite"/></circle>
+    <circle cx="340" cy="230" r="23" fill="none" stroke="#8B7355" stroke-width="0.8" opacity="0.32"/>
+    <text x="340" y="241" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="36" font-style="italic">L</text>
+    <text x="340" y="304" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-style="italic">Leverage</text>
+    <text x="340" y="334" text-anchor="middle" fill="#4a4a4a" font-family="Georgia, 'Times New Roman', serif" font-size="13">Proof + position</text>
+  </g>
+
+  <g>
+    <circle cx="550" cy="230" r="34" fill="#FAFAF7" stroke="#8B7355" stroke-width="1.2" opacity="0.96"><animate attributeName="opacity" values="0.78;1;0.78" dur="6s" begin="0.5s" repeatCount="indefinite"/></circle>
+    <circle cx="550" cy="230" r="23" fill="none" stroke="#8B7355" stroke-width="0.8" opacity="0.32"/>
+    <text x="550" y="241" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="36" font-style="italic">O</text>
+    <text x="550" y="304" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-style="italic">Optimize</text>
+    <text x="550" y="334" text-anchor="middle" fill="#4a4a4a" font-family="Georgia, 'Times New Roman', serif" font-size="13">Pages + clusters</text>
+  </g>
+
+  <g>
+    <circle cx="760" cy="230" r="34" fill="#FAFAF7" stroke="#8B7355" stroke-width="1.2" opacity="0.96"><animate attributeName="opacity" values="0.78;1;0.78" dur="6s" begin="0.75s" repeatCount="indefinite"/></circle>
+    <circle cx="760" cy="230" r="23" fill="none" stroke="#8B7355" stroke-width="0.8" opacity="0.32"/>
+    <text x="760" y="241" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="36" font-style="italic">W</text>
+    <text x="760" y="304" text-anchor="middle" fill="#1a1a1a" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-style="italic">Win</text>
+    <text x="760" y="334" text-anchor="middle" fill="#4a4a4a" font-family="Georgia, 'Times New Roman', serif" font-size="13">AI search + SERP</text>
+  </g>
+
+<text x="475" y="386" text-anchor="middle" fill="#8B7355" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" letter-spacing="3">FIND &#183; LEVERAGE &#183; OPTIMIZE &#183; WIN</text>
+
+        </svg>
