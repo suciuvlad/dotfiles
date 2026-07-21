@@ -13,7 +13,7 @@ set -euo pipefail
 STORE="$HOME/.agents/skills"
 
 CURSOR_SKILLS=(emil-design-eng web-animation-design)
-CODEX_SKILLS=(emil-design-eng web-animation-design 'seo*')
+CODEX_SKILLS=(emil-design-eng web-animation-design)
 
 if [ ! -d "$STORE" ]; then
   echo "✗ $STORE missing — run 'stow -R -t ~ agents' first" >&2

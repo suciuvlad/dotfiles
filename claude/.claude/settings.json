@@ -26,7 +26,8 @@
     "pr-review-toolkit@claude-plugins-official": true,
     "claude-seo@agricidaniel-claude-seo": true,
     "claude-obsidian@agricidaniel-claude-obsidian": true,
-    "cloudflare@cloudflare": true
+    "cloudflare@cloudflare": true,
+    "claude-blog@agricidaniel-blog": true
   },
   "extraKnownMarketplaces": {
     "agricidaniel-claude-seo": {
@@ -45,6 +46,12 @@
       "source": {
         "source": "github",
         "repo": "cloudflare/skills"
+      }
+    },
+    "agricidaniel-blog": {
+      "source": {
+        "source": "github",
+        "repo": "AgriciDaniel/claude-blog"
       }
     }
   },
