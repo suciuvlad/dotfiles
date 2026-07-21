@@ -6,14 +6,19 @@ on:
   pull_request:
 
 jobs:
-  shellcheck:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: shellcheck
-        run: |
-          shopt -s globstar nullglob
-          shellcheck -x --source-path=SCRIPTDIR scripts/setup/*.sh
+      - name: shellcheck (setup, tests, install.sh, macoss, bootstrap.sh)
+        run: make -C scripts lint
+
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe + defaults --verify tests
+        run: make -C scripts test
 
   brewfile:
     runs-on: macos-latest

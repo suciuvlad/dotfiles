@@ -9,7 +9,7 @@ SETUP := $(SCRIPTS_DIR)/setup
 PACKAGES := agents claude ghostty git launchagents mise nvim scripts shell starship tmux zsh
 REQUIRED_CMDS := stow brew git nvim mise tmux fzf starship
 
-.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents skills ai-clis status check lint
+.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents skills ai-clis status check lint test
 
 all: install
 
@@ -38,6 +38,7 @@ help:
 	@echo "  make check      audit symlinks, required commands, brew packages, git identity,"
 	@echo "                  cask trust, CVE scan"
 	@echo "  make lint       shellcheck setup scripts, install.sh, bootstrap.sh, macoss"
+	@echo "  make test       probe + defaults --verify tests against fake \$$HOMEs"
 
 brew: brew-strict brew-pick-optional
 
@@ -126,5 +127,8 @@ check:
 
 lint:
 	@command -v shellcheck >/dev/null 2>&1 || { echo "shellcheck not found — run 'make brew'" >&2; exit 1; }
-	shellcheck -x --source-path=SCRIPTDIR $(SETUP)/*.sh $(SCRIPTS_DIR)/install.sh $(SCRIPTS_DIR)/.bin/macoss $(DOTFILES_DIR)/bootstrap.sh
+	shellcheck -x --source-path=SCRIPTDIR $(SETUP)/*.sh $(SCRIPTS_DIR)/test/*.sh $(SCRIPTS_DIR)/install.sh $(SCRIPTS_DIR)/.bin/macoss $(DOTFILES_DIR)/bootstrap.sh
 	@echo "  ✓ shellcheck clean"
+
+test:
+	@bash $(SCRIPTS_DIR)/test/run-tests.sh

@@ -15,9 +15,11 @@ if [ "$VERIFY" -eq 0 ]; then
   # Close any open System Preferences panes so they don't override settings.
   osascript -e 'tell application "System Preferences" to quit' 2>/dev/null || true
 
-  # Cache sudo upfront, then keep alive in the background until this script ends.
+  # Cache sudo upfront, then keep alive in the background until this script
+  # ends. Detach its stdio: with the pipe inherited, callers that capture our
+  # output ($(...) or install.sh's spinner) block until the loop's next wake.
   sudo -v
-  ( while true; do sudo -n true; sleep 60; kill -0 "$$" 2>/dev/null || exit; done ) &
+  ( while true; do sudo -n true; sleep 60; kill -0 "$$" 2>/dev/null || exit; done ) >/dev/null 2>&1 </dev/null &
 fi
 
 # dw — `defaults write` that records failures instead of aborting the step.
