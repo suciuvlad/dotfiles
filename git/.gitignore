@@ -41,3 +41,5 @@ __pycache__/
 .ruff_cache/
 coverage/
 .coverage
+
+**/.claude/settings.local.json

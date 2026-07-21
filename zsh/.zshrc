@@ -77,6 +77,8 @@ alias d='docker'
 alias r='rails'
 alias c='claude'
 alias cc='claude --permission-mode auto'
+alias k='kimi'
+alias kk='kimi --auto'
 alias t='tmux attach || tmux new -s Work'
 alias cl='clear'
 alias lzd='lazydocker'
@@ -133,3 +135,9 @@ command -v atuin &>/dev/null && eval "$(atuin init zsh --disable-up-arrow)"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh" || true
 
+
+# Added for WeasyPrint / claude-seo PDF reports (Homebrew native libs)
+export DYLD_FALLBACK_LIBRARY_PATH="/opt/homebrew/lib"
+
+# kimi-code
+export PATH="/Users/vladsuciu/.kimi-code/bin:$PATH"
