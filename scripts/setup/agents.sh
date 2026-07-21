@@ -6,7 +6,18 @@ set -euo pipefail
 
 # Load every LaunchAgent the repo defines (stowed into ~/Library/LaunchAgents).
 # The repo dir is the source of truth — same as the status.sh probe.
-REPO_AGENTS="$(cd "$(dirname "$0")/../.." && pwd)/launchagents/Library/LaunchAgents"
+DOTFILES_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
+REPO_AGENTS="$DOTFILES_DIR/launchagents/Library/LaunchAgents"
+
+# launchd won't scan a symlinked ~/Library/LaunchAgents at login — stow folds
+# the dir on fresh Macs where it doesn't pre-exist. Heal: swap the folded
+# symlink for a real dir with per-file links.
+if [ -L "$HOME/Library/LaunchAgents" ]; then
+  echo "→ ~/Library/LaunchAgents is a stow-folded symlink (launchd skips it at login) — unfolding"
+  unlink "$HOME/Library/LaunchAgents"
+  mkdir "$HOME/Library/LaunchAgents"
+  stow -R -t "$HOME" -d "$DOTFILES_DIR" launchagents
+fi
 
 loaded=0
 missing=()

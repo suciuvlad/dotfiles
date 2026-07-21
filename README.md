@@ -144,6 +144,12 @@ Common operations
 Always re-stow with `-R` after adding or deleting files inside a package
 — that's how stow stays in sync and avoids dangling symlinks.
 
+One folding exception: `~/Library/LaunchAgents` must stay a **real
+directory** — launchd won't scan a symlinked one at login, so agents
+silently stop surviving reboots. On fresh Macs (no such dir yet) stow
+would fold it into exactly that; `bootstrap.sh` pre-creates the dir and
+`make agents` heals an already-folded one.
+
 Updating
 --------
 

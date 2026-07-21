@@ -124,6 +124,12 @@ probe() {
         echo "fail ~/.iterm2_shell_integration.zsh missing"
       fi ;;
     agents)
+      # A symlinked LaunchAgents dir resolves fine for [ -e ] but launchd
+      # skips it at login — catch the stow-folded case explicitly.
+      if [ -L "$HOME/Library/LaunchAgents" ]; then
+        echo "fail ~/Library/LaunchAgents is a symlink — launchd skips it at login; run 'make agents'"
+        return 0
+      fi
       local plist missing_agents=0 total=0
       for plist in "$DOTFILES_DIR"/launchagents/Library/LaunchAgents/*.plist; do
         [ -e "$plist" ] || continue

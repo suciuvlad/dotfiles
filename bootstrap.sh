@@ -61,6 +61,12 @@ say "Stow packages"
 cd "$DEST"
 PACKAGES=(agents claude ghostty git launchagents mise nvim scripts shell starship tmux zsh)
 
+# launchd won't scan ~/Library/LaunchAgents at login if it's a symlink, and
+# on a fresh Mac the dir doesn't exist yet — stow would fold it into exactly
+# that. Pre-create the real directory so stow links per-file instead.
+[ -L "$HOME/Library/LaunchAgents" ] && unlink "$HOME/Library/LaunchAgents"
+mkdir -p "$HOME/Library/LaunchAgents"
+
 # Pre-flight: dry-run stow to detect real files that would block linking
 # (e.g. a hand-written ~/.zshrc on a previously-used Mac).
 stow_rc=0
