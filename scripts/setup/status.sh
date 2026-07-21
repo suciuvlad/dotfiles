@@ -55,9 +55,8 @@ age() {  # humanize seconds-since-epoch → "5m ago"
   fi
 }
 
-# Live probes. Each echoes "<ok|warn|fail> <note>"; steps without a cheap,
-# reliable check (defaults, brew-optional) echo nothing and the recorded
-# status stands alone.
+# Live probes. Each echoes "<ok|warn|fail> <note>"; a step that echoes
+# nothing leaves the recorded status standing alone.
 probe() {
   case "$1" in
     brew-strict)
@@ -67,6 +66,30 @@ probe() {
         echo "ok Brewfile satisfied"
       else
         echo "fail Brewfile packages missing"
+      fi ;;
+    brew-optional)
+      # Brewfile.optional is a menu, not a spec (pick-optional.sh) — the
+      # probe is informational and never fails.
+      if command -v brew >/dev/null 2>&1; then
+        local name base installed hit=0 total_opt=0
+        installed=$({ brew list --formula -1 --full-name; brew list --cask -1; } 2>/dev/null)
+        while IFS= read -r name; do
+          [ -n "$name" ] || continue
+          total_opt=$((total_opt + 1))
+          base="${name##*/}"
+          case $'\n'"$installed"$'\n' in
+            *$'\n'"$name"$'\n'* | *$'\n'"$base"$'\n'*) hit=$((hit + 1)) ;;
+          esac
+        done < <(sed -nE 's/^(brew|cask) "([^"]+)".*/\2/p' "$SCRIPTS_DIR/Brewfile.optional")
+        echo "ok $hit/$total_opt optional installed"
+      fi ;;
+    defaults)
+      # defaults.sh --verify re-reads every dw line — same spec, two modes.
+      local dv
+      if dv=$(bash "$SCRIPTS_DIR/setup/defaults.sh" --verify 2>/dev/null); then
+        echo "ok $dv"
+      else
+        echo "fail ${dv:-defaults verify errored}"
       fi ;;
     ssh)
       # ssh exits 1 even on successful auth, so under pipefail a
@@ -137,6 +160,52 @@ probe() {
   esac
 }
 
+# The checkout itself is state: an untracked plist or unpushed commit is
+# drift the step probes can't see. Ahead/behind is vs the last fetch — no
+# network here.
+repo_probe() {
+  if ! git -C "$DOTFILES_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "fail not a git checkout"
+    return 0
+  fi
+  local dirty ahead behind note=""
+  dirty=$(git -C "$DOTFILES_DIR" status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+  ahead=$(git -C "$DOTFILES_DIR" rev-list --count '@{u}..HEAD' 2>/dev/null || echo 0)
+  behind=$(git -C "$DOTFILES_DIR" rev-list --count 'HEAD..@{u}' 2>/dev/null || echo 0)
+  [ "$dirty" -gt 0 ]  && note="$dirty uncommitted change(s)"
+  [ "$ahead" -gt 0 ]  && note="${note:+$note, }$ahead unpushed commit(s)"
+  [ "$behind" -gt 0 ] && note="${note:+$note, }$behind behind origin"
+  if [ -n "$note" ]; then
+    echo "warn $note"
+  else
+    echo "ok clean, in sync with origin (as of last fetch)"
+  fi
+}
+
+# ── --check: probes only, for the drift LaunchAgent ─────────────────────────
+# Prints one line per drifted item, exits 1 when anything drifted. No ledger,
+# no report — pure evidence.
+if [ "${1:-}" = "--check" ]; then
+  DRIFT=()
+  for i in "${!STEPS[@]}"; do
+    live=$(probe "${STEPS[i]}")
+    [ -n "$live" ] || continue
+    case "${live%% *}" in
+      fail|warn) DRIFT+=("${LABELS[i]}: ${live#* }") ;;
+    esac
+  done
+  repo_live=$(repo_probe)
+  case "${repo_live%% *}" in
+    fail|warn) DRIFT+=("Dotfiles repo: ${repo_live#* }") ;;
+  esac
+  if [ ${#DRIFT[@]} -eq 0 ]; then
+    echo "no drift"
+    exit 0
+  fi
+  printf '%s\n' "${DRIFT[@]}"
+  exit 1
+fi
+
 # ── Report ──────────────────────────────────────────────────────────────────
 echo ""
 echo "── Install status ────────────────────────────────────────────────"
@@ -183,8 +252,19 @@ for i in "${!STEPS[@]}"; do
   fi
 done
 
+repo_live=$(repo_probe)
+printf "  %s %-22s %-34s live: %s\n" \
+  "$(icon "${repo_live%% *}")" "Dotfiles repo" "" "${repo_live#* }"
+REPO_DIRTY=0
+[ "${repo_live%% *}" = "warn" ] && REPO_DIRTY=1
+
 # ── Next steps ──────────────────────────────────────────────────────────────
 NEXT=()
+
+if [ "$REPO_DIRTY" -eq 1 ]; then
+  NEXT+=("Sync the dotfiles repo (commit/push local changes, pull remote ones):
+        git -C $DOTFILES_DIR status")
+fi
 
 if [ "$REGISTER_KEY" -eq 1 ]; then
   NEXT+=("Register ~/.ssh/id_ed25519.pub at https://github.com/settings/keys
