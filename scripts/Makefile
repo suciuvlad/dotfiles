@@ -5,7 +5,7 @@ SETUP := $(SCRIPTS_DIR)/setup
 PACKAGES := agents claude ghostty git launchagents mise nvim scripts shell starship tmux zsh
 REQUIRED_CMDS := stow brew git nvim mise tmux fzf starship
 
-.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents skills check lint
+.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents skills status check lint
 
 all: install
 
@@ -26,6 +26,8 @@ help:
 	@echo "  make skills     link AI-agent skills from ~/.agents/skills into cursor/codex"
 	@echo ""
 	@echo "Maintenance:"
+	@echo "  make status     what the install chain ran / failed / never started, verified"
+	@echo "                  against the live machine, with resume commands"
 	@echo "  make check      audit symlinks, required commands, brew packages, git identity,"
 	@echo "                  cask trust, CVE scan"
 	@echo "  make lint       shellcheck setup scripts, install.sh, bootstrap.sh, macoss"
@@ -57,6 +59,9 @@ agents:
 
 skills:
 	bash $(SETUP)/agent-skills.sh
+
+status:
+	@bash $(SETUP)/status.sh
 
 check:
 	@echo "── Symlinks ──────────────────────────────────"

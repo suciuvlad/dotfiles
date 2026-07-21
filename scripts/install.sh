@@ -13,8 +13,14 @@ set -euo pipefail
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 SCRIPTS_DIR="$DOTFILES_DIR/scripts"
 SETUP_DIR="$SCRIPTS_DIR/setup"
-LOG="${DOTFILES_INSTALL_LOG:-/tmp/dotfiles-install.log}"
-RESULT_FILE="$(mktemp -t install-results.XXXXXX)"
+
+# Per-step results and the log persist across runs and reboots (unlike /tmp)
+# so `make status` can show what ran, what failed, and what never started.
+# results.jsonl is append-only; readers take the latest line per step.
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
+mkdir -p "$STATE_DIR"
+LOG="${DOTFILES_INSTALL_LOG:-$STATE_DIR/install.log}"
+RESULT_FILE="$STATE_DIR/results.jsonl"
 
 export INSTALL_RESULT_FILE="$RESULT_FILE"
 : > "$LOG"
@@ -36,7 +42,6 @@ on_exit() {
   if [ "${#STEP_IDS[@]}" -gt 0 ]; then
     render_summary
   fi
-  rm -f "$RESULT_FILE"
   if [ -n "${SUDO_KEEPALIVE_PID:-}" ]; then
     kill "$SUDO_KEEPALIVE_PID" 2>/dev/null || true
   fi
@@ -48,7 +53,7 @@ trap on_exit EXIT
 # verbose output, when stdout isn't a TTY (CI, pipes), or when the script is
 # being driven by something that wants raw logs.
 if [ "${VERBOSE:-0}" = "1" ] || [ ! -t 1 ]; then
-  exec make -C "$SCRIPTS_DIR" brew runtimes ssh defaults iterm agents skills
+  exec make -C "$SCRIPTS_DIR" brew ssh runtimes defaults iterm agents skills
 fi
 
 # Pre-flight: prime sudo so defaults.sh doesn't prompt mid-spinner.
@@ -171,8 +176,8 @@ run_step() {
       fail) synth_detail="exited non-zero" ;;
       *)    synth_detail="$status" ;;
     esac
-    printf '{"step":"%s","status":"%s","detail":"%s","failures":[]}\n' \
-      "$step_id" "$status" "$synth_detail" >> "$RESULT_FILE"
+    printf '{"step":"%s","status":"%s","detail":"%s","failures":[],"ts":%d}\n' \
+      "$step_id" "$status" "$synth_detail" "$(date +%s)" >> "$RESULT_FILE"
   fi
 
   STEP_IDS+=("$step_id")
@@ -189,6 +194,7 @@ run_step() {
   if [ "$status" = "fail" ]; then
     printf "\nStep failed. Last 30 lines of %s:\n\n" "$LOG"
     tail -n 30 "$LOG"
+    printf "\nRun 'make -C %s status' to see what completed and how to resume.\n" "$SCRIPTS_DIR"
     return 1
   fi
 }
@@ -241,8 +247,11 @@ _format_summary_body() {
     "$(format_dur "$total_dur")"
 
   if command -v jq >/dev/null 2>&1; then
+    # ts filter scopes to this run — the persistent file holds prior runs too.
     local failures
-    failures=$(jq -r 'select(.failures and (.failures | length > 0))
+    failures=$(jq -r --argjson start "$START_TIME" \
+                      'select((.ts // 0) >= $start)
+                      | select(.failures and (.failures | length > 0))
                       | "  ⚠ " + .step + " failures:\n" +
                         ([.failures[] | "      · " + .] | join("\n"))' \
               "$RESULT_FILE" 2>/dev/null)
@@ -272,12 +281,14 @@ brew_shellenv
 run_step "🍺" "Homebrew (optional)" "brew-optional" 1 \
   bash "$SETUP_DIR/pick-optional.sh"
 
-run_step "🔧" "Runtimes (mise)" "runtimes" 0 \
-  mise install
-
-# ssh has an interactive ENTER prompt; must stream.
+# ssh runs BEFORE runtimes so the GitHub key exists (and can be registered)
+# before anything clones from GitHub. Has an interactive ENTER prompt; must
+# stream.
 run_step "🔐" "SSH key" "ssh" 1 \
   bash "$SETUP_DIR/ssh.sh"
+
+run_step "🔧" "Runtimes (mise)" "runtimes" 0 \
+  mise install
 
 run_step "⚙️ " "macOS defaults" "defaults" 0 \
   bash "$SETUP_DIR/defaults.sh"

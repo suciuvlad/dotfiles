@@ -41,9 +41,12 @@ if [ ! -d "$DEST/.git" ]; then
   # disables passphrase/password prompts so a missing/locked key fails
   # fast and falls through to HTTPS. accept-new silently adds github.com
   # to known_hosts on first run.
-  if ssh -o BatchMode=yes -o ConnectTimeout=5 \
-         -o StrictHostKeyChecking=accept-new \
-         -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+  # ssh exits 1 even on successful auth; under pipefail an `ssh | grep`
+  # pipeline can never succeed — capture the output, then match.
+  gh_auth=$(ssh -o BatchMode=yes -o ConnectTimeout=5 \
+                -o StrictHostKeyChecking=accept-new \
+                -T git@github.com 2>&1 || true)
+  if [[ "$gh_auth" == *"successfully authenticated"* ]]; then
     echo "→ GitHub SSH already works — cloning via SSH"
     git clone "$REPO_SSH" "$DEST"
   else
@@ -112,4 +115,7 @@ Once registered, re-run:
 
 It will verify GitHub access and auto-switch the dotfiles remote
 from HTTPS to SSH.
+
+Check what ran / what's pending at any time with:
+  make -C ~/dotfiles/scripts status
 EOF

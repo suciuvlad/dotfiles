@@ -28,12 +28,20 @@ It is idempotent. Re-running it on a partially-set-up machine just fills in what
 | Target              | Re-run with            | What it does                                                                        |
 |---------------------|------------------------|-------------------------------------------------------------------------------------|
 | `make brew`         | `~/.bin/macoss brew`   | Strict `Brewfile` (CLI core), then best-effort `Brewfile.optional` (casks, MAS).    |
+| `make ssh`          | `~/.bin/macoss ssh`    | Generates `~/.ssh/id_ed25519`, writes `~/.ssh/config`, prints public key for GitHub. Auto-switches dotfiles remote from HTTPS→SSH once registered. Runs before `runtimes` so the key exists before anything clones from GitHub. |
 | `make runtimes`     | `~/.bin/macoss runtimes` | `mise install` for `~/.tool-versions` (node, go, python, ruby).                  |
-| `make ssh`          | `~/.bin/macoss ssh`    | Generates `~/.ssh/id_ed25519`, writes `~/.ssh/config`, prints public key for GitHub. Auto-switches dotfiles remote from HTTPS→SSH once registered. |
 | `make defaults`     | `~/.bin/macoss defaults` | Applies `defaults write` settings (Finder, Dock, screenshots, keyboard repeat, …). Requires sudo. |
 | `make iterm`        | `~/.bin/macoss iterm`  | Installs iTerm2 shell integration (appends a source line to `~/.zshrc`).            |
 | `make agents`       | `~/.bin/macoss agents` | Loads `~/Library/LaunchAgents/*.plist` via `launchctl bootstrap` (e.g. CapsLock→Escape via `hidutil`). |
 | `make skills`       | `~/.bin/macoss skills` | Symlinks AI-agent skills from the stowed `~/.agents/skills` store into `~/.cursor/skills` and `~/.codex/skills` (see [AI-agent skills](#ai-agent-skills)). |
+
+Each step appends its result to `~/.local/state/dotfiles/results.jsonl` (the
+full log goes to `~/.local/state/dotfiles/install.log`). If a run dies partway,
+`make status` reads that state, cross-checks each step against the live machine
+(brew bundle satisfied? SSH key accepted by GitHub? runtimes present?), and
+prints what ran, what didn't, and the exact commands to resume — including a
+ready-made `brew install --cask --adopt …` line for casks that failed because
+the app was already in `/Applications`.
 
 `~/.bin/macoss` is just a shim: `exec make -C ~/dotfiles/scripts "${@:-all}"`.
 
@@ -140,7 +148,7 @@ If you `rm` a file from a stow package directly, stow's symlink to that file is 
 dotfiles/
 ├── bootstrap.sh                    # one-shot fresh-Mac entry point
 ├── scripts/                        # provisioning (not stowed into $HOME the same way as configs)
-│   ├── Makefile                    # all/brew/runtimes/ssh/defaults/iterm/check/lint
+│   ├── Makefile                    # all/brew/ssh/runtimes/defaults/iterm/status/check/lint
 │   ├── Brewfile                    # strict: core CLI + zsh plugins
 │   ├── Brewfile.optional           # best-effort: casks, MAS, niche CLIs
 │   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, agents.sh, agent-skills.sh, brew-optional.sh

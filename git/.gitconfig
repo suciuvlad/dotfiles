@@ -82,4 +82,6 @@
 [column]
   ui = auto
 [url "git@github.com:"]
-	insteadOf = https://github.com/
+	# pushInsteadOf (not insteadOf): pushes go over SSH, but anonymous HTTPS
+	# clones (brew taps, mise plugins) still work before the key is on GitHub.
+	pushInsteadOf = https://github.com/

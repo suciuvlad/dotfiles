@@ -51,11 +51,14 @@ make -C scripts all
 Per-step provisioning
 ---------------------
 
-`make all` runs `brew → runtimes → ssh → defaults → iterm → agents → skills` through a
+`make all` runs `brew → ssh → runtimes → defaults → iterm → agents → skills` through a
 spinner-driven orchestrator (`scripts/install.sh`) that ends with a styled
 summary box: per-step status icons, durations, and any per-package
 failures (e.g., region-locked casks). Output is captured to
-`/tmp/dotfiles-install.log` for after-the-fact debugging.
+`~/.local/state/dotfiles/install.log`, and per-step results persist in
+`~/.local/state/dotfiles/results.jsonl` — so if a run dies partway,
+`make -C scripts status` shows what ran, what failed, what never started
+(verified against the live machine), and the exact commands to resume.
 
 Bypass the orchestrator for raw output: `VERBOSE=1 make all`. CI / `curl |
 bash` flows fall through automatically when stdout isn't a TTY.

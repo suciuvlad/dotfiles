@@ -55,7 +55,6 @@ Editors + terminals + IDEs + API clients.
 | App           | What it is                                              |
 |---------------|---------------------------------------------------------|
 | `figma`       | Collaborative UI design                                 |
-| `imagealpha`  | Lossy PNG compressor (alpha-aware)                      |
 | `imageoptim`  | Lossless image compressor                               |
 
 ## File sync
