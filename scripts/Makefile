@@ -1,4 +1,8 @@
 SHELL := /usr/bin/env bash
+# Homebrew isn't on PATH in a bare shell (fresh install, non-login bash) and
+# each recipe line is its own shell — prepend the brew prefixes for every
+# target so `brew`, `mise`, etc. resolve without shellenv having run.
+export PATH := /opt/homebrew/bin:/usr/local/bin:$(PATH)
 SCRIPTS_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 DOTFILES_DIR := $(abspath $(SCRIPTS_DIR)/..)
 SETUP := $(SCRIPTS_DIR)/setup
