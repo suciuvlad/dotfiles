@@ -110,7 +110,7 @@ probe() {
         echo "fail mise not installed"
       else
         local missing
-        missing=$(cd "$HOME" && mise ls 2>/dev/null | grep -c missing || true)
+        missing=$(cd "$HOME" && mise ls 2>/dev/null | grep -c missing) || missing=0
         if [ "$missing" -eq 0 ]; then
           echo "ok all runtimes installed"
         else
