@@ -43,6 +43,20 @@ prints what ran, what didn't, and the exact commands to resume — including a
 ready-made `brew install --cask --adopt …` line for casks that failed because
 the app was already in `/Applications`.
 
+### Full Disk Access (for the Mail / App Store defaults)
+
+macOS sandboxes some preference domains under `~/Library/Containers`; `defaults
+write` can only touch them if the terminal has Full Disk Access. `make defaults`
+skips those with a warning rather than failing. To apply them:
+
+1. Open the pane: `open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"`
+   (or System Settings → Privacy & Security → Full Disk Access).
+2. Toggle your terminal (Ghostty / iTerm2 / Terminal) on — use **+** to add it
+   from `/Applications` if it isn't listed.
+3. Quit the terminal fully (⌘Q) and reopen — the grant only applies at launch.
+4. Re-run `make -C ~/dotfiles/scripts defaults`.
+5. Optionally toggle the access back off afterwards; applied settings persist.
+
 `~/.bin/macoss` is just a shim: `exec make -C ~/dotfiles/scripts "${@:-all}"`.
 
 Run `make help` from `scripts/` for the full listing.

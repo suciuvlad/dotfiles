@@ -90,7 +90,9 @@ else
   printf '    %s\n' "${FAILED[@]}"
   echo ""
   echo "Sandboxed domains (Mail, App Store) need Full Disk Access for your"
-  echo "terminal: System Settings → Privacy & Security → Full Disk Access."
-  echo "Grant it, restart the terminal, then re-run: make -C ~/dotfiles/scripts defaults"
+  echo "terminal. Open the pane directly with:"
+  echo "  open \"x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles\""
+  echo "Toggle your terminal on (+ to add it), quit it fully (⌘Q), reopen,"
+  echo "then re-run: make -C ~/dotfiles/scripts defaults"
   emit_result "defaults" "warn" "$((TOTAL - ${#FAILED[@]}))/$TOTAL applied" "${FAILED[@]}"
 fi
