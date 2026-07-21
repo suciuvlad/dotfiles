@@ -302,5 +302,9 @@ run_step "⌨️ " "LaunchAgents" "agents" 0 \
 run_step "🧠" "Agent skills" "agent-skills" 0 \
   bash "$SETUP_DIR/agent-skills.sh"
 
+# After runtimes (codex is mise-managed and gets verified here).
+run_step "🤖" "AI CLIs" "ai-clis" 0 \
+  bash "$SETUP_DIR/ai-clis.sh"
+
 # Falls through to the on_exit trap, which renders the summary and exits with
 # whatever rc the script reached (0 here on the happy path).

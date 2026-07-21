@@ -2,3 +2,4 @@ node lts
 go latest
 python 3.13
 ruby latest
+npm:@openai/codex latest

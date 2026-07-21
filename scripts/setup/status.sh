@@ -13,9 +13,9 @@ RESULTS="$STATE_DIR/results.jsonl"
 
 # Chain order must match install.sh. TARGETS maps step ids to make targets
 # (both brew steps re-run via `make brew`).
-STEPS=(brew-strict brew-optional ssh runtimes defaults iterm agents agent-skills)
-LABELS=("Homebrew (strict)" "Homebrew (optional)" "SSH key" "Runtimes (mise)" "macOS defaults" "iTerm2 integration" "LaunchAgents" "Agent skills")
-TARGETS=(brew brew ssh runtimes defaults iterm agents skills)
+STEPS=(brew-strict brew-optional ssh runtimes defaults iterm agents agent-skills ai-clis)
+LABELS=("Homebrew (strict)" "Homebrew (optional)" "SSH key" "Runtimes (mise)" "macOS defaults" "iTerm2 integration" "LaunchAgents" "Agent skills" "AI CLIs")
+TARGETS=(brew brew ssh runtimes defaults iterm agents skills ai-clis)
 
 icon() {
   case "$1" in
@@ -162,6 +162,20 @@ probe() {
         else
           echo "fail missing:$unlinked"
         fi
+      fi ;;
+    ai-clis)
+      # Absolute-path fallbacks: the drift LaunchAgent's PATH has no
+      # ~/.local/bin or mise shims.
+      local missing_clis=""
+      command -v claude >/dev/null 2>&1 || [ -x "$HOME/.local/bin/claude" ] \
+        || missing_clis="$missing_clis claude"
+      command -v codex >/dev/null 2>&1 || mise which codex >/dev/null 2>&1 \
+        || missing_clis="$missing_clis codex"
+      [ -x "$HOME/.kimi-code/bin/kimi" ] || missing_clis="$missing_clis kimi"
+      if [ -z "$missing_clis" ]; then
+        echo "ok claude, codex, kimi present"
+      else
+        echo "fail missing:$missing_clis"
       fi ;;
   esac
 }

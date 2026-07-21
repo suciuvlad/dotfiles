@@ -9,7 +9,7 @@ SETUP := $(SCRIPTS_DIR)/setup
 PACKAGES := agents claude ghostty git launchagents mise nvim scripts shell starship tmux zsh
 REQUIRED_CMDS := stow brew git nvim mise tmux fzf starship
 
-.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents skills status check lint
+.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents skills ai-clis status check lint
 
 all: install
 
@@ -28,6 +28,7 @@ help:
 	@echo "  make iterm      install iTerm2 shell integration"
 	@echo "  make agents     load all repo LaunchAgents (keyremap, weekly drift check)"
 	@echo "  make skills     link AI-agent skills from ~/.agents/skills into cursor/codex"
+	@echo "  make ai-clis    install claude (native) + kimi CLIs; verify mise-managed codex"
 	@echo ""
 	@echo "Maintenance:"
 	@echo "  make status     what the install chain ran / failed / never started, verified"
@@ -65,6 +66,9 @@ agents:
 
 skills:
 	bash $(SETUP)/agent-skills.sh
+
+ai-clis:
+	bash $(SETUP)/ai-clis.sh
 
 status:
 	@bash $(SETUP)/status.sh

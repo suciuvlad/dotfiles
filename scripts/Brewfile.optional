@@ -62,7 +62,6 @@ cask "zoom"
 
 # Casks — dev tools
 cask "alacritty"
-cask "codex"
 cask "cursor"
 cask "docker-desktop"
 cask "ghostty"

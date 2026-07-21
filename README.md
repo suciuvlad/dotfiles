@@ -81,6 +81,7 @@ Each step is idempotent and re-runnable:
 | iTerm2 shell integration                   | `~/.bin/macoss iterm`     |
 | LaunchAgents (keyremap, weekly drift check)| `~/.bin/macoss agents`    |
 | AI-agent skills → cursor/codex symlinks    | `~/.bin/macoss skills`    |
+| AI CLIs (claude native, kimi; codex via mise) | `~/.bin/macoss ai-clis` |
 
 Brewfiles
 ---------
