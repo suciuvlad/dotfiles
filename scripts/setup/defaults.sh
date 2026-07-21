@@ -11,62 +11,86 @@ osascript -e 'tell application "System Preferences" to quit' 2>/dev/null || true
 sudo -v
 ( while true; do sudo -n true; sleep 60; kill -0 "$$" 2>/dev/null || exit; done ) &
 
+# dw — `defaults write` that records failures instead of aborting the step.
+# Sandboxed domains (Mail, App Store) live in ~/Library/Containers and can't
+# be written unless the terminal has Full Disk Access; one blocked domain
+# shouldn't kill every setting after it.
+FAILED=()
+TOTAL=0
+dw() {
+  TOTAL=$((TOTAL + 1))
+  local err
+  if ! err=$(defaults write "$@" 2>&1); then
+    FAILED+=("$1 $2 — ${err//$'\n'/ }")
+  fi
+}
+
 # General UI/UX
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode  -bool true
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
-defaults write com.apple.LaunchServices LSQuarantine              -bool false
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+dw NSGlobalDomain NSNavPanelExpandedStateForSaveMode  -bool true
+dw NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+dw com.apple.LaunchServices LSQuarantine              -bool false
+dw NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
 # Keyboard
-defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-defaults write NSGlobalDomain KeyRepeat                -int 1
-defaults write NSGlobalDomain InitialKeyRepeat         -int 10
+dw NSGlobalDomain ApplePressAndHoldEnabled -bool false
+dw NSGlobalDomain KeyRepeat                -int 1
+dw NSGlobalDomain InitialKeyRepeat         -int 10
 
 # Finder
-defaults write com.apple.finder AppleShowAllFiles            -bool true
-defaults write NSGlobalDomain   AppleShowAllExtensions        -bool false
-defaults write com.apple.finder ShowStatusBar                -bool true
-defaults write com.apple.finder ShowPathbar                  -bool true
-defaults write com.apple.finder _FXShowPosixPathInTitle      -bool true
-defaults write com.apple.finder _FXSortFoldersFirst          -bool true
-defaults write com.apple.finder FXDefaultSearchScope         -string "SCcf"
-defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+dw com.apple.finder AppleShowAllFiles            -bool true
+dw NSGlobalDomain   AppleShowAllExtensions        -bool false
+dw com.apple.finder ShowStatusBar                -bool true
+dw com.apple.finder ShowPathbar                  -bool true
+dw com.apple.finder _FXShowPosixPathInTitle      -bool true
+dw com.apple.finder _FXSortFoldersFirst          -bool true
+dw com.apple.finder FXDefaultSearchScope         -string "SCcf"
+dw com.apple.finder FXEnableExtensionChangeWarning -bool false
 
 # Dock
-defaults write com.apple.dock tilesize -int 32
+dw com.apple.dock tilesize -int 32
 
 # .DS_Store hygiene
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-defaults write com.apple.desktopservices DSDontWriteUSBStores     -bool true
+dw com.apple.desktopservices DSDontWriteNetworkStores -bool true
+dw com.apple.desktopservices DSDontWriteUSBStores     -bool true
 
 # Power
 sudo pmset -c sleep 0
 sudo pmset -b sleep 5
 
 # Security
-defaults write com.apple.screensaver askForPassword       -int 1
-defaults write com.apple.screensaver askForPasswordDelay  -int 0
+dw com.apple.screensaver askForPassword       -int 1
+dw com.apple.screensaver askForPasswordDelay  -int 0
 
 # Screenshots
-defaults write com.apple.screencapture type -string "png"
+dw com.apple.screencapture type -string "png"
 
 # Mail
-defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending"      -string "yes"
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder"             -string "received-date"
-defaults write com.apple.mail DisableInlineAttachmentViewing   -bool true
+dw com.apple.mail AddressesIncludeNameOnPasteboard -bool false
+dw com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"
+dw com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending"      -string "yes"
+dw com.apple.mail DraftsViewerAttributes -dict-add "SortOrder"             -string "received-date"
+dw com.apple.mail DisableInlineAttachmentViewing   -bool true
 
 # App Store
-defaults write com.apple.appstore       WebKitDeveloperExtras -bool true
-defaults write com.apple.appstore       ShowDebugMenu         -bool true
-defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
-defaults write com.apple.SoftwareUpdate ScheduleFrequency     -int 1
-defaults write com.apple.SoftwareUpdate AutomaticDownload     -int 1
-defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
-defaults write com.apple.SoftwareUpdate ConfigDataInstall     -int 1
-defaults write com.apple.commerce       AutoUpdate                 -bool true
-defaults write com.apple.commerce       AutoUpdateRestartRequired  -bool true
+dw com.apple.appstore       WebKitDeveloperExtras -bool true
+dw com.apple.appstore       ShowDebugMenu         -bool true
+dw com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+dw com.apple.SoftwareUpdate ScheduleFrequency     -int 1
+dw com.apple.SoftwareUpdate AutomaticDownload     -int 1
+dw com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
+dw com.apple.SoftwareUpdate ConfigDataInstall     -int 1
+dw com.apple.commerce       AutoUpdate                 -bool true
+dw com.apple.commerce       AutoUpdateRestartRequired  -bool true
 
-echo "Defaults applied. Some changes require a Finder/Dock restart or logout."
-emit_result "defaults" "ok" "applied"
+if [ ${#FAILED[@]} -eq 0 ]; then
+  echo "Defaults applied. Some changes require a Finder/Dock restart or logout."
+  emit_result "defaults" "ok" "applied"
+else
+  echo "⚠ ${#FAILED[@]} of $TOTAL defaults could not be written:"
+  printf '    %s\n' "${FAILED[@]}"
+  echo ""
+  echo "Sandboxed domains (Mail, App Store) need Full Disk Access for your"
+  echo "terminal: System Settings → Privacy & Security → Full Disk Access."
+  echo "Grant it, restart the terminal, then re-run: make -C ~/dotfiles/scripts defaults"
+  emit_result "defaults" "warn" "$((TOTAL - ${#FAILED[@]}))/$TOTAL applied" "${FAILED[@]}"
+fi

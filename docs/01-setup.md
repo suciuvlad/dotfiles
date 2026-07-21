@@ -30,7 +30,7 @@ It is idempotent. Re-running it on a partially-set-up machine just fills in what
 | `make brew`         | `~/.bin/macoss brew`   | Strict `Brewfile` (CLI core), then best-effort `Brewfile.optional` (casks, MAS).    |
 | `make ssh`          | `~/.bin/macoss ssh`    | Generates `~/.ssh/id_ed25519`, writes `~/.ssh/config`, prints public key for GitHub. Auto-switches dotfiles remote from HTTPS→SSH once registered. Runs before `runtimes` so the key exists before anything clones from GitHub. |
 | `make runtimes`     | `~/.bin/macoss runtimes` | `mise install` for `~/.tool-versions` (node, go, python, ruby).                  |
-| `make defaults`     | `~/.bin/macoss defaults` | Applies `defaults write` settings (Finder, Dock, screenshots, keyboard repeat, …). Requires sudo. |
+| `make defaults`     | `~/.bin/macoss defaults` | Applies `defaults write` settings (Finder, Dock, screenshots, keyboard repeat, …). Requires sudo. Sandboxed domains (Mail, App Store) are skipped with a warning unless the terminal has Full Disk Access — grant it and re-run to apply those. |
 | `make iterm`        | `~/.bin/macoss iterm`  | Installs iTerm2 shell integration (appends a source line to `~/.zshrc`).            |
 | `make agents`       | `~/.bin/macoss agents` | Loads `~/Library/LaunchAgents/*.plist` via `launchctl bootstrap` (e.g. CapsLock→Escape via `hidutil`). |
 | `make skills`       | `~/.bin/macoss skills` | Symlinks AI-agent skills from the stowed `~/.agents/skills` store into `~/.cursor/skills` and `~/.codex/skills` (see [AI-agent skills](#ai-agent-skills)). |
