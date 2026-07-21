@@ -115,10 +115,24 @@ probe() {
         echo "fail $missing_agents of $total plist(s) not linked"
       fi ;;
     agent-skills)
-      if [ -d "$HOME/.cursor/skills" ] || [ -d "$HOME/.codex/skills" ]; then
-        echo "ok skill links present"
+      # Mirror agent-skills.sh semantics: absent agent dirs are skipped there,
+      # so they can't count as failures here.
+      if [ ! -d "$HOME/.agents/skills" ]; then
+        echo "fail skill store ~/.agents/skills missing (stow agents first)"
       else
-        echo "fail no ~/.cursor/skills or ~/.codex/skills"
+        local agent_dir agents_present=0 unlinked=""
+        for agent_dir in "$HOME/.cursor" "$HOME/.codex"; do
+          [ -d "$agent_dir" ] || continue
+          agents_present=$((agents_present + 1))
+          [ -d "$agent_dir/skills" ] || unlinked="$unlinked ~/${agent_dir##*/}/skills"
+        done
+        if [ "$agents_present" -eq 0 ]; then
+          echo "ok no agent dirs present — nothing to link"
+        elif [ -z "$unlinked" ]; then
+          echo "ok skill links present"
+        else
+          echo "fail missing:$unlinked"
+        fi
       fi ;;
   esac
 }
