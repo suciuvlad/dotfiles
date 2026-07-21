@@ -10,10 +10,10 @@ dev stacks, apps, and setup walkthroughs.
 | Package    | What it provides                                        |
 |------------|---------------------------------------------------------|
 | `agents`   | `~/.agents/skills/` — central store for AI-agent skills (claude/cursor/codex symlink into it) |
-| `claude`   | `~/.claude/CLAUDE.md`, `settings.json`, `skills/` (symlinks into `agents`) |
+| `claude`   | `~/.claude/CLAUDE.md`, `settings.json` (declares plugins + marketplaces — Claude Code reinstalls them on first launch), `skills/` (symlinks into `agents`) |
 | `ghostty`  | `~/.config/ghostty/config`                              |
 | `git`      | `~/.gitconfig`, `~/.gitignore`, `~/.gitmessage`         |
-| `launchagents` | `~/Library/LaunchAgents/*.plist` (login-time hidutil remaps) |
+| `launchagents` | `~/Library/LaunchAgents/*.plist` (CapsLock→Escape remap, weekly drift check) |
 | `mise`     | `~/.tool-versions` (global node/go/python/ruby versions)|
 | `nvim`     | `~/.config/nvim/` (init, options, keymaps, plugins)     |
 | `scripts`  | `~/.bin/macoss`, `~/.bin/tmuxinator.zsh`                |
@@ -60,6 +60,13 @@ failures (e.g., region-locked casks). Output is captured to
 `make -C scripts status` shows what ran, what failed, what never started
 (verified against the live machine), and the exact commands to resume.
 
+`status` trusts probes over records: every step is verified live (defaults
+are re-read via `defaults.sh --verify` — the same `dw` lines drive apply
+*and* verify; `Brewfile.optional` is counted, not judged; the checkout
+itself gets a cleanliness row). The ledger only supplies timestamps. A
+weekly LaunchAgent (`com.vladsuciu.dotfiles-drift`, Mondays 10:00) runs
+`status.sh --check` and posts a notification when the machine drifts.
+
 Bypass the orchestrator for raw output: `VERBOSE=1 make all`. CI / `curl |
 bash` flows fall through automatically when stdout isn't a TTY.
 
@@ -72,7 +79,7 @@ Each step is idempotent and re-runnable:
 | SSH key + allowed_signers (+ remote→SSH)   | `~/.bin/macoss ssh`       |
 | macOS `defaults` settings                  | `~/.bin/macoss defaults`  |
 | iTerm2 shell integration                   | `~/.bin/macoss iterm`     |
-| LaunchAgents (CapsLock→Escape via hidutil) | `~/.bin/macoss agents`    |
+| LaunchAgents (keyremap, weekly drift check)| `~/.bin/macoss agents`    |
 | AI-agent skills → cursor/codex symlinks    | `~/.bin/macoss skills`    |
 
 Brewfiles
@@ -101,6 +108,7 @@ Maintenance
 
 | Command                | What it does                                              |
 |------------------------|-----------------------------------------------------------|
+| `~/.bin/macoss status` | live-probe every install step + repo cleanliness, with resume commands (`status.sh --check` for the script-friendly version: drift lines on stdout, exit 1) |
 | `~/.bin/macoss check`  | audit symlinks, required CLI tools, Brewfile, git identity, stow packages, cask trust, CVE scan |
 | `~/.bin/macoss lint`   | shellcheck `scripts/setup/*.sh` and `macoss` itself       |
 
