@@ -118,6 +118,46 @@ chmod +x "$H/.local/bin/claude" "$H/.kimi-code/bin/kimi" "$WORK/fakebin/codex"
 assert_contains "all present → ok" \
   "$(status_out "$H" "$WORK/fakebin:$LEAN_PATH" | grep 'AI CLIs')" "claude, codex, kimi present"
 
+# ── herdr probe ──────────────────────────────────────────────────────────────
+# The "herdr absent" case isn't tested: the probe falls back to absolute brew
+# paths for the drift agent's bare PATH, so on a machine with herdr installed
+# no PATH manipulation can hide it. The three cases below are deterministic.
+echo "herdr probe:"
+
+H=$(new_home herdr-folded)
+mkdir -p "$H/.config"
+ln -s "$SANDBOX/herdr/.config/herdr" "$H/.config/herdr"
+assert_contains "stow-folded config dir → fail" \
+  "$(status_out "$H" | grep 'herdr')" "is a symlink"
+
+# Stub herdr on PATH so integration state is deterministic. Mirrors the real
+# `integration status` format: "<kind>: current (vN) (/path)".
+HERDRBIN="$WORK/herdrbin"
+mkdir -p "$HERDRBIN"
+cat > "$HERDRBIN/herdr" <<'STUB'
+#!/usr/bin/env bash
+[ "${3:-}" = "--outdated-only" ] && exit 0
+for k in claude codex cursor kimi; do
+  if [ "$k" = "${HERDR_TEST_STALE:-}" ]; then
+    echo "$k: not installed (/tmp/$k)"
+  else
+    echo "$k: current (v7) (/tmp/$k)"
+  fi
+done
+STUB
+chmod +x "$HERDRBIN/herdr"
+
+H=$(new_home herdr-ok)
+mkdir -p "$H/.config/herdr"
+assert_contains "all integrations current → ok" \
+  "$(status_out "$H" "$HERDRBIN:$LEAN_PATH" | grep 'herdr')" "4 integrations current"
+
+H=$(new_home herdr-stale)
+mkdir -p "$H/.config/herdr"
+assert_contains "an integration not current → fail, named" \
+  "$(HERDR_TEST_STALE=codex status_out "$H" "$HERDRBIN:$LEAN_PATH" | grep 'herdr')" \
+  "integration(s) not current: codex"
+
 # ── repo probe ───────────────────────────────────────────────────────────────
 echo "repo probe:"
 

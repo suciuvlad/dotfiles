@@ -53,7 +53,7 @@ trap on_exit EXIT
 # verbose output, when stdout isn't a TTY (CI, pipes), or when the script is
 # being driven by something that wants raw logs.
 if [ "${VERBOSE:-0}" = "1" ] || [ ! -t 1 ]; then
-  exec make -C "$SCRIPTS_DIR" brew ssh runtimes defaults iterm agents skills
+  exec make -C "$SCRIPTS_DIR" brew ssh runtimes defaults iterm agents skills ai-clis herdr
 fi
 
 # Pre-flight: prime sudo so defaults.sh doesn't prompt mid-spinner.
@@ -305,6 +305,11 @@ run_step "🧠" "Agent skills" "agent-skills" 0 \
 # After runtimes (codex is mise-managed and gets verified here).
 run_step "🤖" "AI CLIs" "ai-clis" 0 \
   bash "$SETUP_DIR/ai-clis.sh"
+
+# After ai-clis — herdr's integrations are per-agent hooks, so the agent CLIs
+# have to exist first.
+run_step "🐏" "herdr" "herdr" 0 \
+  bash "$SETUP_DIR/herdr.sh"
 
 # Falls through to the on_exit trap, which renders the summary and exits with
 # whatever rc the script reached (0 here on the happy path).

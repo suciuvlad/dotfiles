@@ -13,9 +13,9 @@ RESULTS="$STATE_DIR/results.jsonl"
 
 # Chain order must match install.sh. TARGETS maps step ids to make targets
 # (both brew steps re-run via `make brew`).
-STEPS=(brew-strict brew-optional ssh runtimes defaults iterm agents agent-skills ai-clis)
-LABELS=("Homebrew (strict)" "Homebrew (optional)" "SSH key" "Runtimes (mise)" "macOS defaults" "iTerm2 integration" "LaunchAgents" "Agent skills" "AI CLIs")
-TARGETS=(brew brew ssh runtimes defaults iterm agents skills ai-clis)
+STEPS=(brew-strict brew-optional ssh runtimes defaults iterm agents agent-skills ai-clis herdr)
+LABELS=("Homebrew (strict)" "Homebrew (optional)" "SSH key" "Runtimes (mise)" "macOS defaults" "iTerm2 integration" "LaunchAgents" "Agent skills" "AI CLIs" "herdr")
+TARGETS=(brew brew ssh runtimes defaults iterm agents skills ai-clis herdr)
 
 icon() {
   case "$1" in
@@ -176,6 +176,51 @@ probe() {
         echo "ok claude, codex, kimi present"
       else
         echo "fail missing:$missing_clis"
+      fi ;;
+    herdr)
+      # Checked before the binary: a folded ~/.config/herdr means session.json
+      # (which carries agent conversation refs), logs and sockets get written
+      # inside the repo, and that's true whether or not herdr is installed.
+      # [ -e ] follows the link and sees a directory — test the link itself.
+      if [ -L "$HOME/.config/herdr" ]; then
+        echo "fail ~/.config/herdr is a symlink — herdr runtime state lands in the repo; run 'make herdr'"
+        return 0
+      fi
+      # command -v first so a normal shell (and the tests) resolve it; the
+      # absolute brew prefixes are the fallback for the drift LaunchAgent,
+      # whose PATH is /usr/bin:/bin.
+      local herdr_bin="" c
+      if command -v herdr >/dev/null 2>&1; then
+        herdr_bin=$(command -v herdr)
+      else
+        for c in /opt/homebrew/bin/herdr /usr/local/bin/herdr; do
+          [ -x "$c" ] && { herdr_bin="$c"; break; }
+        done
+      fi
+      if [ -z "$herdr_bin" ]; then
+        echo "fail herdr not installed — run 'make brew'"
+        return 0
+      fi
+      # Integrations version independently of herdr and go stale when an agent
+      # updates. --outdated-only prints nothing when everything is current.
+      # Capture once and match with case: `cmd | grep -q` exits on first match,
+      # SIGPIPEs the producer, and pipefail then reports a *successful* match
+      # as a failure — which only shows up for kinds early in the output.
+      local integ_out stale integ_missing="" kind
+      integ_out=$("$herdr_bin" integration status 2>/dev/null || true)
+      stale=$("$herdr_bin" integration status --outdated-only 2>/dev/null | wc -l | tr -d ' ')
+      for kind in claude codex cursor kimi; do
+        case $'\n'"$integ_out" in
+          *$'\n'"$kind: current"*) ;;
+          *) integ_missing="$integ_missing $kind" ;;
+        esac
+      done
+      if [ "$stale" -gt 0 ]; then
+        echo "fail $stale integration(s) outdated — run 'make herdr'"
+      elif [ -n "$integ_missing" ]; then
+        echo "fail integration(s) not current:$integ_missing"
+      else
+        echo "ok config linked, 4 integrations current"
       fi ;;
   esac
 }

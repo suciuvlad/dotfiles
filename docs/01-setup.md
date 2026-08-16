@@ -34,6 +34,8 @@ It is idempotent. Re-running it on a partially-set-up machine just fills in what
 | `make iterm`        | `~/.bin/macoss iterm`  | Installs iTerm2 shell integration (appends a source line to `~/.zshrc`).            |
 | `make agents`       | `~/.bin/macoss agents` | Loads `~/Library/LaunchAgents/*.plist` via `launchctl bootstrap` (e.g. CapsLock→Escape via `hidutil`). |
 | `make skills`       | `~/.bin/macoss skills` | Symlinks AI-agent skills from the stowed `~/.agents/skills` store into `~/.cursor/skills` and `~/.codex/skills` (see [AI-agent skills](#ai-agent-skills)). |
+| `make ai-clis`      | `~/.bin/macoss ai-clis` | Installs the AI CLIs that aren't brew or mise packages — `claude` (native installer) and `kimi`; verifies mise-managed `codex`. |
+| `make herdr`        | `~/.bin/macoss herdr`  | Installs herdr's per-agent state integrations (the hooks that report `idle`/`working`/`blocked`/`done` to its sidebar), and keeps `~/.config/herdr` a real directory so stow can't fold herdr's runtime state into the repo. The binary itself comes from the strict `Brewfile`. |
 
 Each step appends its result to `~/.local/state/dotfiles/results.jsonl` (the
 full log goes to `~/.local/state/dotfiles/install.log`). If a run dies partway,

@@ -6,10 +6,10 @@ export PATH := /opt/homebrew/bin:/usr/local/bin:$(PATH)
 SCRIPTS_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 DOTFILES_DIR := $(abspath $(SCRIPTS_DIR)/..)
 SETUP := $(SCRIPTS_DIR)/setup
-PACKAGES := agents claude ghostty git launchagents mise nvim scripts shell starship tmux zsh
+PACKAGES := agents claude ghostty git herdr launchagents mise nvim scripts shell starship tmux zsh
 REQUIRED_CMDS := stow brew git nvim mise tmux fzf starship
 
-.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents skills ai-clis status check lint test
+.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents skills ai-clis herdr status check lint test
 
 all: install
 
@@ -29,6 +29,8 @@ help:
 	@echo "  make agents     load all repo LaunchAgents (keyremap, weekly drift check)"
 	@echo "  make skills     link AI-agent skills from ~/.agents/skills into cursor/codex"
 	@echo "  make ai-clis    install claude (native) + kimi CLIs; verify mise-managed codex"
+	@echo "  make herdr      install herdr's per-agent state integrations; keep"
+	@echo "                  ~/.config/herdr a real dir so stow can't fold runtime state in"
 	@echo ""
 	@echo "Maintenance:"
 	@echo "  make status     what the install chain ran / failed / never started, verified"
@@ -70,6 +72,9 @@ skills:
 
 ai-clis:
 	bash $(SETUP)/ai-clis.sh
+
+herdr:
+	bash $(SETUP)/herdr.sh
 
 status:
 	@bash $(SETUP)/status.sh

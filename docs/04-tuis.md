@@ -167,8 +167,11 @@ Multiplexer built around coding agents — same session/window/pane model as tmu
 are installed, which is what makes the sidebar's `working`/`blocked`/`done` states real rather than
 screen-scraped. Re-run `herdr integration install <kind>` after an agent update if status says outdated.
 
-**Install** — not brew or mise: installed to `~/.local/bin/herdr` by the upstream installer.
-`herdr update` self-updates; provisioning doesn't manage it.
+**Install** — strict `Brewfile` (`brew "herdr"`), so `make brew` provisions it and `make status`
+notices when it's missing. Upstream also ships a `curl | sh` installer into `~/.local/bin`; don't use
+both, or `herdr update` and `brew upgrade` maintain two binaries and whichever loses PATH rots.
+`make herdr` provisions the per-agent integrations on top — see the provisioning chain in
+[Setup](01-setup.md).
 
 **Config:** `herdr/.config/herdr/config.toml`, `herdr/.herdr-functions.zsh`
 **Upstream:** <https://herdr.dev>
