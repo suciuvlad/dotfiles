@@ -15,7 +15,7 @@ shell-integration-features = no-cursor, sudo, no-title
 theme = Carbonfox
 
 mouse-hide-while-typing = true
-mouse-scroll-multiplier = 2
+mouse-scroll-multiplier = precision:2,discrete:6
 
 window-padding-balance = true
 window-save-state = always
@@ -34,3 +34,8 @@ unfocused-split-opacity = 0.85
 notify-on-command-finish = unfocused
 
 selection-word-chars = @-./_~?&=%+#
+
+auto-update = download
+auto-update-channel = tip
+
+macos-option-as-alt = true
