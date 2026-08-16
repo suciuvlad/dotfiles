@@ -1,0 +1,145 @@
+# herdr configuration — translated from tmux/.tmux.conf
+# Herdr concepts vs tmux: workspace ≈ session, tab ≈ window, pane ≈ pane.
+# Validate after editing:  herdr config check && herdr server reload-config
+
+onboarding = false
+
+[theme]
+# tmux: set -g @catppuccin_flavor "mocha"
+name = "catppuccin"
+
+[terminal]
+# tmux: every split/new-window used -c "#{pane_current_path}"
+new_cwd = "follow"
+
+[keys]
+# tmux: set -g prefix C-a ; unbind C-b
+prefix = "ctrl+a"
+
+# herdr defaults kept over tmux's `bind r` reload: resizing is a daily action and
+# herdr makes it a mode (enter once, then hjkl/arrows), so it earns the cheap key.
+# Reloading config is rare and deliberate.
+resize_mode = "prefix+r"
+reload_config = "prefix+shift+r"
+# tmux default: prefix+d detaches (herdr ships prefix+q; no argument behind it)
+detach = "prefix+d"
+
+# --- panes ---------------------------------------------------------------
+# tmux: bind | split-window -h   (side by side, vertical divider)
+split_vertical = "prefix+|"
+# tmux: bind _ split-window -v   (stacked, horizontal divider)
+split_horizontal = "prefix+_"
+# tmux: bind ^A resize-pane -Z — prefix+ctrl+a is reserved in herdr
+# (double-prefix sends a literal prefix), so zoom keeps the tmux/herdr default
+zoom = "prefix+z"
+# tmux was `bind ^W select-pane`; herdr's default is kept because it pairs with
+# prefix+shift+tab for the reverse direction, which ctrl+w never had.
+cycle_pane_next = "prefix+tab"
+close_pane = "prefix+x"
+# tmux: prefix [ enters copy mode, prefix ; jumps to the last pane. Both exist
+# here after all — copy_mode was wrongly filed under "no equivalent" earlier.
+copy_mode = "prefix+["
+last_pane = "prefix+;"
+# rename_pane stays on its default prefix+shift+p (free again now that workspace
+# cycling moved to alt+arrows)
+
+# tmux: christoomey/vim-tmux-navigator moved panes with bare ctrl+h/j/k/l.
+# Kept behind the prefix here: herdr has no navigator passthrough, so direct
+# ctrl+h/j/k/l binds would swallow the same keys nvim uses for its splits.
+# Swap the two blocks if you want the prefix-less feel from the video.
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+# focus_pane_left = "ctrl+h"
+# focus_pane_down = "ctrl+j"
+# focus_pane_up = "ctrl+k"
+# focus_pane_right = "ctrl+l"
+
+# --- tabs (tmux windows) -------------------------------------------------
+# tmux: bind c new-window
+new_tab = "prefix+c"
+# tmux `bind k` can't survive — prefix+k is focus_pane_up. herdr's default it is.
+close_tab = "prefix+shift+x"
+previous_tab = "prefix+p"
+next_tab = "prefix+n"
+switch_tab = "prefix+1..9"
+
+# --- sidebar ---------------------------------------------------------------
+# The agents half of the sidebar ships with no keyboard access at all
+# (previous_agent/next_agent/focus_agent are unbound, and navigate mode only
+# covers workspaces and panes). With agent_panel_sort = "priority" below, these
+# are what let you walk the attention queue. Lowercase hjkl moves panes,
+# shift+j/k moves the agent list.
+next_agent = "prefix+shift+j"
+previous_agent = "prefix+shift+k"
+focus_agent = "prefix+alt+1..9"
+# Completes the numeric tier: prefix+1..9 = tabs, +shift = workspaces.
+switch_workspace = "prefix+shift+1..9"
+
+# --- workspaces (tmux sessions) ------------------------------------------
+# The tmux scheme here was C/K/R — lowercase acts on the window, uppercase on the
+# session. That pairing is already broken (k had to become focus_pane_up), so it
+# preserved three arbitrary capitals and nothing else. herdr's own mnemonics are
+# at least internally consistent: N=new, D=delete, W=workspace, T=tab, X=close tab.
+new_workspace = "prefix+shift+n"
+rename_workspace = "prefix+shift+w"
+close_workspace = "prefix+shift+d"
+# tmux: bind -n M-Up / M-Down switch-client -p/-n — the prefix-less pair actually
+# used day to day. Putting cycling here frees the whole shift tier above.
+# Past ~4 workspaces the picker (prefix+w) and goto (prefix+g) beat cycling.
+previous_workspace = "alt+up"
+next_workspace = "alt+down"
+
+# tmux: bind ^T split-window -h -p 20  (narrow 20% drawer)
+# No native percentage split bind in herdr; drive the CLI instead.
+# --ratio is the *existing* pane's share (verified), so 0.8 leaves the new
+# right-hand pane at 20% — the inverse of tmux's -p 20.
+[[keys.command]]
+key = "prefix+ctrl+t"
+type = "shell"
+command = "herdr pane split --direction right --ratio 0.8 --focus"
+
+[ui]
+# tmux: set-option -g status-position bottom
+tab_bar_position = "bottom"
+# Sort the agent panel by who needs attention, not by space. tmux had no
+# equivalent; with several agents running this is the point of the sidebar.
+agent_panel_sort = "priority"
+# tmux: set-option -g mouse on
+mouse_capture = true
+# tmux: bind c created windows without prompting for a name
+prompt_new_tab_name = false
+# tmux: kill-session/kill-window were confirm-before
+confirm_close = true
+
+# Show what each Claude pane is actually doing, not just "claude".
+[ui.sidebar.agents.rows_by_agent]
+claude = [["state_icon", "workspace", "tab"], ["terminal_title_stripped"], ["agent"]]
+
+# Ghostty already does notify-on-command-finish, but under herdr it only ever
+# sees one long-running process — these toasts are the replacement.
+[ui.toast]
+delivery = "system"
+delay_seconds = 1
+
+[ui.sound]
+enabled = true
+
+[experimental]
+# tmux: set -g allow-passthrough on (images/OSC) — Ghostty speaks kitty graphics
+kitty_graphics = true
+# Keep recent pane screens across a server restart, alongside
+# [session] resume_agents_on_restore (on by default, needs the agent integrations).
+pane_history = true
+
+[advanced]
+# tmux: set -g history-limit 50000. Bytes here, not lines — agent panes emit far
+# more than a shell does, so the 10MB default gets consumed quickly.
+scrollback_limit_bytes = 50000000
+
+# Not translatable from .tmux.conf — herdr handles these itself:
+#   copy-mode-vi v / y              → in-mode keys aren't configurable (prefix+[ enters)
+#   mode-keys vi                    → navigate mode already uses h/j/k/l
+#   bind -r arrows resize-pane      → no resize_pane_* actions in 0.8.0; resize_mode covers it
+#   base-index / renumber-windows / detach-on-destroy / escape-time / terminal-features

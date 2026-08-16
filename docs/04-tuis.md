@@ -142,3 +142,33 @@ Terminal multiplexer + persistent session manager.
 
 **Config:** `tmux/.tmux.conf`, `tmux/.tmux-functions.zsh`
 **Upstream:** <https://github.com/tmux/tmux>
+
+---
+
+### `herdr`
+Multiplexer built around coding agents — same session/window/pane model as tmux, plus agent state
+(`idle`/`working`/`blocked`/`done`) surfaced in a sidebar.
+
+**Why it's in the stack**
+- Sidebar tracks which agent pane is waiting on you, across workspaces — the thing tmux can't show.
+- Keymap is ported from `.tmux.conf`, so the muscle memory carries over (see [Hotkeys › herdr](02-hotkeys.md#herdr)).
+- `herdr` CLI drives the live session from inside a pane (`herdr pane split`, `herdr agent start`), which is how the 20% drawer bind works.
+
+**Daily drivers**
+- `herdr` — launch or attach the persistent session
+- `herdr --session <name>` — named session; `herdr session attach <name>` to reattach
+- `herdr config check` — validate `config.toml` before reloading
+- `herdr server reload-config` — apply config changes to the running server
+- `herdr --remote <ssh-target>` — attach a remote herdr server over SSH
+
+- `hdl claude` / `hsl 4 cc` — layout helpers, the herdr twins of `tdl`/`tsl` (see [Hotkeys › herdr](02-hotkeys.md#herdr))
+
+**Agent integrations** — `herdr integration status` lists them; `claude`, `codex`, `cursor` and `kimi`
+are installed, which is what makes the sidebar's `working`/`blocked`/`done` states real rather than
+screen-scraped. Re-run `herdr integration install <kind>` after an agent update if status says outdated.
+
+**Install** — not brew or mise: installed to `~/.local/bin/herdr` by the upstream installer.
+`herdr update` self-updates; provisioning doesn't manage it.
+
+**Config:** `herdr/.config/herdr/config.toml`, `herdr/.herdr-functions.zsh`
+**Upstream:** <https://herdr.dev>

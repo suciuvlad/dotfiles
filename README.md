@@ -13,6 +13,7 @@ dev stacks, apps, and setup walkthroughs.
 | `claude`   | `~/.claude/CLAUDE.md`, `settings.json` (declares plugins + marketplaces — Claude Code reinstalls them on first launch), `skills/` (symlinks into `agents`) |
 | `ghostty`  | `~/.config/ghostty/config`                              |
 | `git`      | `~/.gitconfig`, `~/.gitignore`, `~/.gitmessage`         |
+| `herdr`    | `~/.config/herdr/config.toml`, `~/.herdr-functions.zsh` (tmux keymap + layout helpers ported to herdr) |
 | `launchagents` | `~/Library/LaunchAgents/*.plist` (CapsLock→Escape remap, weekly drift check) |
 | `mise`     | `~/.tool-versions` (global node/go/python/ruby versions)|
 | `nvim`     | `~/.config/nvim/` (init, options, keymaps, plugins)     |

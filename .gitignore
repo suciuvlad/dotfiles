@@ -17,4 +17,10 @@ claude/.claude/*
 /.claude/*
 !/.claude/skills/
 
+# herdr writes runtime state next to its config (session.json, session-history
+# .json, logs, sockets). Track config.toml only — belt and braces alongside
+# bootstrap.sh pre-creating ~/.config/herdr so stow can't fold it.
+herdr/.config/herdr/*
+!herdr/.config/herdr/config.toml
+
 scripts/Brewfile.lock.json

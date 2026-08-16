@@ -168,7 +168,7 @@ dotfiles/
 │   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, agents.sh, agent-skills.sh, brew-optional.sh
 │   └── .bin/                       # macoss, tmuxinator.zsh — stowed to ~/.bin/
 ├── agents/                         # ~/.agents/skills — central AI-agent skill store
-├── claude/    ghostty/    git/     launchagents/  mise/    nvim/
-├── shell/     starship/   tmux/    zsh/
+├── claude/    ghostty/    git/     herdr/   launchagents/  mise/
+├── nvim/      shell/      starship/   tmux/    zsh/
 └── docs/                           # this manual
 ```

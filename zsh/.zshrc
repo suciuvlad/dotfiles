@@ -80,6 +80,7 @@ alias cc='claude --permission-mode auto'
 alias k='kimi'
 alias kk='kimi --auto'
 alias t='tmux attach || tmux new -s Work'
+alias h='herdr'
 alias cl='clear'
 alias lzd='lazydocker'
 
@@ -103,6 +104,9 @@ n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
 
 # Tmux layout helpers (tdl, tdlm, tsl)
 [ -f "$HOME/.tmux-functions.zsh" ] && source "$HOME/.tmux-functions.zsh"
+
+# herdr layout helpers (hdl, hdlm, hsl) — same layouts, herdr CLI
+[ -f "$HOME/.herdr-functions.zsh" ] && source "$HOME/.herdr-functions.zsh"
 
 ## ── Tools ───────────────────────────────────────────────────────
 # Google Cloud SDK

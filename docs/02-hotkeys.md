@@ -3,6 +3,7 @@
 Every binding documented here is extracted from a config file in this repo. When in doubt, the config wins.
 
 - **tmux prefix:** `Ctrl-a` (rebound from default `Ctrl-b`)
+- **herdr prefix:** `Ctrl-a` (rebound from default `Ctrl-b`, same as tmux)
 - **neovim leader:** `,` (both `mapleader` and `maplocalleader`)
 
 ---
@@ -104,6 +105,148 @@ These are zsh functions sourced from `tmux/.tmux-functions.zsh` — they only wo
 | `tsl <count> <command>`       | Swarm layout: tile `<count>` panes, run `<command>` in each. |
 
 Example: `tdl claude` opens nvim + a Claude pane + a terminal pane in the current dir.
+
+---
+
+## herdr
+
+Source: [`herdr/.config/herdr/config.toml`](../herdr/.config/herdr/config.toml)
+
+Agent-oriented multiplexer, keymap ported from `.tmux.conf`. Vocabulary maps 1:1 onto tmux:
+**workspace** ≈ session, **tab** ≈ window, **pane** ≈ pane. Validate edits with `herdr config check`,
+apply to a live server with `herdr server reload-config`.
+
+### Quick start
+
+```sh
+h                           # from Ghostty: launches herdr, or attaches if already running
+cd ~/code/foo && hdl c      # from inside a pane: nvim left, claude right, terminal bottom
+```
+
+`h` once per terminal, `hdl` once per project — `hdl` refuses to run outside a herdr pane
+(it checks `$HERDR_ENV`). For a second project don't re-run `h`; open a tab (`prefix c`) or a
+workspace (`prefix N`), `cd`, then `hdl` again.
+
+Closing the terminal is safe — the server is headless and keeps running with its agents. Reopen and
+type `h`. `prefix d` is the deliberate form of the same thing. After a *server* restart (reboot,
+`herdr update`) the layout returns from `~/.config/herdr/session.json` and Claude panes reopen into
+their original conversations via the persisted session refs — but pane processes do not survive, so a
+dev server or long build is gone.
+
+| Situation                        | What to type                                    |
+|----------------------------------|-------------------------------------------------|
+| Start of day                     | `h`                                             |
+| Something pinged you             | `prefix o` — jumps to the agent that notified   |
+| New project layout               | `prefix c`, `cd …`, `hdl c`                     |
+| Several repos at once            | `hdlm c` from the parent directory              |
+| Same task, N agents              | `hsl 4 cc`                                      |
+| Changed `config.toml`            | `herdr config check` then `prefix R`            |
+
+Not every tmux binding was worth porting. The prefix, the `|`/`_` splits and `prefix d` are tmux's;
+the shift tier, pane cycling and resize are herdr's, because tmux's uppercase/lowercase pairing
+(`c`/`C`, `k`/`K`) couldn't survive `prefix k` becoming pane-focus-up — and once that system breaks,
+herdr's mnemonics (`N`=new, `D`=delete, `W`=workspace, `T`=tab, `X`=close tab) are the consistent ones.
+
+### Workspaces (tmux sessions)
+
+| Binding             | Action                                              |
+|---------------------|-----------------------------------------------------|
+| `Alt-↑` / `Alt-↓`   | Previous / next workspace (no prefix, as in tmux)   |
+| `prefix N`          | New workspace                                       |
+| `prefix W`          | Rename current workspace                            |
+| `prefix D`          | Close current workspace (with confirmation)         |
+| `prefix w`          | Workspace picker — scales better than cycling past ~4 workspaces |
+
+### Tabs (tmux windows)
+
+| Binding             | Action                                              |
+|---------------------|-----------------------------------------------------|
+| `prefix c`          | New tab (no name prompt, matches tmux `bind c`)     |
+| `prefix X`          | Close current tab — **not** `prefix k`, which is pane-focus-up here |
+| `prefix p` / `n`    | Previous / next tab                                 |
+| `prefix 1`–`9`      | Jump to tab N                                       |
+| `prefix T`          | Rename tab                                          |
+
+### Panes
+
+| Binding             | Action                                              |
+|---------------------|-----------------------------------------------------|
+| `prefix \|`          | Split side-by-side (herdr calls this `split_vertical`) |
+| `prefix _`          | Split stacked (`split_horizontal`)                  |
+| `prefix Ctrl-T`     | Narrow 20% drawer on the right (shells out to `herdr pane split --ratio 0.8` — ratio is the *existing* pane's share) |
+| `prefix h/j/k/l`    | Move between panes — **prefix-based**, unlike tmux  |
+| `prefix Tab` / `Shift-Tab` | Cycle to next / previous pane                |
+| `prefix z`          | Toggle pane zoom — `prefix Ctrl-A` is reserved (double-prefix sends a literal `Ctrl-a`) |
+| `prefix r`          | Resize mode — enter once, then arrows/`hjkl` (tmux needed repeatable `prefix` + arrows) |
+| `prefix x`          | Close pane                                          |
+| `prefix ;`          | Jump to last pane                                   |
+| `prefix [`          | Enter copy mode                                     |
+| `prefix P`          | Rename pane                                         |
+
+Pane focus stays behind the prefix on purpose: herdr has no `vim-tmux-navigator` passthrough, so
+binding bare `Ctrl-h/j/k/l` would swallow the keys nvim uses for its own splits. The prefix-less
+variant is commented in the config if that trade is ever worth making.
+
+### Sidebar
+
+Two halves: **spaces** on top, **agents** below. `prefix b` toggles the whole thing.
+
+| Binding             | Action                                              |
+|---------------------|-----------------------------------------------------|
+| `prefix o`          | Jump to whatever just notified you — usually beats walking the list |
+| `prefix g`          | Navigate mode: `↑`/`↓` walk spaces, `hjkl` walk panes |
+| `prefix w`          | Space picker                                        |
+| `prefix Shift-1`–`9`| Jump to space N (`prefix 1`–`9` is tabs)            |
+| `prefix J` / `K`    | Next / previous agent — lowercase `hjkl` is panes, shift is the agent list |
+| `prefix Alt-1`–`9`  | Focus agent N directly                              |
+
+The agent half ships with **no** bindings at all (`next_agent`, `previous_agent` and `focus_agent` are
+unbound, and navigate mode only covers spaces and panes), so the five above are additions rather than
+ports. They matter because `agent_panel_sort = "priority"` turns that half into an attention queue.
+
+### Misc
+
+| Binding             | Action                                              |
+|---------------------|-----------------------------------------------------|
+| `prefix R`          | Reload `config.toml` — rare and deliberate, so `prefix r` goes to resize |
+| `prefix d`          | Detach (tmux default, herdr ships `prefix q`)       |
+| `prefix e`          | Edit scrollback in `$EDITOR`                        |
+| `prefix G`          | New git worktree workspace                          |
+| `prefix s` / `?`    | Settings / help                                     |
+
+### Shell helpers (zsh functions)
+
+Sourced from `herdr/.herdr-functions.zsh` — the tmux `tdl`/`tdlm`/`tsl` trio ported to the herdr CLI.
+Both sets coexist; these only run inside a herdr pane (`$HERDR_ENV`).
+
+| Command                       | Layout                                                       |
+|-------------------------------|--------------------------------------------------------------|
+| `hdl <ai> [<ai2>]`            | Dev layout: editor left, AI right (30%), terminal bottom (15%). Second AI splits the right column. |
+| `hdlm <ai> [<ai2>]`           | Run `hdl` once per subdirectory, one tab each. Renames the workspace to the current dir. |
+| `hsl <count> <command>`       | Swarm layout: tile `<count>` panes, run `<command>` in each. |
+
+`herdr pane run` types into the pane's interactive login zsh, so aliases (`c`, `cc`, `k`, `kk`) expand
+just like `tmux send-keys` did — and the installed agent integrations report real state regardless of
+how the agent was launched.
+
+Two herdr CLI behaviours these helpers work around, worth knowing if you script against it yourself:
+
+- `--ratio` is the **existing** pane's share, the inverse of tmux's `-p N`. A 30% right-hand pane is `--ratio 0.7`.
+- An empty or omitted pane target falls back to the **UI-focused** pane, which may not be yours. Every call passes an explicit id and bails instead of guessing.
+
+### tmux settings with no herdr equivalent
+
+`history-limit` (herdr caps scrollback in bytes via `[advanced] scrollback_limit_bytes`), copy-mode's
+in-mode `v`/`y` (`prefix [` enters, but the keys inside aren't configurable), `bind -r` arrow resizing
+(no `resize_pane_*` actions in 0.8.0 — `prefix r` resize mode covers it), `base-index`,
+`renumber-windows`, `detach-on-destroy`, `escape-time`, `terminal-features`, and the TPM plugin list.
+Catppuccin mocha carries over as `[theme] name = "catppuccin"`.
+
+Two things the shipped `herdr --default-config` doesn't advertise, both verified against 0.8.0:
+an action can take an **array** of bindings (`next_tab = ["prefix+n", "alt+right"]`), and
+`herdr config check` reports unknown key names rather than ignoring them silently — so probing a
+setting you saw in someone else's config with a deliberate bogus key alongside tells you whether your
+build actually supports it.
 
 ---
 
@@ -376,6 +519,7 @@ Source: [`zsh/.zshrc`](../zsh/.zshrc)
 | `r`             | `rails`                                           |
 | `c` / `cc`      | `claude` / `claude --permission-mode auto`        |
 | `t`             | `tmux attach \|\| tmux new -s Work`               |
+| `h`             | `herdr` — launches or attaches the persistent session |
 | `cl`            | `clear`                                           |
 | `lzd`           | `lazydocker`                                      |
 | `ff`            | `fzf --preview 'bat --style=numbers --color=always {}'` |
