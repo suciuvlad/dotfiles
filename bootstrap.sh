@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Fresh-Mac bootstrap.
 # Run with:
-#   curl -fsSL https://raw.githubusercontent.com/suciuvlad/dotfiles/master/bootstrap.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/suciuvlad/dotfiles/main/bootstrap.sh | bash
 #
 # Idempotent — safe to re-run.
 set -euo pipefail

@@ -47,8 +47,8 @@ make -C scripts lint   # shellcheck; CI's ubuntu shellcheck is STRICTER
 make -C scripts test   # 20 probe/verify tests against fake $HOMEs, ~12s
 ```
 
-CI runs both plus Brewfile validation on every push to master. The other
-machines pull master blindly — don't push red.
+CI runs both plus Brewfile validation on every push to main. The other
+machines pull main blindly — don't push red.
 
 ## Package conventions
 

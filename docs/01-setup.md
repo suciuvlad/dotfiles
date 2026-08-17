@@ -7,7 +7,7 @@ Provisioning (Homebrew, runtimes, SSH key, macOS defaults, iTerm2) lives in `scr
 ## Fresh Mac (one command)
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/suciuvlad/dotfiles/master/bootstrap.sh | bash
+curl -fsSL https://raw.githubusercontent.com/suciuvlad/dotfiles/main/bootstrap.sh | bash
 ```
 
 What it does, in order:
@@ -16,14 +16,14 @@ What it does, in order:
 2. **Homebrew** — installs if missing.
 3. **`git` + `stow`** — installed via brew so we can clone and symlink.
 4. **Clone** to `~/dotfiles`. Tries SSH first (in case GitHub is already authorized on this Mac); falls back to HTTPS.
-5. **Stow** all 12 packages into `$HOME`. If any existing real files conflict (e.g. a hand-written `~/.zshrc` from a previous setup), they're moved to `~/.dotfiles-backup-<timestamp>/` first so stow can proceed cleanly.
+5. **Stow** all 13 packages into `$HOME`. If any existing real files conflict (e.g. a hand-written `~/.zshrc` from a previous setup), they're moved to `~/.dotfiles-backup-<timestamp>/` first so stow can proceed cleanly.
 6. **`make all`** — runs the full provisioning chain.
 
 It is idempotent. Re-running it on a partially-set-up machine just fills in what's missing.
 
 ## `make all` — the provisioning chain
 
-`make all` runs seven steps. Each is independently re-runnable:
+`make all` runs nine steps. Each is independently re-runnable:
 
 | Target              | Re-run with            | What it does                                                                        |
 |---------------------|------------------------|-------------------------------------------------------------------------------------|

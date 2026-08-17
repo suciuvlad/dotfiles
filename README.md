@@ -29,7 +29,7 @@ Setup
 ### Fresh Mac (one command)
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/suciuvlad/dotfiles/master/bootstrap.sh | bash
+curl -fsSL https://raw.githubusercontent.com/suciuvlad/dotfiles/main/bootstrap.sh | bash
 ```
 
 `bootstrap.sh` installs Xcode CLT → Homebrew → git/stow, clones this repo
@@ -52,7 +52,7 @@ make -C scripts all
 Per-step provisioning
 ---------------------
 
-`make all` runs `brew → ssh → runtimes → defaults → iterm → agents → skills` through a
+`make all` runs `brew → ssh → runtimes → defaults → iterm → agents → skills → ai-clis → herdr` through a
 spinner-driven orchestrator (`scripts/install.sh`) that ends with a styled
 summary box: per-step status icons, durations, and any per-package
 failures (e.g., region-locked casks). Output is captured to
@@ -83,6 +83,7 @@ Each step is idempotent and re-runnable:
 | LaunchAgents (keyremap, weekly drift check)| `~/.bin/macoss agents`    |
 | AI-agent skills → cursor/codex symlinks    | `~/.bin/macoss skills`    |
 | AI CLIs (claude native, kimi; codex via mise) | `~/.bin/macoss ai-clis` |
+| herdr agent integrations (binary via Brewfile) | `~/.bin/macoss herdr`   |
 
 Brewfiles
 ---------
