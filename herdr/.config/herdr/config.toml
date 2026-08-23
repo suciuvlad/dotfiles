@@ -119,8 +119,20 @@ claude = [["state_icon", "workspace", "tab"], ["terminal_title_stripped"], ["age
 
 # Ghostty already does notify-on-command-finish, but under herdr it only ever
 # sees one long-running process — these toasts are the replacement.
+#
+# "terminal" hands the toast to Ghostty over OSC 9/777 and lets it post, so the
+# notification carries Ghostty's icon and clicking it activates Ghostty. "system"
+# goes through terminal-notifier, or /usr/bin/osascript when that isn't on PATH —
+# and that fallback lands in Notification Center as Script Editor, with a click
+# that can't activate the hosting terminal. Neither yields a Claude icon; macOS
+# ties it to whichever process posts. prefix+o is what jumps to the pane.
+#
+# Relies on Ghostty's desktop-notifications, true by default and so deliberately
+# not mirrored into ghostty/.config/ghostty/config, which only carries non-defaults.
+# Both modes are emitted by the attached client — a detached session is silent
+# either way, and [ui.sound] below is unaffected.
 [ui.toast]
-delivery = "system"
+delivery = "terminal"
 delay_seconds = 1
 
 [ui.sound]

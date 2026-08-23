@@ -556,5 +556,7 @@ Behavior tweaks worth knowing:
 
 - Font: JetBrainsMono Nerd Font 12pt, P3 colorspace, Carbonfox theme
 - `notify-on-command-finish = unfocused` — long-running commands ping when the window isn't focused
+- Ghostty also posts herdr's agent-state toasts — they arrive as OSC 9/777 because herdr runs
+  `[ui.toast] delivery = "terminal"`, which is what keeps them off the Script Editor icon
 - `clipboard-paste-protection = on` — prompts before pasting unsafe content
 - `mouse-hide-while-typing = on`

@@ -167,6 +167,14 @@ Multiplexer built around coding agents — same session/window/pane model as tmu
 are installed, which is what makes the sidebar's `working`/`blocked`/`done` states real rather than
 screen-scraped. Re-run `herdr integration install <kind>` after an agent update if status says outdated.
 
+**Notifications** — `[ui.toast] delivery = "terminal"` hands agent-state toasts to Ghostty over
+OSC 9/777 and lets Ghostty post them, so they carry Ghostty's icon and clicking one activates
+Ghostty. The alternative, `delivery = "system"`, shells out to `terminal-notifier` — and falls back
+to `/usr/bin/osascript` when that isn't installed, which posts as **Script Editor** and can't
+activate the hosting terminal. Needs *System Settings › Notifications › Ghostty › Allow
+Notifications*; without it the toast silently never appears. `prefix o` jumps to the pane that
+pinged, which is what the notification itself can't do.
+
 **Install** — strict `Brewfile` (`brew "herdr"`), so `make brew` provisions it and `make status`
 notices when it's missing. Upstream also ships a `curl | sh` installer into `~/.local/bin`; don't use
 both, or `herdr update` and `brew upgrade` maintain two binaries and whichever loses PATH rots.
