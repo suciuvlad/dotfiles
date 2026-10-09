@@ -35,7 +35,7 @@ It is idempotent. Re-running it on a partially-set-up machine just fills in what
 | `make agents`       | `~/.bin/macoss agents` | Loads `~/Library/LaunchAgents/*.plist` via `launchctl bootstrap` (e.g. CapsLock→Escape via `hidutil`). |
 | `make skills`       | `~/.bin/macoss skills` | Symlinks AI-agent skills from the stowed `~/.agents/skills` store into `~/.cursor/skills` and `~/.codex/skills` (see [AI-agent skills](#ai-agent-skills)). |
 | `make ai-clis`      | `~/.bin/macoss ai-clis` | Installs the AI CLIs that aren't brew or mise packages — `claude` (native installer) and `kimi`; verifies mise-managed `codex`. |
-| `make herdr`        | `~/.bin/macoss herdr`  | Installs herdr's per-agent state integrations (the hooks that report `idle`/`working`/`blocked`/`done` to its sidebar), and keeps `~/.config/herdr` a real directory so stow can't fold herdr's runtime state into the repo. The binary itself comes from the strict `Brewfile`. |
+| `make herdr`        | `~/.bin/macoss herdr`  | Installs herdr's per-agent state integrations (the hooks that report `idle`/`working`/`blocked`/`done` to its sidebar), and keeps `~/.config/herdr` a real directory so stow can't fold herdr's runtime state into the repo. The binary itself comes from the strict `Brewfile` (`linux-pkgs` on Linux). Agents that aren't installed are skipped; an installed CLI that has never run gets its config dir created so the hook can land. |
 
 Each step appends its result to `~/.local/state/dotfiles/results.jsonl` (the
 full log goes to `~/.local/state/dotfiles/install.log`). If a run dies partway,
@@ -71,6 +71,97 @@ Run `make help` from `scripts/` for the full listing.
 - once as a **Signing Key** (so signed commits show "Verified").
 
 Then press ENTER. The script verifies GitHub access via `ssh -T` and switches the dotfiles remote from HTTPS to SSH. If you skip the prompt, re-run `make ssh` later.
+
+## Linux (headless agent VMs)
+
+The agent VMs in the home-infra build run these configs without Homebrew,
+launchd, or any macOS step. `make linux` is a **parallel chain** — deliberately
+not a step inside `install.sh`, and `make status` stays macOS-only.
+
+```sh
+git clone https://github.com/suciuvlad/dotfiles ~/dotfiles
+cd ~/dotfiles/scripts && make linux
+```
+
+| Target            | What it does                                                                                           |
+|-------------------|--------------------------------------------------------------------------------------------------------|
+| `make linux`      | Full chain: `linux-pkgs` → `stow-linux` → `linux-shell` → `runtimes` → `ai-clis` → `herdr` → `skills`. |
+| `make stow-linux` | Stows `LINUX_PACKAGES` — everything except `ghostty` (macOS terminal) and `launchagents` (launchd).    |
+| `make linux-pkgs` | The `Brewfile` equivalent: apt base, `mise` + `herdr` installers, modern CLIs through mise's `ubi:` backend, zsh plugins cloned to `~/.local/share/zsh/plugins`. |
+| `make linux-shell`| `chsh` to zsh for the current user. Runs after `stow-linux` so the shell it switches to has a `.zshrc`. |
+
+Order: `linux-pkgs` first because it installs `stow`; `skills` last because
+`herdr` creates `~/.codex`, which `agent-skills.sh` links into. Off macOS the
+Makefile also prepends `~/.local/bin` to `PATH` for every recipe: the
+installers put mise, herdr and claude there mid-run, and `make` captured `PATH`
+before they existed.
+
+`linux-pkgs` splits its mise tools the way the Brewfiles split: essentials
+(nvim, fzf, starship, atuin, eza, delta, gh) fail the step; the rest (lazygit,
+lazydocker, yazi, dust, gum, grype) are reported and skipped. Re-run to retry.
+They land in mise's global config (`~/.config/mise/config.toml`), not in the
+stowed `~/.tool-versions`, which macOS shares and where brew already provides
+them. The arrays in `linux-pkgs.sh` are the source of truth.
+
+**Skipped on Linux, deliberately:**
+
+- `brew` — no second package manager on a server. apt plus mise covers the list.
+- `defaults`, `iterm`, `agents` — macOS and launchd only.
+- `docker` — a machine-level service. The VM template (cloud-init) owns it;
+  dotfiles own the user environment.
+- `ssh` — keys are per-machine. Generating one inside a VM **template** hands
+  every clone the same private key. Run `make ssh` on the clone, never on the
+  template — and before any agent commits there: `git/.gitconfig` signs every
+  commit with `~/.ssh/id_ed25519.pub`, so until the key exists `git commit`
+  fails with "Couldn't load public key". `ssh.sh` itself is portable; its
+  keychain lines are macOS-only and guarded.
+
+**Debian binary names.** `bat` and `fd` install as `batcat` and `fdfind`.
+`linux-pkgs.sh` symlinks both into `~/.local/bin` rather than aliasing them in
+the shell, so scripts and agents resolve them too.
+
+**GitHub API limit.** Every `ubi:` tool is an unauthenticated GitHub API
+lookup, and the limit is 60 per hour per IP. Rebuilding the template a few
+times inside an hour exhausts it and `linux-pkgs` reports
+`mise use failed: … rate limit`. `export MISE_GITHUB_TOKEN=…` before
+`make linux` lifts it.
+
+**Login shell.** Cloud images hand the default user `bash`, and nothing in
+`zsh/` runs until that changes. `make linux-shell` runs `chsh -s zsh` for the
+current user, after `stow-linux`, so the first zsh login already has its
+`.zshrc` instead of the new-user wizard.
+
+### One `.zshrc`, two plugin prefixes
+
+`zsh/.zshrc:37-43` picks the plugin prefix by `$OSTYPE`: Homebrew's
+`/opt/homebrew/share` on macOS, `~/.local/share/zsh/plugins` elsewhere — the
+one directory `linux-pkgs.sh` clones all four plugins into, so the branch is a
+single variable rather than four distro-specific paths. Only `zsh-completions`
+differs in layout (brew flattens `src/` into the share dir), which is why the
+completions dir is its own variable. Every `source` line is still guarded by
+`[ -f ]`, so a missing plugin degrades silently; the other macOS-only lines
+(`DYLD_FALLBACK_LIBRARY_PATH`, the iTerm2 integration) are guarded the same
+way.
+
+`~/.local/bin` is on `PATH` from both `.zprofile` and `.zshrc` — mise, herdr,
+claude and the Debian symlinks all land there.
+
+### mise: shims in `.zprofile`, hook in `.zshrc`
+
+`mise activate` is a prompt hook, so it only fires in **interactive** shells.
+Agents spawn plenty that aren't, and those would get the system `node`.
+`zsh/.zprofile` puts mise's shims on `PATH` for login shells, and everything
+they spawn inherits it. `.zshrc` layers the hook on top for interactive use,
+where it takes precedence — its per-directory tool paths sort before the shims.
+One-shot `ssh agent01 cmd` is neither login nor interactive and reads only
+`~/.zshenv`, so it sees neither; move both lines there if that matters.
+
+Note `mise reshim` is needed after anything installs executables outside
+mise's knowledge (`npm i -g`), or the new CLI appears not to exist.
+
+A Mac that already has a hand-written `~/.zprofile` (the Codex installer
+writes one) blocks `stow -R -t ~ zsh` until the file is moved aside. Its usual
+content — `~/.local/bin` on `PATH` — is already covered by the stowed one.
 
 ## Brewfiles
 
@@ -164,11 +255,11 @@ If you `rm` a file from a stow package directly, stow's symlink to that file is 
 dotfiles/
 ├── bootstrap.sh                    # one-shot fresh-Mac entry point
 ├── scripts/                        # provisioning (not stowed into $HOME the same way as configs)
-│   ├── Makefile                    # all/brew/ssh/runtimes/defaults/iterm/status/check/lint
+│   ├── Makefile                    # all/brew/ssh/runtimes/defaults/iterm/status/check/lint + linux chain
 │   ├── Brewfile                    # strict: core CLI + zsh plugins
 │   ├── Brewfile.optional           # best-effort: casks, MAS, niche CLIs
-│   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, agents.sh, agent-skills.sh, brew-optional.sh
-│   └── .bin/                       # macoss, tmuxinator.zsh — stowed to ~/.bin/
+│   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, agents.sh, agent-skills.sh, brew-optional.sh, linux-pkgs.sh
+│   └── .bin/                       # macoss, tmuxinator.zsh — the only part stowed (~/.bin/); .stow-local-ignore keeps Makefile/Brewfile/setup out of ~
 ├── agents/                         # ~/.agents/skills — central AI-agent skill store
 ├── claude/    ghostty/    git/     herdr/   launchagents/  mise/
 ├── nvim/      shell/      starship/   tmux/    zsh/

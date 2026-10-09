@@ -34,7 +34,7 @@ Same idea as lazygit, for Docker. Browse containers, images, volumes, networks; 
 
 **Killer commands**
 - `lazydocker` — open
-- `lzd` — alias defined at `zsh/.zshrc:77`
+- `lzd` — alias defined at `zsh/.zshrc:94`
 
 **Upstream:** <https://github.com/jesseduffield/lazydocker>
 

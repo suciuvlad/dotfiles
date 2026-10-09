@@ -21,17 +21,24 @@ if [ ! -f "$KEY" ]; then
   KEY_GENERATED=1
 fi
 
+# UseKeychain is macOS-only, and Linux OpenSSH treats an unknown option as
+# fatal for every ssh invocation. IgnoreUnknown keeps one block portable.
 if ! grep -q "^Host \*" "$HOME/.ssh/config" 2>/dev/null; then
   cat >> "$HOME/.ssh/config" <<'EOF'
 
 Host *
+  IgnoreUnknown UseKeychain
   AddKeysToAgent yes
   UseKeychain yes
   IdentityFile ~/.ssh/id_ed25519
 EOF
 fi
 
-ssh-add --apple-use-keychain "$KEY" 2>/dev/null || true
+if [ "$(uname -s)" = "Darwin" ]; then
+  ssh-add --apple-use-keychain "$KEY" 2>/dev/null || true
+else
+  ssh-add "$KEY" 2>/dev/null || true
+fi
 
 # Allowed signers file for git ssh commit-signing verification
 ALLOWED="$HOME/.ssh/allowed_signers"

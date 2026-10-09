@@ -13,7 +13,7 @@ Searchable, syncable shell history. Replaces `Ctrl-r`.
 - `atuin stats` — what you actually ran this month
 - `atuin login` / `atuin sync` — opt-in cross-machine sync (E2E encrypted)
 
-**Config:** `zsh/.zshrc:124` (`atuin init zsh --disable-up-arrow` — keeps `↑` for substring search)
+**Config:** `zsh/.zshrc:144` (`atuin init zsh --disable-up-arrow` — keeps `↑` for substring search)
 **Upstream:** <https://atuin.sh>
 
 ---
@@ -27,7 +27,7 @@ Searchable, syncable shell history. Replaces `Ctrl-r`.
 - `bat -p` — plain, no paging (good for piping)
 - Used as fzf preview: `fzf --preview 'bat --style=numbers --color=always {}'` (see `ff` alias)
 
-**Config:** `zsh/.zshrc:70` (`alias cat=bat`)
+**Config:** `zsh/.zshrc:83` (`alias cat=bat`)
 **Upstream:** <https://github.com/sharkdp/bat>
 
 ---
@@ -40,7 +40,7 @@ Per-directory environment variables via `.envrc`. Pairs with `mise` for project-
 - `direnv edit` — edit the current `.envrc` and auto-allow on save
 - `direnv reload` — re-source after manual changes
 
-**Config:** `zsh/.zshrc:121` (`eval "$(direnv hook zsh)"`)
+**Config:** `zsh/.zshrc:141` (`eval "$(direnv hook zsh)"`)
 **Upstream:** <https://direnv.net>
 
 ---
@@ -54,7 +54,7 @@ Modern `ls` with icons, git status, and tree mode. Aliased to `ls`/`lt` here.
 - `lt` → `eza --tree --level=2 --long --icons --git`
 - `lta` → `lt -a`
 
-**Config:** `zsh/.zshrc:80-83` (aliases); completions at `~/.config/eza/completions/zsh` (added to FPATH at `zsh/.zshrc:20`)
+**Config:** `zsh/.zshrc:97-100` (aliases); completions at `~/.config/eza/completions/zsh` (added to FPATH at `zsh/.zshrc:25`)
 **Upstream:** <https://eza.rocks>
 
 ---
@@ -85,7 +85,7 @@ General-purpose fuzzy finder. Powers `Ctrl-t`, `Alt-c`, `**<Tab>`, the `ff` alia
 - `eff` — pick file and open in `$EDITOR`
 - `command | fzf` — pipe anything in
 
-**Config:** `zsh/.zshrc:115` (`source <(fzf --zsh)`)
+**Config:** `zsh/.zshrc:135` (`source <(fzf --zsh)`)
 **Upstream:** <https://github.com/junegunn/fzf>
 
 ---
@@ -155,7 +155,7 @@ Polyglot version manager (replacement for asdf, nvm, rbenv, pyenv, goenv). Reads
 - `mise current` — show active versions
 - `mise upgrade` — bump all to latest
 
-**Config:** `mise/.tool-versions` (`node lts`, `go latest`, `python 3.13`, `ruby latest`); activated at `zsh/.zshrc:112`
+**Config:** `mise/.tool-versions` (`node lts`, `go latest`, `python 3.13`, `ruby latest`); activated at `zsh/.zshrc:132`
 **Upstream:** <https://mise.jdx.dev>
 
 ---
@@ -196,7 +196,7 @@ Cross-shell prompt. Configured to be minimal-left / right-aligned info.
 - Left: `directory` + character (`➜` green/red, `[N] >>>` in vi-mode)
 - Right: git branch + status + package version + cmd duration (≥2s) + hostname (when SSH)
 
-**Config:** `starship/.config/starship.toml`; activated at `zsh/.zshrc:109`
+**Config:** `starship/.config/starship.toml`; activated at `zsh/.zshrc:129`
 **Upstream:** <https://starship.rs>
 
 ---
@@ -221,7 +221,7 @@ Directory tree printer. Aliased to `la`.
 - `tree -a` — include hidden
 - `tree -I 'node_modules|.git'` — exclude patterns
 
-**Config:** `zsh/.zshrc:69` (`alias la=tree`)
+**Config:** `zsh/.zshrc:82` (`alias la=tree`)
 **Upstream:** <http://mama.indstate.edu/users/ice/tree/>
 
 ---
@@ -234,7 +234,7 @@ Smarter `cd`. Learns frequently-visited directories.
 - `z foo bar` — multi-keyword match
 - `zi` — interactive picker (fzf)
 
-**Config:** `zsh/.zshrc:118` (`eval "$(zoxide init zsh)"`)
+**Config:** `zsh/.zshrc:138` (`eval "$(zoxide init zsh)"`)
 **Upstream:** <https://github.com/ajeetdsouza/zoxide>
 
 ---
@@ -253,7 +253,9 @@ Smarter `cd`. Learns frequently-visited directories.
 
 ### Zsh plugins
 
-Sourced in this order in `zsh/.zshrc:35-42` (homebrew install paths):
+Sourced in this order in `zsh/.zshrc:37-55`. The prefix is `/opt/homebrew/share`
+on macOS and `~/.local/share/zsh/plugins` on the Linux agent VMs, where
+`scripts/setup/linux-pkgs.sh` clones them (see [01-setup](01-setup.md#one-zshrc-two-plugin-prefixes)):
 
 | Plugin                              | What it does                                          |
 |-------------------------------------|-------------------------------------------------------|
@@ -306,7 +308,7 @@ Alternate node package managers. `pnpm` for content-addressed dedup (saves disk 
 - `pnpm install`, `pnpm add <pkg>`, `pnpm dlx <pkg>` (one-shot exec)
 - `yarn install`, `yarn add <pkg>`
 
-**Config:** `PNPM_HOME=~/Library/pnpm` and `BUN_INSTALL=~/.bun` exported at `zsh/.zshrc:7-8`, both on PATH.
+**Config:** `PNPM_HOME=~/Library/pnpm` and `BUN_INSTALL=~/.bun` exported at `zsh/.zshrc:12-13`, both on PATH.
 **Upstream:** <https://pnpm.io> · <https://yarnpkg.com>
 
 ---

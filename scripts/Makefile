@@ -7,9 +7,21 @@ SCRIPTS_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 DOTFILES_DIR := $(abspath $(SCRIPTS_DIR)/..)
 SETUP := $(SCRIPTS_DIR)/setup
 PACKAGES := agents claude ghostty git herdr launchagents mise nvim scripts shell starship tmux zsh
+# Linux subset: ghostty is a macOS terminal emulator, launchagents is launchd.
+LINUX_PACKAGES := agents claude git herdr mise nvim scripts shell starship tmux zsh
 REQUIRED_CMDS := stow brew git nvim mise tmux fzf starship
+# linux-pkgs puts mise, herdr and claude in ~/.local/bin mid-run, and make
+# captured PATH before they existed — prepend it for every recipe. Linux
+# only: on macOS it would put ~/.local/bin ahead of Homebrew for the
+# existing targets.
+ifneq ($(shell uname -s),Darwin)
+export PATH := $(HOME)/.local/bin:$(PATH)
+endif
+# Every chain here is order-dependent (stow before stow is installed, mise
+# before mise exists); -j would break them.
+.NOTPARALLEL:
 
-.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents skills ai-clis herdr status check lint test
+.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents skills ai-clis herdr status check lint test linux linux-pkgs stow-linux linux-shell
 
 all: install
 
@@ -32,6 +44,13 @@ help:
 	@echo "  make herdr      install herdr's per-agent state integrations; keep"
 	@echo "                  ~/.config/herdr a real dir so stow can't fold runtime state in"
 	@echo ""
+	@echo "Linux (headless agent VMs — no Homebrew, no macOS steps):"
+	@echo "  make linux      full Linux chain: linux-pkgs + stow-linux + linux-shell +"
+	@echo "                  runtimes + ai-clis + herdr + skills"
+	@echo "  make stow-linux stow only the packages that apply off macOS"
+	@echo "  make linux-pkgs apt base + mise-managed CLIs + zsh plugins (Brewfile equivalent)"
+	@echo "  make linux-shell make zsh the login shell (after stow, so it has a .zshrc)"
+	@echo ""
 	@echo "Maintenance:"
 	@echo "  make status     what the install chain ran / failed / never started, verified"
 	@echo "                  against the live machine, with resume commands"
@@ -51,9 +70,13 @@ brew-strict:
 brew-pick-optional:
 	@bash $(SETUP)/pick-optional.sh
 
+# mise finds ~/.tool-versions by walking up from the cwd, not as a global file;
+# from a checkout outside $HOME it would install nothing and report success.
 runtimes:
-	@command -v mise >/dev/null 2>&1 || { echo "mise not found — run 'make brew' first" >&2; exit 1; }
-	mise install
+	@command -v mise >/dev/null 2>&1 || { \
+		[ "$$(uname -s)" = Darwin ] && echo "mise not found — run 'make brew' first" >&2 \
+			|| echo "mise not found — run 'make linux-pkgs' first" >&2; exit 1; }
+	cd $$HOME && mise install
 
 ssh:
 	bash $(SETUP)/ssh.sh
@@ -75,6 +98,29 @@ ai-clis:
 
 herdr:
 	bash $(SETUP)/herdr.sh
+
+# ── Linux ───────────────────────────────────────────────────────────────────
+# Parallel chain to the macOS one, not a step inside it: install.sh and
+# status.sh stay macOS-only. Skipped here: brew (no Homebrew by design),
+# defaults + iterm + agents (macOS/launchd), ssh (keys are per-machine and
+# must never be generated into a VM template that gets cloned).
+# Order matters: linux-pkgs installs stow; stow-linux links the .zshrc that
+# linux-shell's chsh needs and the ~/.tool-versions runtimes reads; skills
+# goes last because herdr creates ~/.codex, which agent-skills.sh links into.
+linux: linux-pkgs stow-linux linux-shell runtimes ai-clis herdr skills
+	@echo ""
+	@echo "  ✓ Linux provisioning complete."
+	@echo "    Shell plugins: ~/.local/share/zsh/plugins"
+
+stow-linux:
+	@command -v stow >/dev/null 2>&1 || { echo "stow not found — run 'make linux-pkgs' first" >&2; exit 1; }
+	stow -R -t $$HOME -d $(DOTFILES_DIR) $(LINUX_PACKAGES)
+
+linux-pkgs:
+	bash $(SETUP)/linux-pkgs.sh
+
+linux-shell:
+	bash $(SETUP)/linux-shell.sh
 
 status:
 	@bash $(SETUP)/status.sh

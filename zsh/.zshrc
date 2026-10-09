@@ -30,21 +30,29 @@ HISTSIZE=10000
 SAVEHIST=10000
 setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
 
-## ── Completion ──────────────────────────────────────────────────
+## ── Completion + plugins ────────────────────────────────────────
+# One prefix per platform: Homebrew's share dir on macOS, the clone prefix
+# scripts/setup/linux-pkgs.sh fills on the agent VMs. The layouts match
+# except zsh-completions, where brew flattens src/ into the share dir.
+if [[ "$OSTYPE" == darwin* ]]; then
+  ZSH_PLUGIN_DIR="/opt/homebrew/share"
+  ZSH_COMPLETIONS_DIR="$ZSH_PLUGIN_DIR/zsh-completions"
+else
+  ZSH_PLUGIN_DIR="$HOME/.local/share/zsh/plugins"
+  ZSH_COMPLETIONS_DIR="$ZSH_PLUGIN_DIR/zsh-completions/src"
+fi
+
 # zsh-completions must be on fpath BEFORE compinit
-[ -d /opt/homebrew/share/zsh-completions ] && \
-  fpath=(/opt/homebrew/share/zsh-completions $fpath)
+[ -d "$ZSH_COMPLETIONS_DIR" ] && fpath=("$ZSH_COMPLETIONS_DIR" $fpath)
 autoload -Uz compinit && compinit -i  # -i: silently skip insecure dirs instead of prompting
 
-## ── Plugins (Homebrew) ──────────────────────────────────────────
-HBSHARE="/opt/homebrew/share"
-[ -f "$HBSHARE/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
-  source "$HBSHARE/zsh-autosuggestions/zsh-autosuggestions.zsh"
-[ -f "$HBSHARE/zsh-history-substring-search/zsh-history-substring-search.zsh" ] && \
-  source "$HBSHARE/zsh-history-substring-search/zsh-history-substring-search.zsh"
+[ -f "$ZSH_PLUGIN_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
+  source "$ZSH_PLUGIN_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[ -f "$ZSH_PLUGIN_DIR/zsh-history-substring-search/zsh-history-substring-search.zsh" ] && \
+  source "$ZSH_PLUGIN_DIR/zsh-history-substring-search/zsh-history-substring-search.zsh"
 # syntax-highlighting MUST be sourced last
-[ -f "$HBSHARE/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
-  source "$HBSHARE/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+[ -f "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
+  source "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # Up/Down arrow → history-substring-search
 bindkey '^[[A' history-substring-search-up
@@ -77,6 +85,7 @@ alias d='docker'
 alias r='rails'
 alias c='claude'
 alias cc='claude --permission-mode auto'
+alias ccw='claude --permission-mode auto --worktree'
 alias k='kimi'
 alias kk='kimi --auto'
 alias t='tmux attach || tmux new -s Work'
@@ -141,7 +150,7 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 
 # Added for WeasyPrint / claude-seo PDF reports (Homebrew native libs)
-export DYLD_FALLBACK_LIBRARY_PATH="/opt/homebrew/lib"
+[[ "$OSTYPE" == darwin* ]] && export DYLD_FALLBACK_LIBRARY_PATH="/opt/homebrew/lib"
 
-# kimi-code
-export PATH="/Users/vladsuciu/.kimi-code/bin:$PATH"
+# kimi-code (installed by scripts/setup/ai-clis.sh on every platform)
+export PATH="$HOME/.kimi-code/bin:$PATH"

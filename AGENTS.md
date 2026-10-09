@@ -29,6 +29,19 @@ A new setup step is not done until it exists in all five places:
 4. `STEPS`/`LABELS`/`TARGETS` arrays in `scripts/setup/status.sh`
 5. A live probe in `status.sh` — a probeless step degrades to "unknown"
 
+The five places above are the **macOS** chain. `make linux` is a separate,
+parallel chain for the headless agent VMs: it has a Makefile target and
+`scripts/setup/linux-pkgs.sh`, but deliberately no `install.sh` run_step and
+no `status.sh` probe — `install.sh` primes sudo for `defaults.sh` and
+`status.sh` probes brew, neither of which means anything off macOS. Steps
+shared by both chains (`runtimes`, `skills`, `ai-clis`, `herdr`) must stay
+portable; branch on `[ "$(uname -s)" = "Darwin" ]` rather than assuming brew.
+Off macOS the Makefile prepends `~/.local/bin` to `PATH` for every recipe,
+because `linux-pkgs` installs mise and herdr there mid-run; keep that export.
+
+Never put `ssh` in the Linux chain. Those VMs are cloned from a template, and
+a key generated before the clone is a key every clone shares.
+
 Probe caveat: the weekly drift LaunchAgent runs probes with a bare PATH
 (no `~/.local/bin`, no mise shims) — use absolute-path fallbacks for
 anything not in `/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin`.

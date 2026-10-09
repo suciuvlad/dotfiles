@@ -8,6 +8,8 @@ set -euo pipefail
 #   claude — native installer into ~/.local (self-updating; the "claude"
 #            brew cask is the desktop app, not this CLI)
 #   kimi   — Moonshot installer into ~/.kimi-code/bin (PATH set in .zshrc)
+# Both installers are portable; this step runs unchanged on the Linux
+# agent VMs via 'make linux'.
 # codex is mise-managed (npm:@openai/codex in ~/.tool-versions) so it
 # survives node version bumps — installed by 'make runtimes', verified here.
 
@@ -29,7 +31,9 @@ if [ -x "$HOME/.kimi-code/bin/kimi" ]; then
   echo "· kimi already installed"
 else
   echo "→ installing Kimi CLI"
-  if curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash; then
+  # .zshrc already puts ~/.kimi-code/bin on PATH; without the opt-out the
+  # installer appends a machine-specific line to the stowed, tracked .zshrc.
+  if curl -fsSL https://code.kimi.com/kimi-code/install.sh | KIMI_NO_MODIFY_PATH=1 bash; then
     installed+=("kimi")
   else
     failed+=("kimi — installer failed")
