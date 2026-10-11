@@ -1,6 +1,6 @@
 [user]
-  name = Vlad Suciu
-  email = suciu.vlad@gmail.com
+  name = Vlad S
+  email = 286058+suciuvlad@users.noreply.github.com
   signingkey = ~/.ssh/id_ed25519.pub
 [alias]
   # status / branch
