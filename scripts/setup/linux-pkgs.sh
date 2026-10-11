@@ -45,6 +45,8 @@ fi
 APT_PKGS=(
   bat build-essential ca-certificates curl direnv fd-find git jq
   ripgrep shellcheck stow tmux tree unzip zoxide zsh btop
+  # herdr.sh's settings.json normaliser; cloud images have it, bare ones don't
+  python3
   # mise's ruby core compiles with ruby-build; without these it fails late
   libssl-dev libyaml-dev libreadline-dev zlib1g-dev libffi-dev libgmp-dev
 )

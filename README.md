@@ -21,7 +21,7 @@ dev stacks, apps, and setup walkthroughs.
 | `shell`    | `~/.agignore`, `~/.eslintrc`, `~/.xterm-256color.ti`    |
 | `starship` | `~/.config/starship.toml`                               |
 | `tmux`     | `~/.tmux.conf`, `~/.tmux-functions.zsh`                 |
-| `zsh`      | `~/.zshrc`, `~/.zprofile` (login-shell PATH + mise shims) |
+| `zsh`      | `~/.zshrc`, `~/.zprofile` (login-shell PATH: brew on macOS, `~/.local/bin`, mise shims) |
 
 Setup
 -----
