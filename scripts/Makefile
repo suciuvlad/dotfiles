@@ -7,8 +7,9 @@ SCRIPTS_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 DOTFILES_DIR := $(abspath $(SCRIPTS_DIR)/..)
 SETUP := $(SCRIPTS_DIR)/setup
 PACKAGES := agents claude ghostty git herdr launchagents mise nvim scripts shell starship tmux zsh
-# Linux subset: ghostty is a macOS terminal emulator, launchagents is launchd.
-LINUX_PACKAGES := agents claude git herdr mise nvim scripts shell starship tmux zsh
+# Linux subset: launchagents is launchd. ghostty stays — it runs on Linux
+# too, and an unused ~/.config/ghostty symlink costs nothing.
+LINUX_PACKAGES := agents claude ghostty git herdr mise nvim scripts shell starship tmux zsh
 REQUIRED_CMDS := stow brew git nvim mise tmux fzf starship
 # linux-pkgs puts mise and herdr (and ai-clis claude) in ~/.local/bin mid-run,
 # and make captured PATH before they existed — prepend it for every recipe. Linux
@@ -16,6 +17,9 @@ REQUIRED_CMDS := stow brew git nvim mise tmux fzf starship
 # existing targets.
 ifneq ($(shell uname -s),Darwin)
 export PATH := $(HOME)/.local/bin:$(PATH)
+# No install.sh here, but each step's emit_result journals when this is set:
+# a template built over ssh keeps a record of what ran and why it failed.
+export INSTALL_RESULT_FILE := $(HOME)/.local/state/dotfiles/results.jsonl
 endif
 # Every chain here is order-dependent (stow before stow is installed, mise
 # before mise exists); -j would break them.
@@ -48,7 +52,8 @@ help:
 	@echo "  make linux      full Linux chain: linux-pkgs + stow-linux + linux-shell +"
 	@echo "                  runtimes + ai-clis + herdr + skills"
 	@echo "  make stow-linux stow only the packages that apply off macOS"
-	@echo "  make linux-pkgs apt base + mise-managed CLIs + zsh plugins (Brewfile equivalent)"
+	@echo "  make linux-pkgs apt base + mise-managed CLIs + zsh plugins (Brewfile equivalent);"
+	@echo "                  clipboard tools + Nerd Font when a desktop session is detected"
 	@echo "  make linux-shell make zsh the login shell (after stow, so it has a .zshrc)"
 	@echo ""
 	@echo "Maintenance:"

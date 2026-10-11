@@ -92,7 +92,7 @@ All splits start in the current pane's directory.
 | `christoomey/vim-tmux-navigator`    | Seamless `Ctrl-h/j/k/l` between tmux panes & nvim splits |
 | `catppuccin/tmux`                   | Status-bar theme (mocha)                              |
 
-Install/update plugins: `prefix I` (install), `prefix U` (update), `prefix alt-u` (uninstall removed).
+TPM clones itself and installs the plugins on the first tmux start (bottom of `tmux/.tmux.conf`). Afterwards: `prefix I` (install), `prefix U` (update), `prefix alt-u` (uninstall removed).
 
 ### Shell helpers (zsh functions)
 

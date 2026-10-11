@@ -39,6 +39,8 @@ shared by both chains (`runtimes`, `skills`, `ai-clis`, `herdr`) must stay
 portable; branch on `[ "$(uname -s)" = "Darwin" ]` rather than assuming brew.
 Off macOS the Makefile prepends `~/.local/bin` to `PATH` for every recipe,
 because `linux-pkgs` installs mise and herdr there mid-run; keep that export.
+It also exports `INSTALL_RESULT_FILE`, so `emit_result` journals without
+`install.sh`.
 
 Never put `ssh` in the Linux chain. Those VMs are cloned from a template, and
 a key generated before the clone is a key every clone shares.

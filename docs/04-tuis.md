@@ -138,7 +138,7 @@ Terminal multiplexer + persistent session manager.
 - `Ctrl-h/j/k/l` — move between panes (also navigates into nvim splits)
 - `tdl claude` — full dev layout in current dir
 
-**Plugins** — installed via TPM. After editing `~/.tmux.conf`, reload with `prefix r`. Manage plugins with `prefix I` (install), `prefix U` (update).
+**Plugins** — installed via TPM, which bootstraps itself on first start. After editing `~/.tmux.conf`, reload with `prefix r`. Manage plugins with `prefix I` (install), `prefix U` (update).
 
 **Config:** `tmux/.tmux.conf`, `tmux/.tmux-functions.zsh`
 **Upstream:** <https://github.com/tmux/tmux>

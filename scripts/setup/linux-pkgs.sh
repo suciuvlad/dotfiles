@@ -9,7 +9,7 @@ set -euo pipefail
 # design: a second package manager on a server buys nothing but a
 # /home/linuxbrew prefix to be surprised by later.
 #
-# Four sections, in dependency order:
+# Five sections, in dependency order:
 #   1. apt         base tools Debian/Ubuntu package at a usable version
 #   2. installers  mise and herdr — the two that bootstrap the rest
 #   3. mise        modern CLIs apt ships stale or not at all, mostly via
@@ -18,6 +18,8 @@ set -euo pipefail
 #                  manager can own it, it does.
 #   4. zsh plugins cloned to ~/.local/share/zsh/plugins — what brew's zsh-*
 #                  formulae provide on macOS
+#   5. desktop     clipboard tools and a Nerd Font, only where a desktop
+#                  session exists (best-effort)
 #
 # Deliberately NOT installed: mas, reattach-to-user-namespace (macOS only),
 # postgresql (runs in Docker on these boxes, not on the host), docker itself
@@ -202,6 +204,53 @@ for entry in "${ZSH_PLUGINS[@]}"; do
     failed+=("$name — clone failed")
   fi
 done
+
+# ── 5. desktop extras ───────────────────────────────────────────────────────
+# Only where something renders them: a session type is set, or a desktop
+# session file exists (Ubuntu Desktop; cloud images and containers have
+# neither). LINUX_DESKTOP=1|0 overrides the guess. Everything here is
+# best-effort — a headless box that guesses wrong loses nothing.
+is_desktop() {
+  case "${LINUX_DESKTOP:-}" in 1) return 0 ;; 0) return 1 ;; esac
+  [ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ] && return 0
+  compgen -G "/usr/share/xsessions/*.desktop" >/dev/null \
+    || compgen -G "/usr/share/wayland-sessions/*.desktop" >/dev/null
+}
+
+if is_desktop; then
+  # nvim's unnamedplus and tmux-yank need a clipboard tool; xdg-open backs
+  # nvim's vim.ui.open; fontconfig provides fc-cache below.
+  DESKTOP_PKGS=(xclip wl-clipboard xdg-utils fontconfig)
+  echo "→ desktop: apt ${DESKTOP_PKGS[*]}"
+  if "${SUDO[@]}" env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+      apt-get install -y -qq "${DESKTOP_PKGS[@]}"; then
+    installed+=("desktop-apt(${#DESKTOP_PKGS[@]})")
+  else
+    optional_failed+=("desktop packages — apt-get install failed")
+  fi
+
+  # The font ghostty, starship and `eza --icons` assume. Direct release URL:
+  # a redirect, not an API call, so it doesn't count against the 60/hour.
+  FONT_DIR="$HOME/.local/share/fonts/JetBrainsMonoNerdFont"
+  if compgen -G "$FONT_DIR/*.ttf" >/dev/null; then
+    echo "· JetBrainsMono Nerd Font present"
+  else
+    echo "→ JetBrainsMono Nerd Font → $FONT_DIR"
+    tmp="$(mktemp -d)"
+    if curl -fsSL -o "$tmp/font.zip" \
+         https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip \
+       && mkdir -p "$FONT_DIR" \
+       && unzip -qo "$tmp/font.zip" '*.ttf' -d "$FONT_DIR" \
+       && fc-cache -f "$HOME/.local/share/fonts" >/dev/null; then
+      installed+=("nerd-font")
+    else
+      optional_failed+=("JetBrainsMono Nerd Font — download or install failed")
+    fi
+    rm -rf "$tmp"
+  fi
+else
+  echo "· no desktop session — skipping clipboard tools and fonts (LINUX_DESKTOP=1 forces them)"
+fi
 
 # ── Result ──────────────────────────────────────────────────────────────────
 [ ${#optional_failed[@]} -gt 0 ] && printf '⚠ %s\n' "${optional_failed[@]}" >&2

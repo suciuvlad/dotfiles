@@ -86,15 +86,18 @@ cd ~/dotfiles/scripts && make linux
 | Target            | What it does                                                                                           |
 |-------------------|--------------------------------------------------------------------------------------------------------|
 | `make linux`      | Full chain: `linux-pkgs` → `stow-linux` → `linux-shell` → `runtimes` → `ai-clis` → `herdr` → `skills`. |
-| `make stow-linux` | Stows `LINUX_PACKAGES` — everything except `ghostty` (macOS terminal) and `launchagents` (launchd).    |
-| `make linux-pkgs` | The `Brewfile` equivalent: apt base, `mise` + `herdr` installers, modern CLIs through mise (mostly its `github:` backend), zsh plugins cloned to `~/.local/share/zsh/plugins`. |
+| `make stow-linux` | Stows `LINUX_PACKAGES` — everything except `launchagents` (launchd). `ghostty` is in: it runs on Linux too. |
+| `make linux-pkgs` | The `Brewfile` equivalent: apt base, `mise` + `herdr` installers, modern CLIs through mise (mostly its `github:` backend), zsh plugins cloned to `~/.local/share/zsh/plugins`; on a desktop, clipboard tools and the JetBrainsMono Nerd Font. |
 | `make linux-shell`| `chsh` to zsh for the current user. Runs after `stow-linux` so the shell it switches to has a `.zshrc`. |
 
 Order: `linux-pkgs` first because it installs `stow`; `skills` last because
 `herdr` creates `~/.codex`, which `agent-skills.sh` links into. Off macOS the
 Makefile also prepends `~/.local/bin` to `PATH` for every recipe: the
 installers put mise, herdr and claude there mid-run, and `make` captured `PATH`
-before they existed.
+before they existed. There is no `install.sh` orchestration, but every setup
+script still journals to `~/.local/state/dotfiles/results.jsonl` (`stow-linux`
+and `runtimes` are plain recipes and don't) — `cat` it after a run over ssh to
+see what ran and the recorded failure strings.
 
 `linux-pkgs` applies the Brewfile / Brewfile.optional policy to its mise
 tools, though the membership differs (on macOS all of these are strict):
@@ -124,6 +127,14 @@ them. The arrays in `linux-pkgs.sh` are the source of truth.
 **Debian binary names.** `bat` and `fd` install as `batcat` and `fdfind`.
 `linux-pkgs.sh` symlinks both into `~/.local/bin` rather than aliasing them in
 the shell, so scripts and agents resolve them too.
+
+**Desktop extras.** `linux-pkgs` adds `xclip`, `wl-clipboard`, `xdg-utils`
+and the JetBrainsMono Nerd Font (into `~/.local/share/fonts`) only when it
+finds a desktop session: `$DISPLAY`/`$WAYLAND_DISPLAY`, or a session file
+under `/usr/share/xsessions` or `/usr/share/wayland-sessions`. Cloud images
+have neither. `LINUX_DESKTOP=1` or `=0` overrides the guess. All of it is
+best-effort. Ghostty itself isn't installed (no apt package); its config is
+stowed so it works the moment you install it.
 
 **GitHub API limit.** Every `github:` (and `aqua:`) tool is an
 unauthenticated GitHub API lookup, and the limit is 60 per hour per IP.

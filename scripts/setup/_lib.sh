@@ -12,6 +12,7 @@
 #   failures  optional list of per-item failure strings (one JSON entry each)
 emit_result() {
   [ -z "${INSTALL_RESULT_FILE:-}" ] && return 0
+  mkdir -p "$(dirname "$INSTALL_RESULT_FILE")" 2>/dev/null || return 0
   local step="$1" status="${2:-ok}" detail="${3:-}"
   shift 3 2>/dev/null || shift $#
 
