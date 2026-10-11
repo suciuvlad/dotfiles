@@ -1,7 +1,14 @@
 {
   "permissions": {
+    "allow": [
+      "Bash(gh pr view:*)",
+      "Bash(gh workflow run:*)",
+      "Bash(git push origin v*)",
+      "Bash(gh pr merge:*)"
+    ],
     "defaultMode": "auto"
   },
+  "model": "fable",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -130,6 +137,9 @@
       }
     ]
   },
+  "worktree": {
+    "baseRef": "head"
+  },
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline.sh"
@@ -154,7 +164,10 @@
     "claude-seo@agricidaniel-claude-seo": true,
     "claude-obsidian@agricidaniel-claude-obsidian": true,
     "cloudflare@cloudflare": true,
-    "claude-blog@agricidaniel-blog": true
+    "claude-blog@agricidaniel-blog": true,
+    "hey@37signals": true,
+    "backend-best-practices@purposeinplay-claude-plugins": true,
+    "frontend-best-practices@purposeinplay-claude-plugins": true
   },
   "extraKnownMarketplaces": {
     "agricidaniel-claude-seo": {
@@ -180,28 +193,30 @@
         "source": "github",
         "repo": "AgriciDaniel/claude-blog"
       }
+    },
+    "37signals": {
+      "source": {
+        "source": "github",
+        "repo": "basecamp/claude-plugins"
+      }
+    },
+    "purposeinplay-claude-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "purposeinplay/claude-plugins"
+      }
     }
   },
   "effortLevel": "xhigh",
+  "advisorModel": "fable",
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "theme": "auto",
   "autoCompactEnabled": true,
+  "switchModelsOnFlag": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "mcpServers": {
-    "nanobanana-mcp": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@ycse/nanobanana-mcp@1.1.1"
-      ],
-      "env": {
-        "GOOGLE_AI_API_KEY": "${GOOGLE_AI_API_KEY}"
-      }
-    }
-  },
   "autoMode": {
     "environment": [
       "### Org-wide",
@@ -229,5 +244,18 @@
       "**Org-specific CLIs**: None configured — herdr was seen in usage but no organization or purpose context was found for it",
       "**routine under <user>/ prefix**: none configured"
     ]
-  }
+  },
+  "mcpServers": {
+    "nanobanana-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@ycse/nanobanana-mcp@1.1.1"
+      ],
+      "env": {
+        "GOOGLE_AI_API_KEY": "${GOOGLE_AI_API_KEY}"
+      }
+    }
+  },
+  "remoteControlAtStartup": true
 }

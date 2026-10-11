@@ -10,6 +10,10 @@ claude/.claude/*
 !claude/.claude/settings.json
 # skills/ holds only symlinks into agents/.agents/skills (the tracked store)
 !claude/.claude/skills
+# ...but not Claude Code's own runtime state inside it: the deleted-skill bin
+# and the claude.ai synced-skills cache (UUID dirs, per machine).
+claude/.claude/skills/.trash/
+claude/.claude/skills/synced/
 
 # Project-local Claude Code skills (track skills/, ignore everything else
 # under .claude/ — settings.local.json, projects/, cache/, etc.)
