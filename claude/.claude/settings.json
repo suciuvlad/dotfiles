@@ -1,10 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(gh pr view:*)",
-      "Bash(gh workflow run:*)",
-      "Bash(git push origin v*)",
-      "Bash(gh pr merge:*)"
+      "Bash(gh pr view:*)"
     ],
     "defaultMode": "auto"
   },
