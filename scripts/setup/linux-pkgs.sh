@@ -4,27 +4,30 @@ set -euo pipefail
 # shellcheck source=_lib.sh
 . "$(dirname "$0")/_lib.sh"
 
-# Linux counterpart to the strict Brewfile. Targets Debian/Ubuntu on the
-# headless agent VMs (see the home-infra plan's agent01); there is no
-# Homebrew here by design — a second package manager on a server buys
-# nothing but a /home/linuxbrew prefix to be surprised by later.
+# Linux counterpart to the strict Brewfile. Targets Debian/Ubuntu — the
+# headless agent VMs first, a desktop too. There is no Homebrew here by
+# design: a second package manager on a server buys nothing but a
+# /home/linuxbrew prefix to be surprised by later.
 #
-# Three tiers, in dependency order:
-#   1. apt       base tools Debian/Ubuntu package at a usable version
+# Four sections, in dependency order:
+#   1. apt         base tools Debian/Ubuntu package at a usable version
 #   2. installers  mise and herdr — the two that bootstrap the rest
-#   3. mise      modern CLIs apt ships stale or not at all, via mise's ubi
-#                backend (GitHub releases). Same convention as
-#                mise/.tool-versions owning npm CLIs: if a version manager
-#                can own it, it does.
+#   3. mise        modern CLIs apt ships stale or not at all, mostly via
+#                  mise's github backend (release binaries). Same convention
+#                  as mise/.tool-versions owning npm CLIs: if a version
+#                  manager can own it, it does.
+#   4. zsh plugins cloned to ~/.local/share/zsh/plugins — what brew's zsh-*
+#                  formulae provide on macOS
 #
 # Deliberately NOT installed: mas, reattach-to-user-namespace (macOS only),
 # postgresql (runs in Docker on these boxes, not on the host), docker itself
 # (a machine-level service — the VM template/cloud-init owns it, dotfiles
-# own the user environment).
+# own the user environment), yarn and tmuxinator (per-project; the tmux
+# helpers live in herdr now).
 #
-# The ubi tools end up in mise's global config (~/.config/mise/config.toml),
+# The mise tools end up in mise's global config (~/.config/mise/config.toml),
 # not in the stowed ~/.tool-versions: that file is shared with macOS, where
-# brew already provides them. The array below is their source of truth.
+# brew already provides them. The arrays below are their source of truth.
 
 installed=()
 failed=()
@@ -51,7 +54,8 @@ if ! "${SUDO[@]}" apt-get update -qq; then
   failed+=("apt-get update — failed")
 else
   # env, not a prefix assignment: sudo resets the environment. noninteractive
-  # + needrestart in list mode keep Ubuntu cloud images from prompting.
+  # + needrestart in automatic mode (restart affected services, don't ask)
+  # keep Ubuntu cloud images from prompting.
   if ! "${SUDO[@]}" env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
       apt-get install -y -qq "${APT_PKGS[@]}"; then
     failed+=("apt-get install — one or more packages failed")
@@ -64,8 +68,13 @@ fi
 # names every config and muscle-memory expects, rather than aliasing in .zshrc
 # where scripts and agents won't see them.
 mkdir -p "$HOME/.local/bin"
-[ -x /usr/bin/batcat ] && ln -sf /usr/bin/batcat "$HOME/.local/bin/bat" || true
-[ -x /usr/bin/fdfind ] && ln -sf /usr/bin/fdfind "$HOME/.local/bin/fd" || true
+# -T (GNU): never descend into an existing ~/.local/bin/bat directory.
+for pair in "batcat bat" "fdfind fd"; do
+  deb="${pair% *}"; want="${pair##* }"
+  if [ -x "/usr/bin/$deb" ]; then
+    ln -sfT "/usr/bin/$deb" "$HOME/.local/bin/$want" || failed+=("$want — symlink to $deb failed")
+  fi
+done
 
 # ── 2. bootstrap installers ─────────────────────────────────────────────────
 if command -v mise >/dev/null 2>&1; then
@@ -94,40 +103,45 @@ else
 fi
 
 # ── 3. mise-managed CLIs ────────────────────────────────────────────────────
-# ubi: pulls the matching release binary straight from GitHub, so these track
-# upstream instead of whatever the distro froze two years ago.
+# github: pulls the matching release binary straight from GitHub, so these
+# track upstream instead of whatever the distro froze two years ago. (It
+# replaced mise's ubi backend, which goes away in mise 2027.1.)
 # "<mise tool spec> <binary>" pairs — the binary name is what the present-check
 # asks mise for, and it isn't always the tool name (neovim ships nvim).
-# Each ubi lookup is an unauthenticated GitHub API call, 60/hour per IP.
+# Each GitHub-backed lookup is an unauthenticated API call, 60/hour per IP.
 # Rebuilding the template a few times in an hour exhausts that; exporting
 # MISE_GITHUB_TOKEN before 'make linux' lifts it.
 #
-# Same split as Brewfile vs Brewfile.optional: essentials are what the stowed
-# configs wire in or agents lean on (a missing eza breaks `ls`), and a failure
-# there stops the chain. The rest is best-effort — reported, never fatal.
+# Same two-tier policy as Brewfile vs Brewfile.optional (membership differs:
+# on macOS all of these are strict). Essentials are what the stowed configs
+# wire in or agents lean on (a missing eza breaks `ls`), and a failure there
+# stops the chain. The rest is best-effort — reported, never fatal.
 MISE_ESSENTIAL=(
   "neovim nvim"
   # apt's fzf (0.44 on 24.04) predates the `fzf --zsh` that .zshrc sources
-  "ubi:junegunn/fzf[exe=fzf] fzf"
-  "ubi:starship/starship[exe=starship] starship"
-  "ubi:atuinsh/atuin[exe=atuin] atuin"
-  "ubi:eza-community/eza[exe=eza] eza"
-  "ubi:dandavison/delta[exe=delta] delta"
-  "ubi:cli/cli[exe=gh] gh"
+  "github:junegunn/fzf[exe=fzf] fzf"
+  "github:starship/starship[exe=starship] starship"
+  "github:atuinsh/atuin[exe=atuin] atuin"
+  "github:eza-community/eza[exe=eza] eza"
+  "github:dandavison/delta[exe=delta] delta"
+  "github:cli/cli[exe=gh] gh"
 )
 MISE_OPTIONAL=(
-  "ubi:jesseduffield/lazygit[exe=lazygit] lazygit"
-  "ubi:jesseduffield/lazydocker[exe=lazydocker] lazydocker"
-  "ubi:sxyazi/yazi[exe=yazi] yazi"
-  "ubi:bootandy/dust[exe=dust] dust"
-  "ubi:charmbracelet/gum[exe=gum] gum"
-  "ubi:anchore/grype[exe=grype] grype"
+  "github:jesseduffield/lazygit[exe=lazygit] lazygit"
+  "github:jesseduffield/lazydocker[exe=lazydocker] lazydocker"
+  "github:sxyazi/yazi[exe=yazi] yazi"
+  "github:bootandy/dust[exe=dust] dust"
+  "github:charmbracelet/gum[exe=gum] gum"
+  "github:anchore/grype[exe=grype] grype"
+  # registry names (aqua backend); strict on macOS, best-effort here
+  "pnpm pnpm"
+  "tealdeer tldr"
 )
 
 # mise_tools <strict|optional> <entry>...
 mise_tools() {
   local tier="$1"; shift
-  local entry tool name err
+  local entry tool name err why
   for entry in "$@"; do
     tool="${entry% *}"; name="${entry##* }"
     if "$MISE_BIN" which "$name" >/dev/null 2>&1; then
@@ -135,13 +149,19 @@ mise_tools() {
       continue
     fi
     echo "→ mise use -g $tool"
-    # Keep stderr: mise's last line names the cause (404, rate limit, ...).
+    # Keep stderr: the first 'mise ERROR' line names the cause (404, 403 rate
+    # limit, ...); the last line only says "run with --verbose".
     if err="$("$MISE_BIN" use -g "$tool" 2>&1 >/dev/null)"; then
       installed+=("$name")
-    elif [ "$tier" = "strict" ]; then
-      failed+=("$name — mise use failed: $(printf '%s\n' "$err" | tail -n 1)")
+      printf '%s\n' "$err" | grep '^mise WARN' | sed 's/^/  /' || true
     else
-      optional_failed+=("$name — mise use failed: $(printf '%s\n' "$err" | tail -n 1)")
+      why="$(printf '%s\n' "$err" | grep -m1 '^mise ERROR' | sed 's/^mise ERROR *//' || true)"
+      [ -n "$why" ] || why="$(printf '%s\n' "$err" | tail -n 1)"
+      if [ "$tier" = "strict" ]; then
+        failed+=("$name — mise use failed: $why")
+      else
+        optional_failed+=("$name — mise use failed: $why")
+      fi
     fi
   done
 }
@@ -186,7 +206,8 @@ done
 
 if [ ${#failed[@]} -gt 0 ]; then
   printf '✗ %s\n' "${failed[@]}" >&2
-  emit_result "linux-pkgs" "warn" "${#failed[@]} issue(s)" "${failed[@]}" "${optional_failed[@]}"
+  echo "  re-run 'make linux' to retry; export MISE_GITHUB_TOKEN first if the cause is a GitHub rate limit (403)" >&2
+  emit_result "linux-pkgs" "fail" "${#failed[@]} issue(s)" "${failed[@]}" "${optional_failed[@]}"
   exit 1
 fi
 

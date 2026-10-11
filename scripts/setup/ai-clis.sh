@@ -40,7 +40,7 @@ else
   fi
 fi
 
-if command -v codex >/dev/null 2>&1 || mise which codex >/dev/null 2>&1; then
+if agent_present codex; then
   echo "· codex present (mise-managed via ~/.tool-versions)"
 else
   failed+=("codex — mise-managed; run 'make runtimes'")

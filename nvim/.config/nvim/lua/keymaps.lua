@@ -33,8 +33,8 @@ map('v', 'p', '"_dP')
 map('i', ';;', '<Esc>A;<Esc>')
 map('i', ',,', '<Esc>A,<Esc>')
 
--- Open the current file in the default program
-map('n', '<leader>x', ':!open %<cr><cr>')
+-- Open the current file in the default program (open on macOS, xdg-open on Linux)
+map('n', '<leader>x', function() vim.ui.open(vim.fn.expand('%:p')) end)
 
 -- Disable annoying command line thing
 map('n', 'q:', ':q<CR>')

@@ -147,16 +147,25 @@ done
 STUB
 chmod +x "$HERDRBIN/herdr"
 
+# Agent config dirs present: the probe only expects an integration for an
+# agent that is installed or has been run (same rule as herdr.sh).
 H=$(new_home herdr-ok)
-mkdir -p "$H/.config/herdr"
+mkdir -p "$H/.config/herdr" "$H/.claude" "$H/.codex" "$H/.cursor" "$H/.kimi-code"
 assert_contains "all integrations current → ok" \
   "$(status_out "$H" "$HERDRBIN:$LEAN_PATH" | grep 'herdr')" "4 integrations current"
 
 H=$(new_home herdr-stale)
-mkdir -p "$H/.config/herdr"
+mkdir -p "$H/.config/herdr" "$H/.claude" "$H/.codex" "$H/.cursor" "$H/.kimi-code"
 assert_contains "an integration not current → fail, named" \
   "$(HERDR_TEST_STALE=codex status_out "$H" "$HERDRBIN:$LEAN_PATH" | grep 'herdr')" \
   "integration(s) not current: codex"
+
+# No ~/.cursor and no cursor-agent on the lean PATH → not expected, not drift.
+H=$(new_home herdr-skip)
+mkdir -p "$H/.config/herdr" "$H/.claude" "$H/.codex" "$H/.kimi-code"
+assert_contains "absent agent → skipped, not drift" \
+  "$(HERDR_TEST_STALE=cursor status_out "$H" "$HERDRBIN:$LEAN_PATH" | grep 'herdr')" \
+  "3 integrations current, skipped: cursor"
 
 # ── repo probe ───────────────────────────────────────────────────────────────
 echo "repo probe:"

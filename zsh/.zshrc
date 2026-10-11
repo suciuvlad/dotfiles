@@ -10,7 +10,12 @@ export HOMEBREW_VERIFY_ATTESTATIONS=1
 
 ## ── PATH ────────────────────────────────────────────────────────
 export BUN_INSTALL="$HOME/.bun"
-export PNPM_HOME="$HOME/Library/pnpm"
+# pnpm's global-bin dir, at pnpm's own default for each OS.
+if [[ "$OSTYPE" == darwin* ]]; then
+  export PNPM_HOME="$HOME/Library/pnpm"
+else
+  export PNPM_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/pnpm"
+fi
 typeset -U path  # de-dupe
 path=(
   "$HOME/.local/bin"
@@ -125,11 +130,13 @@ n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
 # Bun completions
 [ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
+# Mise (version manager). Before starship on purpose: on Linux starship, fzf,
+# atuin, eza and delta are mise-managed, and `mise activate` puts them on PATH
+# at eval time — a non-login shell (Linux desktop terminals) has no shims yet.
+command -v mise &>/dev/null && eval "$(mise activate zsh)"
+
 # Starship prompt
 command -v starship &>/dev/null && eval "$(starship init zsh)"
-
-# Mise (version manager)
-command -v mise &>/dev/null && eval "$(mise activate zsh)"
 
 # fzf
 command -v fzf &>/dev/null && source <(fzf --zsh)

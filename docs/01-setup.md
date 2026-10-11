@@ -87,7 +87,7 @@ cd ~/dotfiles/scripts && make linux
 |-------------------|--------------------------------------------------------------------------------------------------------|
 | `make linux`      | Full chain: `linux-pkgs` → `stow-linux` → `linux-shell` → `runtimes` → `ai-clis` → `herdr` → `skills`. |
 | `make stow-linux` | Stows `LINUX_PACKAGES` — everything except `ghostty` (macOS terminal) and `launchagents` (launchd).    |
-| `make linux-pkgs` | The `Brewfile` equivalent: apt base, `mise` + `herdr` installers, modern CLIs through mise's `ubi:` backend, zsh plugins cloned to `~/.local/share/zsh/plugins`. |
+| `make linux-pkgs` | The `Brewfile` equivalent: apt base, `mise` + `herdr` installers, modern CLIs through mise (mostly its `github:` backend), zsh plugins cloned to `~/.local/share/zsh/plugins`. |
 | `make linux-shell`| `chsh` to zsh for the current user. Runs after `stow-linux` so the shell it switches to has a `.zshrc`. |
 
 Order: `linux-pkgs` first because it installs `stow`; `skills` last because
@@ -96,16 +96,20 @@ Makefile also prepends `~/.local/bin` to `PATH` for every recipe: the
 installers put mise, herdr and claude there mid-run, and `make` captured `PATH`
 before they existed.
 
-`linux-pkgs` splits its mise tools the way the Brewfiles split: essentials
-(nvim, fzf, starship, atuin, eza, delta, gh) fail the step; the rest (lazygit,
-lazydocker, yazi, dust, gum, grype) are reported and skipped. Re-run to retry.
+`linux-pkgs` applies the Brewfile / Brewfile.optional policy to its mise
+tools, though the membership differs (on macOS all of these are strict):
+essentials (nvim, fzf, starship, atuin, eza, delta, gh) fail the step; the
+rest (lazygit, lazydocker, yazi, dust, gum, grype, pnpm, tldr) are reported
+and skipped. Re-run to retry.
 They land in mise's global config (`~/.config/mise/config.toml`), not in the
 stowed `~/.tool-versions`, which macOS shares and where brew already provides
 them. The arrays in `linux-pkgs.sh` are the source of truth.
 
 **Skipped on Linux, deliberately:**
 
-- `brew` — no second package manager on a server. apt plus mise covers the list.
+- `brew` — no second package manager on a server. apt plus mise cover the
+  strict Brewfile, minus `yarn` and `tmuxinator` (per-project tools; the tmux
+  helpers live in herdr now).
 - `defaults`, `iterm`, `agents` — macOS and launchd only.
 - `docker` — a machine-level service. The VM template (cloud-init) owns it;
   dotfiles own the user environment.
@@ -113,18 +117,19 @@ them. The arrays in `linux-pkgs.sh` are the source of truth.
   every clone the same private key. Run `make ssh` on the clone, never on the
   template — and before any agent commits there: `git/.gitconfig` signs every
   commit with `~/.ssh/id_ed25519.pub`, so until the key exists `git commit`
-  fails with "Couldn't load public key". `ssh.sh` itself is portable; its
-  keychain lines are macOS-only and guarded.
+  fails with "Couldn't load public key". `ssh.sh` itself is portable: its
+  `ssh-add --apple-use-keychain` call is Darwin-only, and the `UseKeychain`
+  config line is made harmless elsewhere by `IgnoreUnknown`.
 
 **Debian binary names.** `bat` and `fd` install as `batcat` and `fdfind`.
 `linux-pkgs.sh` symlinks both into `~/.local/bin` rather than aliasing them in
 the shell, so scripts and agents resolve them too.
 
-**GitHub API limit.** Every `ubi:` tool is an unauthenticated GitHub API
-lookup, and the limit is 60 per hour per IP. Rebuilding the template a few
-times inside an hour exhausts it and `linux-pkgs` reports
-`mise use failed: … rate limit`. `export MISE_GITHUB_TOKEN=…` before
-`make linux` lifts it.
+**GitHub API limit.** Every `github:` (and `aqua:`) tool is an
+unauthenticated GitHub API lookup, and the limit is 60 per hour per IP.
+Rebuilding the template a few times inside an hour exhausts it; `linux-pkgs`
+then reports mise's error line (a 403 from `api.github.com`) and how to
+retry. `export MISE_GITHUB_TOKEN=…` before `make linux` lifts it.
 
 **Login shell.** Cloud images hand the default user `bash`, and nothing in
 `zsh/` runs until that changes. `make linux-shell` runs `chsh -s zsh` for the
@@ -133,7 +138,7 @@ current user, after `stow-linux`, so the first zsh login already has its
 
 ### One `.zshrc`, two plugin prefixes
 
-`zsh/.zshrc:37-43` picks the plugin prefix by `$OSTYPE`: Homebrew's
+`zsh/.zshrc:42-48` picks the plugin prefix by `$OSTYPE`: Homebrew's
 `/opt/homebrew/share` on macOS, `~/.local/share/zsh/plugins` elsewhere — the
 one directory `linux-pkgs.sh` clones all four plugins into, so the branch is a
 single variable rather than four distro-specific paths. Only `zsh-completions`
@@ -148,13 +153,15 @@ claude and the Debian symlinks all land there.
 
 ### mise: shims in `.zprofile`, hook in `.zshrc`
 
-`mise activate` is a prompt hook, so it only fires in **interactive** shells.
-Agents spawn plenty that aren't, and those would get the system `node`.
+`.zshrc` is read by **interactive** shells only, so its `mise activate zsh`
+never runs for the non-interactive shells agents spawn, and those would get
+the system `node`.
 `zsh/.zprofile` puts mise's shims on `PATH` for login shells, and everything
 they spawn inherits it. `.zshrc` layers the hook on top for interactive use,
 where it takes precedence — its per-directory tool paths sort before the shims.
 One-shot `ssh agent01 cmd` is neither login nor interactive and reads only
-`~/.zshenv`, so it sees neither; move both lines there if that matters.
+`~/.zshenv`, so it sees neither; move both lines to an untracked `~/.zshenv`
+if that matters.
 
 Note `mise reshim` is needed after anything installs executables outside
 mise's knowledge (`npm i -g`), or the new CLI appears not to exist.
@@ -258,7 +265,7 @@ dotfiles/
 │   ├── Makefile                    # all/brew/ssh/runtimes/defaults/iterm/status/check/lint + linux chain
 │   ├── Brewfile                    # strict: core CLI + zsh plugins
 │   ├── Brewfile.optional           # best-effort: casks, MAS, niche CLIs
-│   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, agents.sh, agent-skills.sh, brew-optional.sh, linux-pkgs.sh
+│   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, agents.sh, agent-skills.sh, brew-optional.sh, ai-clis.sh, herdr.sh, linux-pkgs.sh, linux-shell.sh
 │   └── .bin/                       # macoss, tmuxinator.zsh — the only part stowed (~/.bin/); .stow-local-ignore keeps Makefile/Brewfile/setup out of ~
 ├── agents/                         # ~/.agents/skills — central AI-agent skill store
 ├── claude/    ghostty/    git/     herdr/   launchagents/  mise/

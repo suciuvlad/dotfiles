@@ -18,7 +18,7 @@ ruby latest
 
 ### Runtime
 - `node` — managed by `mise`. Global default is `lts`. Pin per-project with `mise use node@22`.
-- `bun` (Brewfile.optional, `oven-sh/bun` tap) — alt JS runtime + bundler + package manager. `BUN_INSTALL=$HOME/.bun` (`zsh/.zshrc:12,19`) keeps `bun add -g` binaries on PATH; completions via `$BUN_INSTALL/_bun`.
+- `bun` (Brewfile.optional, `oven-sh/bun` tap) — alt JS runtime + bundler + package manager. `BUN_INSTALL=$HOME/.bun` (`zsh/.zshrc:12,24`) keeps `bun add -g` binaries on PATH; completions via `$BUN_INSTALL/_bun`.
 
 ### Package managers
 - `pnpm` (Brewfile, strict) — preferred for monorepos / disk-efficient installs. `PNPM_HOME=~/Library/pnpm` on PATH.
@@ -175,7 +175,7 @@ gcloud config set project <proj>
 gcloud projects list
 ```
 
-`zsh/.zshrc:122-123` sources `path.zsh.inc` and `completion.zsh.inc` from `~/google-cloud-sdk/` if present.
+`zsh/.zshrc:127-128` sources `path.zsh.inc` and `completion.zsh.inc` from `~/google-cloud-sdk/` if present.
 
 ### `cloudflared` (Brewfile.optional)
 Cloudflare Tunnel client. Expose a local service publicly:

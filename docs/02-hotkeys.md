@@ -263,7 +263,7 @@ Leader is `,`. Press `<leader>?` to surface buffer-local maps via which-key.
 | `<leader><leader>`  | Jump to alternate file (`<C-^>`)                    |
 | `<leader>/`         | Clear search highlight                              |
 | `<leader>Q`         | Close all buffers (`:bufdo bdelete`)                |
-| `<leader>x`         | Open current file in default macOS app (`!open %`)  |
+| `<leader>x`         | Open current file in its default app (`vim.ui.open`) |
 | `gf`                | Open file under cursor (creates if missing)         |
 | `q:`                | Close instead of opening command-line history       |
 | `j` / `k`           | Move by terminal rows when wrapped (no count); by lines otherwise |

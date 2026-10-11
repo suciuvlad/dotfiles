@@ -6,6 +6,9 @@
 # Always exits 0 — this is a report, not a gate.
 set -euo pipefail
 
+# shellcheck source=_lib.sh
+. "$(dirname "$0")/_lib.sh"
+
 SCRIPTS_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 DOTFILES_DIR="$(cd "$SCRIPTS_DIR/.." && pwd)"
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
@@ -206,10 +209,18 @@ probe() {
       # Capture once and match with case: `cmd | grep -q` exits on first match,
       # SIGPIPEs the producer, and pipefail then reports a *successful* match
       # as a failure — which only shows up for kinds early in the output.
-      local integ_out stale integ_missing="" kind
+      # Same rule as herdr.sh: an agent that is neither installed nor
+      # configured is skipped, not drift — otherwise a Mac without cursor
+      # would fail every week with nothing 'make herdr' could do about it.
+      local integ_out stale integ_missing="" integ_skipped="" expected=0 kind
       integ_out=$("$herdr_bin" integration status 2>/dev/null || true)
       stale=$("$herdr_bin" integration status --outdated-only 2>/dev/null | wc -l | tr -d ' ')
       for kind in claude codex cursor kimi; do
+        if ! agent_expected "$kind"; then
+          integ_skipped="$integ_skipped $kind"
+          continue
+        fi
+        expected=$((expected + 1))
         case $'\n'"$integ_out" in
           *$'\n'"$kind: current"*) ;;
           *) integ_missing="$integ_missing $kind" ;;
@@ -220,7 +231,7 @@ probe() {
       elif [ -n "$integ_missing" ]; then
         echo "fail integration(s) not current:$integ_missing"
       else
-        echo "ok config linked, 4 integrations current"
+        echo "ok config linked, $expected integrations current${integ_skipped:+, skipped:$integ_skipped}"
       fi ;;
   esac
 }

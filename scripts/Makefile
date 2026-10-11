@@ -10,8 +10,8 @@ PACKAGES := agents claude ghostty git herdr launchagents mise nvim scripts shell
 # Linux subset: ghostty is a macOS terminal emulator, launchagents is launchd.
 LINUX_PACKAGES := agents claude git herdr mise nvim scripts shell starship tmux zsh
 REQUIRED_CMDS := stow brew git nvim mise tmux fzf starship
-# linux-pkgs puts mise, herdr and claude in ~/.local/bin mid-run, and make
-# captured PATH before they existed — prepend it for every recipe. Linux
+# linux-pkgs puts mise and herdr (and ai-clis claude) in ~/.local/bin mid-run,
+# and make captured PATH before they existed — prepend it for every recipe. Linux
 # only: on macOS it would put ~/.local/bin ahead of Homebrew for the
 # existing targets.
 ifneq ($(shell uname -s),Darwin)
@@ -111,6 +111,7 @@ linux: linux-pkgs stow-linux linux-shell runtimes ai-clis herdr skills
 	@echo ""
 	@echo "  ✓ Linux provisioning complete."
 	@echo "    Shell plugins: ~/.local/share/zsh/plugins"
+	@echo "    Not a VM template? 'make ssh' next — git signs every commit with that key."
 
 stow-linux:
 	@command -v stow >/dev/null 2>&1 || { echo "stow not found — run 'make linux-pkgs' first" >&2; exit 1; }

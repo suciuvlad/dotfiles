@@ -30,8 +30,9 @@ A new setup step is not done until it exists in all five places:
 5. A live probe in `status.sh` — a probeless step degrades to "unknown"
 
 The five places above are the **macOS** chain. `make linux` is a separate,
-parallel chain for the headless agent VMs: it has a Makefile target and
-`scripts/setup/linux-pkgs.sh`, but deliberately no `install.sh` run_step and
+parallel chain for the headless agent VMs: it has Makefile targets (`linux`,
+`linux-pkgs`, `stow-linux`, `linux-shell`) and `scripts/setup/linux-pkgs.sh` +
+`linux-shell.sh`, but deliberately no `install.sh` run_step and
 no `status.sh` probe — `install.sh` primes sudo for `defaults.sh` and
 `status.sh` probes brew, neither of which means anything off macOS. Steps
 shared by both chains (`runtimes`, `skills`, `ai-clis`, `herdr`) must stay
@@ -57,7 +58,7 @@ allowed but count as unverifiable.
 
 ```sh
 make -C scripts lint   # shellcheck; CI's ubuntu shellcheck is STRICTER
-make -C scripts test   # 20 probe/verify tests against fake $HOMEs, ~12s
+make -C scripts test   # 24 probe/verify tests against fake $HOMEs, ~12s
 ```
 
 CI runs both plus Brewfile validation on every push to main. The other

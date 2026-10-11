@@ -25,25 +25,11 @@ DOTFILES_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 # config dir is missing — on a fresh box that is every CLI that has never run.
 INTEGRATIONS=(claude codex cursor kimi)
 
-# Where each agent keeps its config, and the binary that proves it's installed.
-# A present binary with no config dir (installed, never launched) gets the dir
-# created so the hook can land; no binary and no dir means skip, not fail.
-agent_dir() {
-  case "$1" in
-    claude) echo "$HOME/.claude" ;;
-    codex)  echo "$HOME/.codex" ;;
-    cursor) echo "$HOME/.cursor" ;;
-    kimi)   echo "$HOME/.kimi-code" ;;
-  esac
-}
-agent_present() {
-  case "$1" in
-    claude) command -v claude >/dev/null 2>&1 || [ -x "$HOME/.local/bin/claude" ] ;;
-    codex)  command -v codex >/dev/null 2>&1 || mise which codex >/dev/null 2>&1 ;;
-    cursor) command -v cursor-agent >/dev/null 2>&1 ;;
-    kimi)   [ -x "$HOME/.kimi-code/bin/kimi" ] ;;
-  esac
-}
+# Where each agent keeps its config, and the binary that proves it's installed:
+# agent_dir / agent_present in _lib.sh, shared with the status.sh probe so both
+# skip the same agents. A present binary with no config dir (installed, never
+# launched) gets the dir created so the hook can land; no binary and no dir
+# means skip, not fail.
 
 failed=()
 installed=()
@@ -86,7 +72,11 @@ else
   # release that changes the entry's shape shows up as a real diff to commit.
   normalize_claude_hook() {
     local settings="$HOME/.claude/settings.json"
-    [ -f "$settings" ] && command -v python3 >/dev/null 2>&1 || return 0
+    [ -f "$settings" ] || return 0
+    if ! command -v python3 >/dev/null 2>&1; then
+      echo "⚠ python3 missing — settings.json keeps this machine's absolute hook path" >&2
+      return 0
+    fi
     python3 - "$settings" "$HOME" <<'PY'
 import json, sys
 path, home = sys.argv[1], sys.argv[2]
@@ -94,26 +84,31 @@ with open(path) as f:
     data = json.load(f)
 abs_cmd = f"bash '{home}/.claude/hooks/herdr-agent-state.sh' session"
 rel_cmd = 'bash "$HOME/.claude/hooks/herdr-agent-state.sh" session'
-changed = False
+rewrote = deduped = False
 for name, group in data.get("hooks", {}).items():
     seen, kept = set(), []
     for entry in group:
         for h in entry.get("hooks", []):
             if h.get("command") == abs_cmd:
                 h["command"] = rel_cmd
-                changed = True
+                rewrote = True
+        # Only herdr's own entry is deduped; anything else is left alone.
+        is_herdr = any(h.get("command") == rel_cmd for h in entry.get("hooks", []))
         key = json.dumps(entry, sort_keys=True)
-        if key in seen:
-            changed = True
+        if is_herdr and key in seen:
+            deduped = True
             continue
         seen.add(key)
         kept.append(entry)
     data["hooks"][name] = kept
-if changed:
+if rewrote or deduped:
     with open(path, "w") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
         f.write("\n")
-    print("· claude hook path normalised to $HOME")
+    if rewrote:
+        print("· claude hook path normalised to $HOME")
+    if deduped:
+        print("· duplicate herdr hook entry dropped")
 PY
   }
 
@@ -134,13 +129,18 @@ PY
       fi
     fi
     echo "→ installing $kind integration"
-    if herdr integration install "$kind" >/dev/null 2>&1; then
+    # Keep stderr: herdr says why ("config directory not found"), and warns
+    # on a *successful* install when the agent is too old for the hook.
+    if err="$(herdr integration install "$kind" 2>&1 >/dev/null)"; then
       installed+=("$kind")
+      [ -n "$err" ] && printf '⚠ %s: %s\n' "$kind" "$(printf '%s\n' "$err" | tail -n 1)" >&2
     else
-      failed+=("$kind — herdr integration install failed")
+      failed+=("$kind — herdr integration install failed: $(printf '%s\n' "$err" | tail -n 1)")
     fi
   done
-  normalize_claude_hook
+  if ! normalize_claude_hook; then
+    failed+=("claude — settings.json normalise failed (traceback above); it may still carry this machine's absolute \$HOME")
+  fi
 fi
 
 # ── Result ──────────────────────────────────────────────────────────────────

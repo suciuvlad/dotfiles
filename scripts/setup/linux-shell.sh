@@ -10,7 +10,15 @@ set -euo pipefail
 # next login in zsh's new-user wizard with no ~/.local/bin on PATH.
 
 me="$(id -un)"
-login_shell="$(getent passwd "$me" | cut -d: -f7)"
+# `|| true`: under set -e a failed NSS lookup (no passwd entry, LDAP not up
+# yet) would otherwise kill the script here with no output at all.
+passwd_entry="$(getent passwd "$me" || true)"
+if [ -z "$passwd_entry" ]; then
+  echo "✗ no passwd entry for $me — cannot read or change the login shell" >&2
+  emit_result "linux-shell" "fail" "no passwd entry for $me"
+  exit 1
+fi
+login_shell="${passwd_entry##*:}"   # field 7; empty means /bin/sh, still not zsh
 zsh_bin="$(command -v zsh || true)"
 
 if [ -z "$zsh_bin" ]; then

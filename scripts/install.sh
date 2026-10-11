@@ -287,8 +287,11 @@ run_step "🍺" "Homebrew (optional)" "brew-optional" 1 \
 run_step "🔐" "SSH key" "ssh" 1 \
   bash "$SETUP_DIR/ssh.sh"
 
+# From $HOME, not the checkout: mise finds ~/.tool-versions by walking up
+# from the cwd, so a repo outside $HOME would install nothing and report ok.
+# shellcheck disable=SC2016  # $HOME is for the inner shell
 run_step "🔧" "Runtimes (mise)" "runtimes" 0 \
-  mise install
+  bash -c 'cd "$HOME" && mise install'
 
 run_step "⚙️ " "macOS defaults" "defaults" 0 \
   bash "$SETUP_DIR/defaults.sh"
