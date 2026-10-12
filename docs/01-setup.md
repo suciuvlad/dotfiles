@@ -33,7 +33,6 @@ It is idempotent. Re-running it on a partially-set-up machine just fills in what
 | `make defaults`     | `~/.bin/macoss defaults` | Applies `defaults write` settings (Finder, Dock, screenshots, keyboard repeat, …). Requires sudo. Sandboxed domains (Mail, App Store) are skipped with a warning unless the terminal has Full Disk Access — grant it and re-run to apply those. |
 | `make iterm`        | `~/.bin/macoss iterm`  | Installs iTerm2 shell integration (appends a source line to `~/.zshrc`).            |
 | `make agents`       | `~/.bin/macoss agents` | Loads `~/Library/LaunchAgents/*.plist` via `launchctl bootstrap` (e.g. CapsLock→Escape via `hidutil`). |
-| `make skills`       | `~/.bin/macoss skills` | Symlinks AI-agent skills from the stowed `~/.agents/skills` store into `~/.cursor/skills` and `~/.codex/skills` (see [AI-agent skills](#ai-agent-skills)). |
 | `make ai-clis`      | `~/.bin/macoss ai-clis` | Installs the AI CLIs that aren't brew or mise packages — `claude` (native installer) and `kimi`; verifies mise-managed `codex`. |
 | `make herdr`        | `~/.bin/macoss herdr`  | Installs herdr's per-agent state integrations (the hooks that report `idle`/`working`/`blocked`/`done` to its sidebar), and keeps `~/.config/herdr` a real directory so stow can't fold herdr's runtime state into the repo. The binary itself comes from the strict `Brewfile` (`linux-pkgs` on Linux). Agents that aren't installed are skipped; an installed CLI that has never run gets its config dir created so the hook can land. |
 
@@ -87,13 +86,12 @@ cd ~/dotfiles/scripts && make linux
 
 | Target            | What it does                                                                                           |
 |-------------------|--------------------------------------------------------------------------------------------------------|
-| `make linux`      | Full chain: `linux-pkgs` → `stow-linux` → `linux-shell` → `runtimes` → `ai-clis` → `herdr` → `skills`. |
+| `make linux`      | Full chain: `linux-pkgs` → `stow-linux` → `linux-shell` → `runtimes` → `ai-clis` → `herdr`. |
 | `make stow-linux` | Stows `LINUX_PACKAGES` — everything except `launchagents` (launchd). `ghostty` is in: it runs on Linux too. |
 | `make linux-pkgs` | The `Brewfile` equivalent: apt base, `mise` + `herdr` installers, modern CLIs through mise (mostly its `github:` backend), zsh plugins cloned to `~/.local/share/zsh/plugins`; on a desktop, clipboard tools and the JetBrainsMono Nerd Font. |
 | `make linux-shell`| `chsh` to zsh for the current user. Runs after `stow-linux` so the shell it switches to has a `.zshrc`. |
 
-Order: `linux-pkgs` first because it installs `stow`; `skills` last because
-`herdr` creates `~/.codex`, which `agent-skills.sh` links into. Off macOS the
+Order: `linux-pkgs` first because it installs `stow`. Off macOS the
 Makefile also prepends `~/.local/bin` to `PATH` for every recipe: the
 installers put mise, herdr and claude there mid-run, and `make` captured `PATH`
 before they existed. There is no `install.sh` orchestration, but every setup
@@ -198,10 +196,10 @@ Add new strictly-required CLI to `Brewfile`. Add anything that might be renamed,
 
 ## AI-agent skills
 
-All agent skills (Claude Code, Cursor, Codex) live in **one git-tracked store**: `agents/.agents/skills/`, stowed to `~/.agents/skills`. Agent directories never hold real skill content, only symlinks:
+All agent skills (Claude Code, Codex) live in **one git-tracked store**: `agents/.agents/skills/`, stowed to `~/.agents/skills`. Agent directories never hold real skill content:
 
-- `~/.claude/skills/<name>` → `../../../../.agents/skills/<name>` — these relative symlinks live *inside the repo* (`claude/.claude/skills/`) and are themselves git-tracked, so Claude's skill selection survives a fresh clone with zero extra steps.
-- `~/.cursor/skills` and `~/.codex/skills` are runtime dirs (not stowed), so `make skills` (`scripts/setup/agent-skills.sh`) recreates their symlinks. Per-agent skill lists live at the top of that script; edit them to change which skills an agent sees.
+- **Codex reads `~/.agents/skills` natively** — it is Codex's user-level skills location (see the [Codex skills docs](https://developers.openai.com/codex/skills)), so the stowed `agents` package is all it needs. Nothing is linked into `~/.codex/skills`; that directory stays Codex's own (bundled `.system/`, hey-cli's `hey/`).
+- **Claude Code needs per-skill links**: `~/.claude/skills/<name>` → `../../../../.agents/skills/<name>`. These relative symlinks live *inside the repo* (`claude/.claude/skills/`) and are themselves git-tracked, so Claude's skill selection survives a fresh clone with zero extra steps.
 
 Installing a new skill from [skills.sh](https://www.skills.sh/):
 
@@ -210,7 +208,7 @@ npx skills add <owner/repo> -g        # writes into ~/.agents/skills + symlinks 
 cd ~/dotfiles && git add agents claude/.claude/skills && git commit
 ```
 
-Because `~/.agents` is a stow symlink into the repo, the CLI's output lands directly in git's working tree — `git status` shows the new skill ready to commit. Skills not from skills.sh follow the same pattern: drop the folder in `agents/.agents/skills/` and symlink it where needed.
+Because `~/.agents` is a stow symlink into the repo, the CLI's output lands directly in git's working tree — `git status` shows the new skill ready to commit. Skills not from skills.sh follow the same pattern: drop the folder in `agents/.agents/skills/` and add the Claude link in `claude/.claude/skills/` (Codex picks it up on its own).
 
 ## Stow workflow
 
@@ -278,7 +276,7 @@ dotfiles/
 │   ├── Makefile                    # all/brew/ssh/runtimes/defaults/iterm/status/check/lint + linux chain
 │   ├── Brewfile                    # strict: core CLI + zsh plugins
 │   ├── Brewfile.optional           # best-effort: casks, MAS, niche CLIs
-│   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, agents.sh, agent-skills.sh, brew-optional.sh, ai-clis.sh, herdr.sh, linux-pkgs.sh, linux-shell.sh
+│   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, agents.sh, brew-optional.sh, ai-clis.sh, herdr.sh, linux-pkgs.sh, linux-shell.sh
 │   └── .bin/                       # macoss, tmuxinator.zsh — the only part stowed (~/.bin/); .stow-local-ignore keeps Makefile/Brewfile/setup out of ~
 ├── agents/                         # ~/.agents/skills — central AI-agent skill store
 ├── claude/    ghostty/    git/     herdr/   launchagents/  mise/

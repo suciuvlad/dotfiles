@@ -53,7 +53,7 @@ trap on_exit EXIT
 # verbose output, when stdout isn't a TTY (CI, pipes), or when the script is
 # being driven by something that wants raw logs.
 if [ "${VERBOSE:-0}" = "1" ] || [ ! -t 1 ]; then
-  exec make -C "$SCRIPTS_DIR" brew ssh runtimes defaults iterm agents skills ai-clis herdr
+  exec make -C "$SCRIPTS_DIR" brew ssh runtimes defaults iterm agents ai-clis herdr
 fi
 
 # Pre-flight: prime sudo so defaults.sh doesn't prompt mid-spinner.
@@ -301,9 +301,6 @@ run_step "📦" "iTerm2 integration" "iterm" 0 \
 
 run_step "⌨️ " "LaunchAgents" "agents" 0 \
   bash "$SETUP_DIR/agents.sh"
-
-run_step "🧠" "Agent skills" "agent-skills" 0 \
-  bash "$SETUP_DIR/agent-skills.sh"
 
 # After runtimes (codex is mise-managed and gets verified here).
 run_step "🤖" "AI CLIs" "ai-clis" 0 \

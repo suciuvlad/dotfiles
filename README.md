@@ -9,7 +9,7 @@ dev stacks, apps, and setup walkthroughs.
 
 | Package    | What it provides                                        |
 |------------|---------------------------------------------------------|
-| `agents`   | `~/.agents/skills/` — central store for AI-agent skills (claude/cursor/codex symlink into it) |
+| `agents`   | `~/.agents/skills/` — central store for AI-agent skills (Codex reads it directly; Claude symlinks into it) |
 | `claude`   | `~/.claude/CLAUDE.md`, `settings.json` (declares plugins + marketplaces — Claude Code reinstalls them on first launch), `skills/` (symlinks into `agents`) |
 | `ghostty`  | `~/.config/ghostty/config`                              |
 | `git`      | `~/.gitconfig`, `~/.gitignore`, `~/.gitmessage`         |
@@ -81,7 +81,6 @@ Each step is idempotent and re-runnable:
 | macOS `defaults` settings                  | `~/.bin/macoss defaults`  |
 | iTerm2 shell integration                   | `~/.bin/macoss iterm`     |
 | LaunchAgents (keyremap, weekly drift check)| `~/.bin/macoss agents`    |
-| AI-agent skills → cursor/codex symlinks    | `~/.bin/macoss skills`    |
 | AI CLIs (claude native, kimi; codex via mise) | `~/.bin/macoss ai-clis` |
 | herdr agent integrations (binary via Brewfile) | `~/.bin/macoss herdr`   |
 

@@ -30,7 +30,7 @@ endif
 # before mise exists); -j would break them.
 .NOTPARALLEL:
 
-.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents skills ai-clis herdr status check lint test linux linux-pkgs stow-linux linux-shell
+.PHONY: all install help brew brew-strict brew-pick-optional runtimes ssh defaults iterm agents ai-clis herdr status check lint test linux linux-pkgs stow-linux linux-shell
 
 all: install
 
@@ -48,14 +48,13 @@ help:
 	@echo "  make defaults   apply all macOS 'defaults write' settings"
 	@echo "  make iterm      install iTerm2 shell integration"
 	@echo "  make agents     load all repo LaunchAgents (keyremap, weekly drift check)"
-	@echo "  make skills     link AI-agent skills from ~/.agents/skills into cursor/codex"
 	@echo "  make ai-clis    install claude (native) + kimi CLIs; verify mise-managed codex"
 	@echo "  make herdr      install herdr's per-agent state integrations; keep"
 	@echo "                  ~/.config/herdr a real dir so stow can't fold runtime state in"
 	@echo ""
 	@echo "Linux (headless agent VMs — no Homebrew, no macOS steps):"
 	@echo "  make linux      full Linux chain: linux-pkgs + stow-linux + linux-shell +"
-	@echo "                  runtimes + ai-clis + herdr + skills"
+	@echo "                  runtimes + ai-clis + herdr"
 	@echo "  make stow-linux stow only the packages that apply off macOS"
 	@echo "  make linux-pkgs apt base + mise-managed CLIs + zsh plugins (Brewfile equivalent);"
 	@echo "                  clipboard tools + Nerd Font when a desktop session is detected"
@@ -98,9 +97,6 @@ iterm:
 agents:
 	bash $(SETUP)/agents.sh
 
-skills:
-	bash $(SETUP)/agent-skills.sh
-
 ai-clis:
 	bash $(SETUP)/ai-clis.sh
 
@@ -113,9 +109,8 @@ herdr:
 # defaults + iterm + agents (macOS/launchd), ssh (keys are per-machine and
 # must never be generated into a VM template that gets cloned).
 # Order matters: linux-pkgs installs stow; stow-linux links the .zshrc that
-# linux-shell's chsh needs and the ~/.tool-versions runtimes reads; skills
-# goes last because herdr creates ~/.codex, which agent-skills.sh links into.
-linux: linux-pkgs stow-linux linux-shell runtimes ai-clis herdr skills
+# linux-shell's chsh needs and the ~/.tool-versions runtimes reads.
+linux: linux-pkgs stow-linux linux-shell runtimes ai-clis herdr
 	@echo ""
 	@echo "  ✓ Linux provisioning complete."
 	@echo "    Shell plugins: ~/.local/share/zsh/plugins"

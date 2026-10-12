@@ -25,9 +25,9 @@ RESULTS="$STATE_DIR/results.jsonl"
 
 # Chain order must match install.sh. TARGETS maps step ids to make targets
 # (both brew steps re-run via `make brew`).
-STEPS=(brew-strict brew-optional ssh runtimes defaults iterm agents agent-skills ai-clis herdr)
-LABELS=("Homebrew (strict)" "Homebrew (optional)" "SSH key" "Runtimes (mise)" "macOS defaults" "iTerm2 integration" "LaunchAgents" "Agent skills" "AI CLIs" "herdr")
-TARGETS=(brew brew ssh runtimes defaults iterm agents skills ai-clis herdr)
+STEPS=(brew-strict brew-optional ssh runtimes defaults iterm agents ai-clis herdr)
+LABELS=("Homebrew (strict)" "Homebrew (optional)" "SSH key" "Runtimes (mise)" "macOS defaults" "iTerm2 integration" "LaunchAgents" "AI CLIs" "herdr")
+TARGETS=(brew brew ssh runtimes defaults iterm agents ai-clis herdr)
 
 icon() {
   case "$1" in
@@ -154,26 +154,6 @@ probe() {
         echo "ok $total plist(s) linked"
       else
         echo "fail $missing_agents of $total plist(s) not linked"
-      fi ;;
-    agent-skills)
-      # Mirror agent-skills.sh semantics: absent agent dirs are skipped there,
-      # so they can't count as failures here.
-      if [ ! -d "$HOME/.agents/skills" ]; then
-        echo "fail skill store ~/.agents/skills missing (stow agents first)"
-      else
-        local agent_dir agents_present=0 unlinked=""
-        for agent_dir in "$HOME/.cursor" "$HOME/.codex"; do
-          [ -d "$agent_dir" ] || continue
-          agents_present=$((agents_present + 1))
-          [ -d "$agent_dir/skills" ] || unlinked="$unlinked ~/${agent_dir##*/}/skills"
-        done
-        if [ "$agents_present" -eq 0 ]; then
-          echo "ok no agent dirs present — nothing to link"
-        elif [ -z "$unlinked" ]; then
-          echo "ok skill links present"
-        else
-          echo "fail missing:$unlinked"
-        fi
       fi ;;
     ai-clis)
       # Absolute-path fallbacks: the drift LaunchAgent's PATH has no

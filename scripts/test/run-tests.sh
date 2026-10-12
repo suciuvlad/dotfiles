@@ -65,28 +65,6 @@ status_out() { # <home> [PATH override]
   HOME="$1" PATH="$PROBESTUBS:${2:-$PATH}" bash "$STATUS" 2>/dev/null
 }
 
-# ── agent-skills probe ───────────────────────────────────────────────────────
-echo "agent-skills probe:"
-
-H=$(new_home skills-nostore)
-assert_contains "no store → fail" \
-  "$(status_out "$H" | grep 'Agent skills')" "skill store ~/.agents/skills missing"
-
-H=$(new_home skills-noagents)
-mkdir -p "$H/.agents/skills"
-assert_contains "store only → ok, nothing to link" \
-  "$(status_out "$H" | grep 'Agent skills')" "no agent dirs present"
-
-H=$(new_home skills-unlinked)
-mkdir -p "$H/.agents/skills" "$H/.cursor"
-assert_contains "cursor without skills → fail" \
-  "$(status_out "$H" | grep 'Agent skills')" "missing: ~/.cursor/skills"
-
-H=$(new_home skills-linked)
-mkdir -p "$H/.agents/skills" "$H/.cursor/skills"
-assert_contains "cursor with skills → ok" \
-  "$(status_out "$H" | grep 'Agent skills')" "skill links present"
-
 # ── agents (LaunchAgents) probe ──────────────────────────────────────────────
 echo "agents probe:"
 
