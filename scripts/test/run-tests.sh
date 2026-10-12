@@ -24,6 +24,13 @@ assert_contains() { # <name> <haystack> <needle>
   esac
 }
 
+assert_lacks() { # <name> <haystack> <needle>
+  case "$2" in
+    *"$3"*) t_fail "$1" "no …$3…" "$2" ;;
+    *)      t_ok "$1" ;;
+  esac
+}
+
 assert_rc() { # <name> <want> <got>
   if [ "$2" -eq "$3" ]; then t_ok "$1"; else t_fail "$1" "rc=$2" "rc=$3"; fi
 }
@@ -186,6 +193,33 @@ H=$(new_home check)
 check_out=$(HOME="$H" PATH="$PROBESTUBS:$LEAN_PATH" bash "$STATUS" --check 2>/dev/null); check_rc=$?
 assert_rc "drift present → exit 1" 1 "$check_rc"
 assert_contains "drift lines name the step" "$check_out" "AI CLIs: missing:"
+
+# ── off macOS ────────────────────────────────────────────────────────────────
+# status.sh and `make check` audit install.sh's chain (brew, defaults,
+# launchd), which never runs on the Linux VMs — there they must decline, not
+# report five steps that can't exist as "never ran" and advise 'make brew'.
+# A `uname` stub in its own dir so no other test sees it.
+echo "off macOS:"
+LINUXSTUB="$WORK/linuxstub"
+mkdir -p "$LINUXSTUB"
+printf '#!/usr/bin/env bash\necho Linux\n' > "$LINUXSTUB/uname"
+chmod +x "$LINUXSTUB/uname"
+
+H=$(new_home linux)
+linux_out=$(HOME="$H" PATH="$LINUXSTUB:$PROBESTUBS:$LEAN_PATH" bash "$STATUS" 2>&1); linux_rc=$?
+assert_rc "status off macOS → exit 1" 1 "$linux_rc"
+assert_contains "status off macOS → declines, points at make linux" "$linux_out" "macOS only"
+assert_contains "status off macOS → points at make linux" "$linux_out" "make linux"
+assert_lacks "status off macOS → no step report" "$linux_out" "Install status"
+
+linux_check=$(HOME="$H" PATH="$LINUXSTUB:$PROBESTUBS:$LEAN_PATH" bash "$STATUS" --check 2>&1); linux_check_rc=$?
+assert_rc "status --check off macOS → exit 1" 1 "$linux_check_rc"
+assert_contains "status --check off macOS → declines, not a drift list" "$linux_check" "macOS only"
+
+make_check=$(HOME="$H" PATH="$LINUXSTUB:$PROBESTUBS:$LEAN_PATH" make -s -C "$SANDBOX/scripts" check 2>&1); make_check_rc=$?
+if [ "$make_check_rc" -ne 0 ]; then t_ok "make check off macOS → non-zero"; else t_fail "make check off macOS → non-zero" "rc≠0" "rc=0"; fi
+assert_contains "make check off macOS → declines before the audit" "$make_check" "macOS only"
+assert_lacks "make check off macOS → no audit sections" "$make_check" "Required commands"
 
 # ── defaults.sh apply → verify round-trip ────────────────────────────────────
 # Stub defaults/pmset/sudo/osascript: `write` records normalized values the

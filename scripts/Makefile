@@ -20,6 +20,11 @@ export PATH := $(HOME)/.local/bin:$(PATH)
 # No install.sh here, but each step's emit_result journals when this is set:
 # a template built over ssh keeps a record of what ran and why it failed.
 export INSTALL_RESULT_FILE := $(HOME)/.local/state/dotfiles/results.jsonl
+# The target that installs this platform's base packages — what a missing-tool
+# hint should point at.
+PKGS_TARGET := linux-pkgs
+else
+PKGS_TARGET := brew
 endif
 # Every chain here is order-dependent (stow before stow is installed, mise
 # before mise exists); -j would break them.
@@ -56,7 +61,7 @@ help:
 	@echo "                  clipboard tools + Nerd Font when a desktop session is detected"
 	@echo "  make linux-shell make zsh the login shell (after stow, so it has a .zshrc)"
 	@echo ""
-	@echo "Maintenance:"
+	@echo "Maintenance (status + check are macOS only — on Linux, 'make linux' re-provisions):"
 	@echo "  make status     what the install chain ran / failed / never started, verified"
 	@echo "                  against the live machine, with resume commands"
 	@echo "                  (status.sh --check: probes only, exit 1 on drift — used by"
@@ -78,9 +83,7 @@ brew-pick-optional:
 # mise finds ~/.tool-versions by walking up from the cwd, not as a global file;
 # from a checkout outside $HOME it would install nothing and report success.
 runtimes:
-	@command -v mise >/dev/null 2>&1 || { \
-		[ "$$(uname -s)" = Darwin ] && echo "mise not found — run 'make brew' first" >&2 \
-			|| echo "mise not found — run 'make linux-pkgs' first" >&2; exit 1; }
+	@command -v mise >/dev/null 2>&1 || { echo "mise not found — run 'make $(PKGS_TARGET)' first" >&2; exit 1; }
 	cd $$HOME && mise install
 
 ssh:
@@ -131,7 +134,10 @@ linux-shell:
 status:
 	@bash $(SETUP)/status.sh
 
+# Audits install.sh's chain (brew, casks, launchd) — off macOS every section
+# would be red for the wrong reason, so decline up front.
 check:
+	@[ "$$(uname -s)" = Darwin ] || { echo "make check is macOS only — on Linux, run 'make linux' to re-provision" >&2; exit 1; }
 	@echo "── Symlinks ──────────────────────────────────"
 	@broken=$$(find $$HOME/.config $$HOME -maxdepth 4 -type l ! -exec test -e {} \; -print 2>/dev/null | grep dotfiles || true); \
 	if [ -z "$$broken" ]; then \
@@ -183,7 +189,7 @@ check:
 	fi
 
 lint:
-	@command -v shellcheck >/dev/null 2>&1 || { echo "shellcheck not found — run 'make brew'" >&2; exit 1; }
+	@command -v shellcheck >/dev/null 2>&1 || { echo "shellcheck not found — run 'make $(PKGS_TARGET)' first" >&2; exit 1; }
 	shellcheck -x --source-path=SCRIPTDIR $(SETUP)/*.sh $(SCRIPTS_DIR)/test/*.sh $(SCRIPTS_DIR)/install.sh $(SCRIPTS_DIR)/.bin/macoss $(DOTFILES_DIR)/bootstrap.sh
 	@echo "  ✓ shellcheck clean"
 

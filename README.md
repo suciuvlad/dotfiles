@@ -111,8 +111,8 @@ Maintenance
 
 | Command                | What it does                                              |
 |------------------------|-----------------------------------------------------------|
-| `~/.bin/macoss status` | live-probe every install step + repo cleanliness, with resume commands (`status.sh --check` for the script-friendly version: drift lines on stdout, exit 1) |
-| `~/.bin/macoss check`  | audit symlinks, required CLI tools, Brewfile, git identity, stow packages, cask trust, CVE scan |
+| `~/.bin/macoss status` | (macOS only) live-probe every install step + repo cleanliness, with resume commands (`status.sh --check` for the script-friendly version: drift lines on stdout, exit 1) |
+| `~/.bin/macoss check`  | (macOS only) audit symlinks, required CLI tools, Brewfile, git identity, stow packages, cask trust, CVE scan |
 | `~/.bin/macoss lint`   | shellcheck `scripts/setup/*.sh` and `macoss` itself       |
 | `~/.bin/macoss test`   | probe + `defaults --verify` logic tests against fake `$HOME`s (also run in CI on every push) |
 

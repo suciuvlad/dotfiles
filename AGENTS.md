@@ -34,7 +34,9 @@ parallel chain for the headless agent VMs: it has Makefile targets (`linux`,
 `linux-pkgs`, `stow-linux`, `linux-shell`) and `scripts/setup/linux-pkgs.sh` +
 `linux-shell.sh`, but deliberately no `install.sh` run_step and
 no `status.sh` probe — `install.sh` primes sudo for `defaults.sh` and
-`status.sh` probes brew, neither of which means anything off macOS. Steps
+`status.sh` probes brew, neither of which means anything off macOS. For the
+same reason `status.sh` and `make check` decline off macOS (exit 1) rather
+than report on a chain that never ran there; keep that guard. Steps
 shared by both chains (`runtimes`, `skills`, `ai-clis`, `herdr`) must stay
 portable; branch on `[ "$(uname -s)" = "Darwin" ]` rather than assuming brew.
 Off macOS the Makefile prepends `~/.local/bin` to `PATH` for every recipe,
@@ -60,7 +62,7 @@ allowed but count as unverifiable.
 
 ```sh
 make -C scripts lint   # shellcheck; CI's ubuntu shellcheck is STRICTER
-make -C scripts test   # 24 probe/verify tests against fake $HOMEs, ~12s
+make -C scripts test   # 33 probe/verify tests against fake $HOMEs, ~12s
 ```
 
 CI runs both plus Brewfile validation on every push to main. The other

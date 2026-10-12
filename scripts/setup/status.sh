@@ -3,8 +3,17 @@
 # resume. Reads the persistent per-step results install.sh appends to
 # ~/.local/state/dotfiles/results.jsonl, then cross-checks each step against
 # the live machine (a recorded "ok" is a claim; the probe is the evidence).
-# Always exits 0 — this is a report, not a gate.
+# Always exits 0 — this is a report, not a gate. The one exception is off
+# macOS: the chain reported on is install.sh's (brew, defaults, launchd),
+# which never runs there, so the script declines with exit 1 instead of listing
+# five steps that can't exist as "never ran" — and so --check can't read as
+# "no drift" on a box it knows nothing about.
 set -euo pipefail
+
+if [ "$(uname -s)" != "Darwin" ]; then
+  echo "make status is macOS only — on Linux, run 'make linux' to re-provision" >&2
+  exit 1
+fi
 
 # shellcheck source=_lib.sh
 . "$(dirname "$0")/_lib.sh"

@@ -76,7 +76,9 @@ Then press ENTER. The script verifies GitHub access via `ssh -T` and switches th
 
 The agent VMs in the home-infra build run these configs without Homebrew,
 launchd, or any macOS step. `make linux` is a **parallel chain** — deliberately
-not a step inside `install.sh`, and `make status` stays macOS-only.
+not a step inside `install.sh`. `make status` and `make check` audit that
+macOS chain, so off macOS both decline (exit 1) instead of reporting brew,
+defaults and launchd steps as missing — on a VM, `make linux` is the repair.
 
 ```sh
 git clone https://github.com/suciuvlad/dotfiles ~/dotfiles
@@ -226,7 +228,7 @@ Because `~/.agents` is a stow symlink into the repo, the CLI's output lands dire
 
 | Command                | What it does                                                                                          |
 |------------------------|-------------------------------------------------------------------------------------------------------|
-| `make check`           | Audits broken symlinks, required CLI tools, Brewfile satisfaction, git identity, stow packages.      |
+| `make check`           | Audits broken symlinks, required CLI tools, Brewfile satisfaction, git identity, stow packages. macOS only. |
 | `make lint`            | Runs `shellcheck` on `scripts/setup/*.sh`, `scripts/.bin/macoss`, and `bootstrap.sh`.                 |
 
 Run `make check` after pulling, after `stow -R`, or whenever something feels off.
