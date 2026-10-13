@@ -199,6 +199,33 @@ if [ "$make_check_rc" -ne 0 ]; then t_ok "make check off macOS → non-zero"; el
 assert_contains "make check off macOS → declines before the audit" "$make_check" "macOS only"
 assert_lacks "make check off macOS → no audit sections" "$make_check" "Required commands"
 
+# ── github_ssh_auth_ok (ssh.sh) ──────────────────────────────────────────────
+# GitHub greets then closes, so `ssh -T` exits 1 on success and only the
+# greeting says it worked. ssh.sh runs under pipefail, where an
+# `ssh | grep -q` check reports every success as a failure — the drift probes
+# can't catch that because the path only runs on a machine cloned over HTTPS.
+# The stub mirrors GitHub's real output; the helper runs under ssh.sh's own
+# shell options so the test sees exactly what the script sees.
+echo "github_ssh_auth_ok:"
+LIB="$SANDBOX/scripts/setup/_lib.sh"
+SSHSTUB="$WORK/sshstub"
+mkdir -p "$SSHSTUB"
+cat > "$SSHSTUB/ssh" <<'STUB'
+#!/usr/bin/env bash
+if [ "${SSH_TEST_DENY:-}" = 1 ]; then
+  echo "git@github.com: Permission denied (publickey)." >&2
+  exit 255
+fi
+echo "Hi t! You've successfully authenticated, but GitHub does not provide shell access." >&2
+exit 1
+STUB
+chmod +x "$SSHSTUB/ssh"
+
+auth_check() { PATH="$SSHSTUB:$LEAN_PATH" bash -euo pipefail -c '. "$1"; github_ssh_auth_ok' _ "$LIB"; }
+
+auth_check; assert_rc "greeting + exit 1 → authenticated (rc 0)" 0 "$?"
+SSH_TEST_DENY=1 auth_check; assert_rc "permission denied → not authenticated (rc 1)" 1 "$?"
+
 # ── defaults.sh apply → verify round-trip ────────────────────────────────────
 # Stub defaults/pmset/sudo/osascript: `write` records normalized values the
 # way macOS would (bool → 1/0), `read` returns them. Apply then verify must

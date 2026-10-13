@@ -62,7 +62,7 @@ allowed but count as unverifiable.
 
 ```sh
 make -C scripts lint   # shellcheck; CI's ubuntu shellcheck is STRICTER
-make -C scripts test   # 29 probe/verify tests against fake $HOMEs, ~12s
+make -C scripts test   # 31 probe/verify tests against fake $HOMEs, ~12s
 ```
 
 CI runs both plus Brewfile validation on every push to main. The other

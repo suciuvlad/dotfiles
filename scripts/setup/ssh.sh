@@ -84,10 +84,9 @@ if [ -d "$DOTFILES_DIR/.git" ]; then
       exit 0
     fi
 
-    # ssh -T returns exit 1 on success (GitHub closes the connection),
-    # so we match the success message in stderr.
-    if ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -T git@github.com 2>&1 \
-         | grep -q "successfully authenticated"; then
+    # github_ssh_auth_ok in _lib.sh: GitHub's `ssh -T` exits 1 on success,
+    # so the greeting text is the signal, not the exit code.
+    if github_ssh_auth_ok; then
       git -C "$DOTFILES_DIR" remote set-url origin "$SSH_URL"
       echo "✓ Dotfiles remote switched to SSH: $SSH_URL"
       emit_result "ssh" "ok" "remote switched to SSH"

@@ -59,3 +59,15 @@ agent_present() {   # <kind> → 0 when the agent's binary is installed
 agent_expected() {  # <kind> → 0 when herdr.sh would install its integration
   [ -d "$(agent_dir "$1")" ] || agent_present "$1"
 }
+
+# ── GitHub SSH auth ──────────────────────────────────────────────────────────
+# GitHub greets and closes, so `ssh -T` exits 1 on success and only the
+# greeting says it worked. Capture first, then match the text: an
+# `ssh | grep -q` pipeline under pipefail returns ssh's 1 even when grep
+# matched, which made every success read as "key not registered".
+github_ssh_auth_ok() {   # → 0 when the loaded key authenticates to GitHub
+  local out
+  out="$(ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -T git@github.com 2>&1 || true)"
+  case "$out" in *"successfully authenticated"*) return 0 ;; esac
+  return 1
+}
