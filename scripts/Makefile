@@ -6,10 +6,10 @@ export PATH := /opt/homebrew/bin:/usr/local/bin:$(PATH)
 SCRIPTS_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 DOTFILES_DIR := $(abspath $(SCRIPTS_DIR)/..)
 SETUP := $(SCRIPTS_DIR)/setup
-PACKAGES := agents claude ghostty git herdr launchagents mise nvim scripts shell starship tmux zsh
+PACKAGES := agents claude codex ghostty git herdr launchagents mise nvim scripts shell starship tmux zsh
 # Linux subset: launchagents is launchd. ghostty stays — it runs on Linux
 # too, and an unused ~/.config/ghostty symlink costs nothing.
-LINUX_PACKAGES := agents claude ghostty git herdr mise nvim scripts shell starship tmux zsh
+LINUX_PACKAGES := agents claude codex ghostty git herdr mise nvim scripts shell starship tmux zsh
 REQUIRED_CMDS := stow brew git nvim mise tmux fzf starship
 # linux-pkgs puts mise and herdr (and ai-clis claude) in ~/.local/bin mid-run,
 # and make captured PATH before they existed — prepend it for every recipe. Linux
@@ -116,8 +116,11 @@ linux: linux-pkgs stow-linux linux-shell runtimes ai-clis herdr
 	@echo "    Shell plugins: ~/.local/share/zsh/plugins"
 	@echo "    Not a VM template? 'make ssh' next — git signs every commit with that key."
 
+# ~/.codex must be a real dir before stow runs (auth.json, session sqlite —
+# see bootstrap.sh); herdr.sh creates it too, but only after this target.
 stow-linux:
 	@command -v stow >/dev/null 2>&1 || { echo "stow not found — run 'make linux-pkgs' first" >&2; exit 1; }
+	@[ -L "$$HOME/.codex" ] && unlink "$$HOME/.codex"; mkdir -p "$$HOME/.codex"
 	stow -R -t $$HOME -d $(DOTFILES_DIR) $(LINUX_PACKAGES)
 
 linux-pkgs:

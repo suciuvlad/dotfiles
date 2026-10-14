@@ -59,7 +59,7 @@ fi
 
 say "Stow packages"
 cd "$DEST"
-PACKAGES=(agents claude ghostty git herdr launchagents mise nvim scripts shell starship tmux zsh)
+PACKAGES=(agents claude codex ghostty git herdr launchagents mise nvim scripts shell starship tmux zsh)
 
 # launchd won't scan ~/Library/LaunchAgents at login if it's a symlink, and
 # on a fresh Mac the dir doesn't exist yet — stow would fold it into exactly
@@ -74,6 +74,12 @@ mkdir -p "$HOME/Library/LaunchAgents"
 # inside this repo. Pre-create it so stow links config.toml per-file instead.
 [ -L "$HOME/.config/herdr" ] && unlink "$HOME/.config/herdr"
 mkdir -p "$HOME/.config/herdr"
+
+# And ~/.codex: Codex keeps auth.json and ~1GB of session sqlite there, next
+# to the AGENTS.md this repo links in. A folded ~/.codex would put credentials
+# and history inside this repo. Pre-create it so stow links AGENTS.md per-file.
+[ -L "$HOME/.codex" ] && unlink "$HOME/.codex"
+mkdir -p "$HOME/.codex"
 
 # Pre-flight: dry-run stow to detect real files that would block linking
 # (e.g. a hand-written ~/.zshrc on a previously-used Mac).

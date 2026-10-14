@@ -11,6 +11,7 @@ dev stacks, apps, and setup walkthroughs.
 |------------|---------------------------------------------------------|
 | `agents`   | `~/.agents/skills/` — central store for AI-agent skills (Codex reads it directly; Claude symlinks into it) |
 | `claude`   | `~/.claude/CLAUDE.md`, `settings.json` (declares plugins + marketplaces — Claude Code reinstalls them on first launch), `skills/` (symlinks into `agents`) |
+| `codex`    | `~/.codex/AGENTS.md` — a symlink to `claude/.claude/CLAUDE.md`, so Codex reads the same global instructions as Claude Code |
 | `ghostty`  | `~/.config/ghostty/config`                              |
 | `git`      | `~/.gitconfig`, `~/.gitignore`, `~/.gitmessage`         |
 | `herdr`    | `~/.config/herdr/config.toml`, `~/.herdr-functions.zsh` (tmux keymap + layout helpers ported to herdr) |

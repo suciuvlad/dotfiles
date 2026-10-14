@@ -298,6 +298,32 @@ drift_out=$(DEFAULTS_DB="$DB" PATH="$STUBS:$PATH" bash "$DEFAULTS" --verify 2>&1
 assert_rc "drifted value → exit 1" 1 "$drift_rc"
 assert_contains "drift names the key" "$drift_out" "com.apple.dock tilesize — want 32, got 40"
 
+# ── codex package ────────────────────────────────────────────────────────────
+# ~/.codex holds auth.json and session sqlite; the package links only AGENTS.md
+# (a symlink to claude/.claude/CLAUDE.md). Two guards keep that runtime state
+# out of the repo: the .gitignore rule, and bootstrap.sh / stow-linux
+# pre-creating ~/.codex so stow links per-file instead of folding the dir.
+# Both are checked against the real repo, read-only (check-ignore, stow -n).
+echo "codex package:"
+
+assert_contains "AGENTS.md → claude/.claude/CLAUDE.md" \
+  "$(readlink "$DOTFILES_DIR/codex/.codex/AGENTS.md")" "claude/.claude/CLAUDE.md"
+ignored() { git -C "$DOTFILES_DIR" check-ignore -q "$1" && echo ignored || echo tracked; }
+assert_contains "codex/.codex/auth.json ignored" "$(ignored codex/.codex/auth.json)" "ignored"
+assert_contains "codex/.codex/AGENTS.md tracked" "$(ignored codex/.codex/AGENTS.md)" "tracked"
+
+if command -v stow >/dev/null 2>&1; then
+  H=$(new_home codex)
+  mkdir -p "$H/.codex"
+  assert_contains "pre-created ~/.codex → per-file link" \
+    "$(stow -n -v -t "$H" -d "$DOTFILES_DIR" codex 2>&1)" "LINK: .codex/AGENTS.md"
+  H=$(new_home codex-fold)
+  assert_contains "missing ~/.codex → stow folds it (why bootstrap pre-creates)" \
+    "$(stow -n -v -t "$H" -d "$DOTFILES_DIR" codex 2>&1)" "LINK: .codex =>"
+else
+  echo "  · stow not installed — dry-run checks skipped"
+fi
+
 # ── Summary ──────────────────────────────────────────────────────────────────
 echo ""
 echo "$PASS passed, $FAIL failed"

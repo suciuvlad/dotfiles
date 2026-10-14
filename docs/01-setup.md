@@ -210,6 +210,8 @@ cd ~/dotfiles && git add agents claude/.claude/skills && git commit
 
 Because `~/.agents` is a stow symlink into the repo, the CLI's output lands directly in git's working tree — `git status` shows the new skill ready to commit. Skills not from skills.sh follow the same pattern: drop the folder in `agents/.agents/skills/` and add the Claude link in `claude/.claude/skills/` (Codex picks it up on its own).
 
+Global instructions are shared the same way. `~/.claude/CLAUDE.md` is the one real file (the `claude` package); the `codex` package stows `~/.codex/AGENTS.md` as a symlink to it, so both agents read identical user-level guidance and one edit updates both. `~/.codex` itself stays a real directory (auth.json, session sqlite): `bootstrap.sh` and `make stow-linux` pre-create it so stow links `AGENTS.md` per-file instead of folding the whole directory into the repo.
+
 ## Stow workflow
 
 | Action                          | Command (run from `~/dotfiles`)         |
@@ -279,7 +281,7 @@ dotfiles/
 │   ├── setup/                      # ssh.sh, defaults.sh, iterm.sh, agents.sh, brew-optional.sh, ai-clis.sh, herdr.sh, linux-pkgs.sh, linux-shell.sh
 │   └── .bin/                       # macoss, tmuxinator.zsh — the only part stowed (~/.bin/); .stow-local-ignore keeps Makefile/Brewfile/setup out of ~
 ├── agents/                         # ~/.agents/skills — central AI-agent skill store
-├── claude/    ghostty/    git/     herdr/   launchagents/  mise/
+├── claude/    codex/      ghostty/    git/     herdr/   launchagents/  mise/
 ├── nvim/      shell/      starship/   tmux/    zsh/
 └── docs/                           # this manual
 ```

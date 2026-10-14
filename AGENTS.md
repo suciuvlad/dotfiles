@@ -11,6 +11,10 @@ file is what you need to not break things.
   scan a symlinked one at login. Never let stow fold it (bootstrap.sh
   pre-creates it; `make -C scripts agents` heals a folded one). If you add a
   similar `~/Library` path, apply the same treatment.
+- `~/.codex` must stay a real directory too: it holds Codex's auth.json and
+  session sqlite, and the `codex` package links only `AGENTS.md` into it (a
+  symlink to `claude/.claude/CLAUDE.md`). bootstrap.sh and `make stow-linux`
+  pre-create it; `.gitignore` ignores everything else under `codex/.codex/`.
 - `claude/.claude/` is deny-by-default in `.gitignore` with per-file `!`
   whitelists. Adding a tracked file there requires a matching `!` rule, or
   it will silently never commit. Runtime state (plugin caches, sessions,

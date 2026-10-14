@@ -27,4 +27,10 @@ claude/.claude/skills/synced/
 herdr/.config/herdr/*
 !herdr/.config/herdr/config.toml
 
+# Codex keeps auth.json and session sqlite in ~/.codex, next to the AGENTS.md
+# this package links in. Track the link only — belt and braces alongside
+# bootstrap.sh / stow-linux pre-creating ~/.codex so stow can't fold it.
+codex/.codex/*
+!codex/.codex/AGENTS.md
+
 scripts/Brewfile.lock.json
