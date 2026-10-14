@@ -124,6 +124,16 @@ them. The arrays in `linux-pkgs.sh` are the source of truth.
   `ssh-add --apple-use-keychain` call is Darwin-only, and the `UseKeychain`
   config line is made harmless elsewhere by `IgnoreUnknown`.
 
+**Proxmox guest agent.** `linux-pkgs` installs `qemu-guest-agent`, which gives
+the hypervisor IP reporting, clean ACPI shutdown, and filesystem quiesce so
+`vzdump` snapshots are consistent. It is udev-activated on Debian/Ubuntu — no
+`[Install]` section, so `systemctl enable` fails and is not needed — and inert
+on bare metal, where the rule never fires. This is a backstop, not the primary
+fix: a cloned VM needs the agent at first `qm reboot`, which is long before
+anyone runs `make linux`, so the **VM template** should carry it too. Same
+boundary as `docker` above — the template owns machine-level services; this one
+is cheap enough to have in both places.
+
 **Debian binary names.** `bat` and `fd` install as `batcat` and `fdfind`.
 `linux-pkgs.sh` symlinks both into `~/.local/bin` rather than aliasing them in
 the shell, so scripts and agents resolve them too.
