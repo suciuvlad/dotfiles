@@ -47,6 +47,10 @@ fi
 APT_PKGS=(
   bat build-essential ca-certificates curl direnv fd-find git jq
   ripgrep shellcheck stow tmux tree unzip zoxide zsh btop
+  # Proxmox guest integration: IP reporting in the UI, clean shutdown, and
+  # filesystem quiesce so vzdump snapshots are consistent. udev-activated, so
+  # there is nothing to enable; harmless on bare metal, where it never fires.
+  qemu-guest-agent
   # herdr.sh's settings.json normaliser; cloud images have it, bare ones don't
   python3
   # mise's ruby core compiles with ruby-build; without these it fails late
